@@ -1,0 +1,12 @@
+@font-face {
+    font-family: "RichBlack";
+    font-weight: 400;
+    src: url("./92VCtsoqhtDTfM6BxmsNZ.woff2") format("woff2"),
+        url("./92VCtsoqhtDTfM6BxmsNZ.woff") format("woff");
+    font-display: swap;
+}
+
+.analyzer-icon {
+    font-family: "RichBlack";
+    font-size:36px;
+}
