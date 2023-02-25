@@ -1,3 +1,7 @@
+:root {
+    --color-primary-black:#333;
+    --color-primary-white: #fff;
+}
 @font-face {
     font-family: "RichBlack";
     font-weight: 400;
@@ -5,8 +9,34 @@
         url("./92VCtsoqhtDTfM6BxmsNZ.woff") format("woff");
     font-display: swap;
 }
-
+html,body {
+    margin: 0;
+    padding: 0;
+}
+a{
+    text-decoration: none;
+}
+header {
+    display: flex;
+    justify-content: center;
+    background-color: var(--color-primary-black)
+}
+.header-content {
+    width: 1160px;
+    max-width: 1160px;
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+}
+.logo {
+    width: 65px;
+    height: 32px;
+    background-image: url("./icons/logo.png");
+    background-size: contain;
+    margin-right: 16px;
+}
 .analyzer-icon {
     font-family: "RichBlack";
-    font-size:36px;
+    font-size:32px;
+    color: var(--color-primary-white);
 }
