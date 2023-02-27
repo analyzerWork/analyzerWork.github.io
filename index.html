@@ -13,18 +13,49 @@
     <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/all.js"></script>
     <script src="./src/assets/web-template.js"></script>
 
-    <script type="module">
-        import { ROUTES } from "./config.js"
-    </script>
+    <script src="./config.js"></script>
+    <script src="./src/script/tool.js"></script>
+    
 </head>
 
 <body>
-<header>
-    <a class="header-content" href="/">
-        <div class="logo"></div>
-        <div class="analyzer-icon">Analyzer</div>
-    </a>
-</header>
+    <header>
+        <a class="header-content" href="/">
+            <div class="logo"></div>
+            <div class="analyzer-icon">Analyzer</div>
+        </a>
+    </header>
+    <div class="content-body">
+        <nav>
+            <ul class="nav" id="nav">
+                <template id="navTemplate" rule="v-">
+                    <li v-for="route in CONFIG.routes" class="menu-item ${computeMenuClass(route.isActive)}" data-menu='${route.pathname}'  >
+                        <span class='menu-icon ${route.pathname}' ></span>
+                        <span>${route.name}</span>
+                    </li>
+                </template>
+            </ul>
+        </nav>
+        <iframe src="" frameborder="0"></iframe>
+
+    </div>
+    <script src="./src/script/render.js"></script>
+
+    <script>
+       window.addEventListener("load", function(){
+        const pathname = window.location.pathname.slice(1);
+        renderNav(CONFIG.routes, pathname);
+       });
+
+       document.querySelector('#nav').addEventListener('click',function(e){
+        if (e.target.nodeName.toLowerCase === 'li'){
+            const ele = e.target;
+            const currentMenu = ele.dataset.menu;
+            ele.classList.replace("foo", "bar");
+
+        }
+       })
+    </script>
 </body>
 
 </html>

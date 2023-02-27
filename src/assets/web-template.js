@@ -32,10 +32,16 @@
 
     // 字符串转模板字符串 https://www.zhangxinxu.com/wordpress/2020/10/es6-html-template-literal/
     String.prototype.interpolate = function (params) {
-        const names = Object.keys(params);
+        const names =  Object.keys(params);
         const vals = Object.values(params).map( el => typeof el === 'function' ? el() : el);
         const str = this.replace(/\{\{([^\}]+)\}\}/g, '${$1}'); // {{xx}} => ${xx}
+        console.log(str,vals);
         return new Function(...names, `return \`${escape2Html(str)}\`;`)(...vals);
+    };
+
+    String.prototype.customInterpolate = function () {
+        const str = this.replace(/\{\{([^\}]+)\}\}/g, '${$1}'); // {{xx}} => ${xx}
+        return new Function(`return \`${escape2Html(str)}\`;`)();
     };
 
     // 模板引擎 render
@@ -109,8 +115,7 @@
                 el.removeAttribute(`${rule}bind:key`);
             })
         }
-        this.fragment.innerHTML = this.$fragment.innerHTML.interpolate(data);
-        
+        this.fragment.innerHTML = this.$fragment.innerHTML.customInterpolate(data);
         // 表单props特殊处理，false直接移除
         const propsEls = this.fragment.content.querySelectorAll(`[${propsMap.join('],[')}]`);
         propsEls.forEach(el => {
