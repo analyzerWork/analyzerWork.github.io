@@ -67,7 +67,9 @@ nav ul {
     align-items: center;
     padding: 12px;
 }
-
+.menu-item span {
+    pointer-events: none;
+}
 .default-menu {
     transition: background-color .25s;
     cursor: pointer;
