@@ -50,6 +50,7 @@ header {
 
 .content-body{
     height: calc(100vh - 60px);
+    display: flex;
 }
 nav{
     width: 170px;
@@ -88,4 +89,8 @@ nav ul {
 }
 .taste_matching {
     background-image: url('./icons/taste_matching.svg');
+}
+
+.iframeContainer{
+    flex: 1;
 }
