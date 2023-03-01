@@ -13,6 +13,7 @@ class AnalyzerEvent {
             renderNav(CONFIG.routes);
             const defaultMenu = document.querySelector(`[data-menu=${currentPathName}]`);
             defaultMenu.classList.replace(defaultClass, activeClass);
+            document.querySelector('iframe').src = `../src/pages/${currentPathName}/index.html`;
         });
 
         const navEle = document.querySelector('#nav');
@@ -22,7 +23,8 @@ class AnalyzerEvent {
                 
                 Array.from(navEle.children).forEach(menuEle => {
                     if(menuEle.dataset.menu === activeEle.dataset.menu){
-                        menuEle.classList.replace(defaultClass,activeClass)
+                        menuEle.classList.replace(defaultClass,activeClass);
+                        document.querySelector('iframe').src = `../src/pages/${activeEle.dataset.menu}/index.html`;
                     }else{
                         menuEle.classList.replace(activeClass,defaultClass)
                     }
