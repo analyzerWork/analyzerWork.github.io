@@ -17,14 +17,11 @@
         <py-config>
             packages = ["pandas", "openpyxl"]
             [[fetch]]
-            from = '../../datasource/'
-            files = ['taste_matching.json']
+            files = ['datasource/taste_matching.xlsx','datasource/taste_matching.json','task.py']
         </py-config>
         <py-script>
-            import pandas as pd
-            df = pd.read_excel(r'taste_matching.json')
-            manual_div = Element("manual-write")
-            manual_div.element.innerHTML = df.head()
+            from task import init
+            init() 
         </py-script>
     </div>
 </body>
