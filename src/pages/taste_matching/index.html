@@ -9,21 +9,38 @@
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <link rel="stylesheet" href="index.css" />
 
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <!-- <script defer src="https://pyscript.net/latest/pyscript.js"></script> -->
 </head>
 
 <body>
     <div>
-        <py-config>
+        <!-- <py-config>
+            terminal = false
             packages = ["pandas", "openpyxl"]
             [[fetch]]
-            files = ['datasource/taste_matching.xlsx','datasource/taste_matching.json','task.py']
+            files = ['../../py_package/utils.py','datasource/taste_matching.xlsx','datasource/taste_matching.json','task.py']
         </py-config>
         <py-script>
-            from task import init
-            init() 
-        </py-script>
+            from task import TasteMatching
+            tasteMatching = TasteMatching({'isDataTransfer': False})
+            first_classification, first_classification_ingredient_dict, second_ingredient_count_dict, second_classification_ingredient_list_dict, product_list = tasteMatching.exec()
+        </py-script> -->
+       
     </div>
+     
+    <script>
+        const SOURCE_PATH= './src/pages/taste_matching/datasource/'
+        const { ANAlYZER_UTILS } = window.parent;
+        let data = {};
+        
+        window.addEventListener('load', function(){
+            ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching_result.json`).then((result)=>{
+                data = result
+            })
+        })
+
+       
+    </script>
 </body>
 
 </html>

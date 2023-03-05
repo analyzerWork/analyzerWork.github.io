@@ -1,9 +1,8 @@
+import os
+import sys
 
 import pandas as pd
 import json
-
-import os
-import sys
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
@@ -13,11 +12,13 @@ from py_package.utils import message
 
 class TasteMatching:
 
-    def __init__(self):
+    def __init__(self, opions):
+        self.opions = opions
         self.data = pd.DataFrame([])
 
     def exec(self):
-        self.transToJSON()
+        if self.opions.get('isDataTransfer') == True:
+            self.transToJSON()
 
         self.data = self.get_data()
 
@@ -28,6 +29,9 @@ class TasteMatching:
             '桃子')
 
         product_list = self.get_product_list('桃子', '草莓')
+        
+        if self.opions.get('isBuildResult') == True:
+            self.build_taste_matching_data(first_classification, first_classification_ingredient_dict, second_ingredient_count_dict, second_classification_ingredient_list_dict, product_list)
 
         return first_classification, first_classification_ingredient_dict, second_ingredient_count_dict, second_classification_ingredient_list_dict, product_list
 
@@ -47,15 +51,33 @@ class TasteMatching:
                        indent=4)
 
             message.get('success')(log_message)
-        except:
-            message.get('error')(log_message)
+        except Exception as e:
+            message.get('error')(log_message, e)
 
+    # 生成业务数据
+    def build_taste_matching_data(self,first_classification, first_classification_ingredient_dict, second_ingredient_count_dict, second_classification_ingredient_list_dict, product_list):
+        log_message = '生成业务数据'
+        try:
+            with open('./datasource/taste_matching_result.json','w',encoding='utf-8') as f:
+                json.dump({
+                    'first_classification': first_classification,
+                    'first_classification_ingredient_dict': first_classification_ingredient_dict,
+                    'second_ingredient_count_dict': second_ingredient_count_dict,
+                    'second_classification_ingredient_list_dict': second_classification_ingredient_list_dict,
+                    'product_list': product_list,
+                },f,ensure_ascii=False,indent=4, separators=(',', ': '))
+            message.get('success')(log_message)
+        except Exception as e:
+            message.get('error')(log_message, e)
+        
     # 读取转换好的原始json数据
     def get_data(self):
         # 使用 Python JSON 模块载入数据
         log_message = '读取数据'
         try:
-            with open('./datasource/taste_matching.json', 'r', encoding='utf-8') as f:
+            with open('./datasource/taste_matching.json',
+                      'r',
+                      encoding='utf-8') as f:
                 origin_data = json.loads(f.read())
 
             message.get('success')(log_message)
@@ -85,7 +107,7 @@ class TasteMatching:
                 first_classification_ingredient_dict[key] = list(set(value))
             message.get('success')(log_message)
             return first_classification, first_classification_ingredient_dict
-        except  Exception as e:
+        except Exception as e:
             message.get('error')(log_message, e)
 
     # 获取品牌-产品名称-原料构成列表作为辅助数据
@@ -111,7 +133,7 @@ class TasteMatching:
             for item in unique_product_brand_ingredient_list:
                 # 获取品牌、产品名称、原料构成对应的二级成分
                 second_ingredient_list = data[data['品牌-产品名称-原料构成'] ==
-                                            item]['加工后成分'].to_list()
+                                              item]['加工后成分'].to_list()
                 # 排除一级成分后的二级成分
                 omit_first_second_ingredient_list = list(
                     set(second_ingredient_list) - set(first_class_ingredient))
@@ -129,7 +151,7 @@ class TasteMatching:
             for key, value in second_ingredient_count_dict.items():
                 # 获取二级成分对应的二级创新成分分类
                 second_classification = data[data['加工后成分'] ==
-                                            key]['成分分类'].to_list()[0]
+                                             key]['成分分类'].to_list()[0]
                 second_classification_ingredient_list_dict['all'].append(key)
                 if second_classification in second_classification_ingredient_list_dict:
                     second_classification_ingredient_list_dict[
@@ -137,12 +159,11 @@ class TasteMatching:
                 else:
                     second_classification_ingredient_list_dict[
                         second_classification] = []
-           
+
             message.get('success')(log_message)
             return second_ingredient_count_dict, second_classification_ingredient_list_dict
-        except  Exception as e:
-            message.get('error')(log_message,e)
-
+        except Exception as e:
+            message.get('error')(log_message, e)
 
     # 获取产品示例
     def get_product_list(self, first_class_ingredient,
@@ -152,7 +173,8 @@ class TasteMatching:
             data = self.data
             # 分别获取一级成分、二级成分对应的品牌-产品名称-原料构成列表
             first_class_product_list = data[
-                data['加工后成分'] == first_class_ingredient]['品牌-产品名称-原料构成'].to_list()
+                data['加工后成分'] ==
+                first_class_ingredient]['品牌-产品名称-原料构成'].to_list()
             second_class_product_list = data[
                 data['加工后成分'] ==
                 second_class_ingredient]['品牌-产品名称-原料构成'].to_list()
@@ -160,13 +182,16 @@ class TasteMatching:
             product_list = list(
                 set(first_class_product_list).intersection(
                     second_class_product_list))
-            
+
             message.get('success')(log_message)
             return product_list
-        except  Exception as e:
+        except Exception as e:
             message.get('error')(log_message, e)
 
 
-tasteMatching = TasteMatching()
+# tasteMatching = TasteMatching({
+#     'isDataTransfer': False,
+#     'isBuildResult': False,
+# })
 
-tasteMatching.exec()
+# tasteMatching.exec()
