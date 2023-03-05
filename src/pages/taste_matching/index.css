@@ -1,0 +1,13 @@
+
+.taste-matching-date-picker{
+    display: flex;
+    align-items: center;
+    padding: 8px 24px;
+}
+.base-label {
+    font-size: 16px;
+}
+#taste-matching-date-picker{
+    font-family: 'RichBlack';
+    color: var(---color-primary-dark);
+}

@@ -1,0 +1,36 @@
+:root {
+    ---color-primary-dark: #4c5161;
+    ---color-primary-blue:#13227a;
+    --color-primary-white: #fff;
+}
+@font-face {
+    font-family: "RichBlack";
+    font-weight: 400;
+    src: url("./92VCtsoqhtDTfM6BxmsNZ.woff2") format("woff2"),
+        url("./92VCtsoqhtDTfM6BxmsNZ.woff") format("woff");
+    font-display: swap;
+}
+html,body{
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    font-family: "RichBlack";
+}
+
+ul,li {
+    margin: 0;
+    padding: 0;
+}
+li {
+    list-style-type:none
+}
+a{
+    text-decoration: none;
+}
+
+html, body {
+    font-family: "RichBlack";
+}
+.mgr-12{
+    margin-right: 12px;
+}

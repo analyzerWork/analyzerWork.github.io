@@ -22,6 +22,8 @@ class TasteMatching:
 
         self.data = self.get_data()
 
+        date_range = self.get_date_range()
+
         first_classification, first_classification_ingredient_dict = self.get_first_classification_ingredient(
         )
 
@@ -29,17 +31,22 @@ class TasteMatching:
             '桃子')
 
         product_list = self.get_product_list('桃子', '草莓')
-        
-        if self.opions.get('isBuildResult') == True:
-            self.build_taste_matching_data(first_classification, first_classification_ingredient_dict, second_ingredient_count_dict, second_classification_ingredient_list_dict, product_list)
 
-        return first_classification, first_classification_ingredient_dict, second_ingredient_count_dict, second_classification_ingredient_list_dict, product_list
+        if self.opions.get('isBuildResult') == True:
+            self.build_taste_matching_data(
+                date_range, first_classification,
+                first_classification_ingredient_dict,
+                second_ingredient_count_dict,
+                second_classification_ingredient_list_dict, product_list)
+
+        return date_range, first_classification, first_classification_ingredient_dict, second_ingredient_count_dict, second_classification_ingredient_list_dict, product_list
 
     # 读取原始数据,转换为json格式
     def transToJSON(self):
         log_message = 'Excel转换JSON数据'
         try:
-            df = pd.read_excel(r'./datasource/taste_matching.xlsx')
+            df = pd.read_excel(
+                r'./datasource/taste_matching.xlsx').sort_values(by='月份')
 
             df['月份'] = df['月份'].dt.strftime('%Y-%m')
 
@@ -55,21 +62,36 @@ class TasteMatching:
             message.get('error')(log_message, e)
 
     # 生成业务数据
-    def build_taste_matching_data(self,first_classification, first_classification_ingredient_dict, second_ingredient_count_dict, second_classification_ingredient_list_dict, product_list):
+    def build_taste_matching_data(self, date_range, first_classification,
+                                  first_classification_ingredient_dict,
+                                  second_ingredient_count_dict,
+                                  second_classification_ingredient_list_dict,
+                                  product_list):
         log_message = '生成业务数据'
         try:
-            with open('./datasource/taste_matching_result.json','w',encoding='utf-8') as f:
-                json.dump({
-                    'first_classification': first_classification,
-                    'first_classification_ingredient_dict': first_classification_ingredient_dict,
-                    'second_ingredient_count_dict': second_ingredient_count_dict,
-                    'second_classification_ingredient_list_dict': second_classification_ingredient_list_dict,
-                    'product_list': product_list,
-                },f,ensure_ascii=False,indent=4, separators=(',', ': '))
+            with open('./datasource/taste_matching_result.json',
+                      'w',
+                      encoding='utf-8') as f:
+                json.dump(
+                    {
+                        'date_range': date_range,
+                        'first_classification': first_classification,
+                        'first_classification_ingredient_dict':
+                        first_classification_ingredient_dict,
+                        'second_ingredient_count_dict':
+                        second_ingredient_count_dict,
+                        'second_classification_ingredient_list_dict':
+                        second_classification_ingredient_list_dict,
+                        'product_list': product_list,
+                    },
+                    f,
+                    ensure_ascii=False,
+                    indent=4,
+                    separators=(',', ': '))
             message.get('success')(log_message)
         except Exception as e:
             message.get('error')(log_message, e)
-        
+
     # 读取转换好的原始json数据
     def get_data(self):
         # 使用 Python JSON 模块载入数据
@@ -82,6 +104,17 @@ class TasteMatching:
 
             message.get('success')(log_message)
             return pd.json_normalize(origin_data)
+        except Exception as e:
+            message.get('error')(log_message, e)
+
+    # 获取时间范围
+    def get_date_range(self):
+        log_message = '获取日期范围'
+        try:
+            data = self.data
+            date_range = data['月份'].drop_duplicates().to_list()
+            message.get('success')(log_message)
+            return date_range
         except Exception as e:
             message.get('error')(log_message, e)
 
@@ -169,7 +202,7 @@ class TasteMatching:
     def get_product_list(self, first_class_ingredient,
                          second_class_ingredient):
         try:
-            log_message = '获取产品示例'
+            log_message = '产品示例计算'
             data = self.data
             # 分别获取一级成分、二级成分对应的品牌-产品名称-原料构成列表
             first_class_product_list = data[
@@ -189,9 +222,9 @@ class TasteMatching:
             message.get('error')(log_message, e)
 
 
-# tasteMatching = TasteMatching({
-#     'isDataTransfer': False,
-#     'isBuildResult': False,
-# })
+tasteMatching = TasteMatching({
+    'isDataTransfer': True,
+    'isBuildResult': True,
+})
 
-# tasteMatching.exec()
+tasteMatching.exec()
