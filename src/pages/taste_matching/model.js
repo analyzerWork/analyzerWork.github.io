@@ -1,9 +1,10 @@
 class TasteMatching {
-    data = {}
+    data = []
     computedData = {
-        dateRange: []
     }
-    $datePickerEle = document.querySelector('#taste-matching-date-picker');
+    element = {
+        $datePicker: document.querySelector('#taste-matching-date-picker'),
+    }
     constructor(initData){
         this.data = initData;
         this.init();
@@ -12,22 +13,20 @@ class TasteMatching {
     }
 
     init = () =>{
-        const { date_range } = this.data;
-        const last_date = date_range[date_range.length-1]
-        this.$datePickerEle.value = `${last_date} 至 ${last_date}`;
-        this.$datePickerEle.min = date_range[0]
-        this.$datePickerEle.max = last_date
+        const date_range  = [...new Set(this.data.map((item) =>item['月份']))];
+        const last_date = date_range[date_range.length-1];
+        this.element.$datePicker.value = `${last_date} 至 ${last_date}`;
+        this.element.$datePicker.min = date_range[0];
+        this.element.$datePicker.max = last_date;
     }
 
     computed = () =>{
-        const { date_range } = this.data;
-        this.computedData.dateRange = date_range.map((date) => parent.dayjs(date).unix())
     }
 
 
 
     bind = () =>{
-        this.$datePickerEle.addEventListener('change', function () {
+        this.element.$datePicker.addEventListener('change', function () {
            
         });
     }

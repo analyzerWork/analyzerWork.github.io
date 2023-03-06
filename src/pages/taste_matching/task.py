@@ -22,25 +22,6 @@ class TasteMatching:
 
         self.data = self.get_data()
 
-        date_range = self.get_date_range()
-
-        first_classification, first_classification_ingredient_dict = self.get_first_classification_ingredient(
-        )
-
-        second_ingredient_count_dict, second_classification_ingredient_list_dict = self.get_second_classification_ingredient(
-            '桃子')
-
-        product_list = self.get_product_list('桃子', '草莓')
-
-        if self.opions.get('isBuildResult') == True:
-            self.build_taste_matching_data(
-                date_range, first_classification,
-                first_classification_ingredient_dict,
-                second_ingredient_count_dict,
-                second_classification_ingredient_list_dict, product_list)
-
-        return date_range, first_classification, first_classification_ingredient_dict, second_ingredient_count_dict, second_classification_ingredient_list_dict, product_list
-
     # 读取原始数据,转换为json格式
     def transToJSON(self):
         log_message = 'Excel转换JSON数据'
@@ -57,37 +38,6 @@ class TasteMatching:
                        force_ascii=False,
                        indent=4)
 
-            message.get('success')(log_message)
-        except Exception as e:
-            message.get('error')(log_message, e)
-
-    # 生成业务数据
-    def build_taste_matching_data(self, date_range, first_classification,
-                                  first_classification_ingredient_dict,
-                                  second_ingredient_count_dict,
-                                  second_classification_ingredient_list_dict,
-                                  product_list):
-        log_message = '生成业务数据'
-        try:
-            with open('./datasource/taste_matching_result.json',
-                      'w',
-                      encoding='utf-8') as f:
-                json.dump(
-                    {
-                        'date_range': date_range,
-                        'first_classification': first_classification,
-                        'first_classification_ingredient_dict':
-                        first_classification_ingredient_dict,
-                        'second_ingredient_count_dict':
-                        second_ingredient_count_dict,
-                        'second_classification_ingredient_list_dict':
-                        second_classification_ingredient_list_dict,
-                        'product_list': product_list,
-                    },
-                    f,
-                    ensure_ascii=False,
-                    indent=4,
-                    separators=(',', ': '))
             message.get('success')(log_message)
         except Exception as e:
             message.get('error')(log_message, e)
@@ -223,8 +173,17 @@ class TasteMatching:
 
 
 tasteMatching = TasteMatching({
-    'isDataTransfer': True,
-    'isBuildResult': True,
+    'isDataTransfer': False,
 })
 
 tasteMatching.exec()
+
+# test case
+# first_classification, first_classification_ingredient_dict = tasteMatching.get_first_classification_ingredient(
+#         )
+
+# second_ingredient_count_dict, second_classification_ingredient_list_dict = tasteMatching.get_second_classification_ingredient(
+#             '桃子')
+
+# product_list = tasteMatching.get_product_list('桃子', '草莓')
+
