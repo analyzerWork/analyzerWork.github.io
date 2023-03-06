@@ -1,5 +1,5 @@
 
 (function(){
-    const analyzerEventInstance = new AnalyzerEvent();
-    analyzerEventInstance.init()
+    const analyzerModelInstance = new AnalyzerModel();
+    analyzerModelInstance.init()
 })()
