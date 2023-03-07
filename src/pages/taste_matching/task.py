@@ -83,7 +83,7 @@ class TasteMatching:
                     first_classification_ingredient_dict.get(key).append(
                         row['加工后成分'])
                 else:
-                    first_classification_ingredient_dict[key] = []
+                    first_classification_ingredient_dict[key] = [row['加工后成分']]
 
             # 去重处理
             for key, value in first_classification_ingredient_dict.items():
@@ -141,7 +141,7 @@ class TasteMatching:
                         second_classification].append(key)
                 else:
                     second_classification_ingredient_list_dict[
-                        second_classification] = []
+                        second_classification] = [key]
 
             message.get('success')(log_message)
             return second_ingredient_count_dict, second_classification_ingredient_list_dict

@@ -57,12 +57,13 @@ nav ul {
     background-color: #ddd;
 }
 .menu-icon {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     margin-right: 5px;
 }
 .taste_matching {
     background-image: url('./icons/taste_matching.svg');
+    background-size: cover;
 }
 
 .iframeContainer{
