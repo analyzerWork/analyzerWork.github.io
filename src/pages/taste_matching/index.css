@@ -1,8 +1,14 @@
-
+body{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
 .taste-matching-date-picker{
     display: flex;
     align-items: center;
     padding: 10px 24px;
+    border-radius: 4px;
+    background-color: var(--color-primary-white);
 }
 .base-label {
     font-size: 14px;
@@ -10,5 +16,12 @@
 #taste-matching-date-picker{
     width: 180px;
     font-family: 'RichBlack';
-    color: var(---color-primary-dark);
+    color: var(--color-primary-dark);
+}
+.taste-matching-content{
+    flex: 1;
+    margin: 12px 0 0;
+    border-radius: 4px;
+    background-color: var(--color-primary-white);
+ 
 }

@@ -173,7 +173,7 @@ class TasteMatching:
 
 
 tasteMatching = TasteMatching({
-    'isDataTransfer': False,
+    'isDataTransfer': True,
 })
 
 tasteMatching.exec()

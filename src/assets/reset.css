@@ -1,7 +1,8 @@
 :root {
-    ---color-primary-dark: #4c5161;
-    ---color-primary-blue:#13227a;
+    --color-primary-dark: #4c5161;
+    --color-primary-blue:#13227a;
     --color-primary-white: #fff;
+    --color-background: #f0f0f0;
 }
 @font-face {
     font-family: "RichBlack";
@@ -15,6 +16,7 @@ html,body{
     padding: 0;
     user-select: none;
     font-family: "RichBlack";
+    background-color: var(--color-background);
 }
 
 ul,li {
