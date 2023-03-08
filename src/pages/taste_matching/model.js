@@ -6,6 +6,7 @@ class TasteMatching {
     }
     element = {
         $datePicker: document.querySelector('#taste-matching-date-picker'),
+        $firstClassPanel: document.querySelector('#firstClassPanel'),
     }
     constructor(initData){
         this.init(initData);
@@ -71,12 +72,43 @@ class TasteMatching {
     }
 
     renderFirstClassificationIngredient = () => {
-        const {firstClassification, firstClassificationIngredientMap} = this.get('firstClassification','firstClassificationIngredientMap')
-        console.log(firstClassification,firstClassificationIngredientMap)
+        const {firstClassificationIngredientMap} = this.get('firstClassification','firstClassificationIngredientMap')
+        const firstPanelFragment = document.createDocumentFragment()
+        for(let [classification,ingredientList] of firstClassificationIngredientMap.entries()){
+            const panelItemInstance = new PanelItem({type:'first',classification,ingredientList})
+            firstPanelFragment.appendChild(panelItemInstance.produce())
+        }
+        this.element.$firstClassPanel.appendChild(firstPanelFragment)
+
     }
 
+}
 
-    
+class PanelItem{
+    constructor({type, classification,ingredientList}){
+        this.type = type;
+        this.classification = classification;
+        this.ingredientList = ingredientList;
+    }
 
+    produce = () => {
+        const {type, classification,ingredientList} = this;
+        const panelEle = document.createElement('div');
+        panelEle.className = `panel ${type}-panel`;
+        panelEle.innerHTML = `<div class='panel-title ${type}-panel-title'>${classification}</div>`;
+        const ingredientWraper = document.createElement('div');
+        ingredientWraper.className = 'ingredient-wrapper';
+        const panelFragment = document.createDocumentFragment();
+        ingredientList.forEach((ingredient)=>{
+            const ingredientItem = document.createElement('div');
+            ingredientItem.className = `ingredient-item ${type}-ingredient-item`;
+            ingredientItem.innerHTML = ingredient
+            panelFragment.appendChild(ingredientItem);
+        });
+        ingredientWraper.appendChild(panelFragment);
+        panelEle.appendChild(ingredientWraper);
 
+        return panelEle;
+
+    }
 }

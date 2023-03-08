@@ -23,5 +23,17 @@ body{
     margin: 12px 0 0;
     border-radius: 4px;
     background-color: var(--color-primary-white);
- 
+    overflow-y: auto;
+}
+
+#firstClassPanel{
+    display: flex;
+    padding: 12px;
+    height: 430px;
+    overflow-y: auto;
+}
+
+.panel{
+   display: flex;
+   flex-direction: column;
 }
