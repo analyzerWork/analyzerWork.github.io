@@ -1,5 +1,6 @@
 :root {
     --color-primary-dark: #4c5161;
+    --color-deep-dark: #000;
     --color-primary-blue:#13227a;
     --color-primary-white: #fff;
     --color-background: #f0f0f0;
@@ -30,9 +31,29 @@ a{
     text-decoration: none;
 }
 
-html, body {
-    font-family: "RichBlack";
+::-webkit-scrollbar {
+    width: 6px;
+    background-color: var(--color-background);
 }
+
+/* 滚动条轨道 */
+::-webkit-scrollbar-track {
+    /* 阴影 */
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: var(--color-primary-white);
+}
+
+/* 滚定条滑块 */
+::-webkit-scrollbar-thumb {
+    border-radius: 30px;
+    background-color: var(--color-primary-dark);
+}
+
 .mgr-12{
     margin-right: 12px;
+}
+.font-title{
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--color-deep-dark);
 }

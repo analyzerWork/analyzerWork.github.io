@@ -30,7 +30,7 @@ class AnalyzerModel {
 
     switchMenuHandler = (e, navEle) => {
         const activeEle = e.target;
-        if (activeEle.tagName.toLowerCase() === 'li') {
+        if (activeEle.tagName.toLowerCase() === 'li' && !activeEle.classList.contains('active-menu')) {
             const { defaultClass, activeClass } = VALUES.nav;
             Array.from(navEle.children).forEach(menuEle => {
                 if(menuEle.dataset.menu === activeEle.dataset.menu){
