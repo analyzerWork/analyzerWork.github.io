@@ -85,3 +85,7 @@ body{
     color: var(--color-primary-white);
     background-color: var(--color-primary-blue);
 }
+
+.second-panel-title {
+    color: var(--ui-green);
+}
