@@ -7,11 +7,14 @@ class TasteMatching {
     endIndex: 0,
     secondIngredientCountMap: new Map(),
     secondClassificationIngredientListMap: new Map(),
+    selectedFirstIngredient: "",
+    selectedSecondIngredient: "",
   };
   element = {
     $datePicker: document.querySelector("#taste-matching-date-picker"),
     $firstClassPanel: document.querySelector("#firstClassPanel"),
     $secondClassPanel: document.querySelector("#secondClassPanel"),
+    $secondPanel: document.querySelector(".second-class-section"),
   };
   constructor(initData) {
     this.init(initData);
@@ -59,6 +62,11 @@ class TasteMatching {
       "click",
       this.firstIngredientClickHandler
     );
+
+    this.element.$secondClassPanel.addEventListener(
+      "click",
+      this.secondIngredientClickHandler
+    );
   };
 
   dateChangeHandler(dateRange) {
@@ -71,17 +79,27 @@ class TasteMatching {
       startIndex: startDateIndex,
       endIndex: endDateIndex,
     });
+    // 清除已选
+    this.set({
+      selectedFirstIngredient: "",
+      selectedSecondIngredient: "",
+    });
+    // 隐藏二级
+    this.element.$secondPanel.classList.add("hide");
     this.getFirstClassificationIngredient();
     this.renderFirstClassificationIngredient();
-    // 清除二级
   }
 
   firstIngredientClickHandler = (e) => {
     const activeEle = e.target;
+    // 标签点击
     if (
       activeEle.classList.contains("ingredient-item") &&
       !activeEle.classList.contains("first-ingredient-item-selected")
     ) {
+      if (this.element.$secondPanel.classList.contains("hide")) {
+        this.element.$secondPanel.classList.remove("hide");
+      }
       const currentSelectedItem = document.querySelector(
         ".first-ingredient-item-selected"
       );
@@ -92,14 +110,52 @@ class TasteMatching {
         );
       }
       const nextSelectedItem = document.querySelector(
-        `[data-name=${activeEle.dataset.name}]`
+        `.first-panel [data-name=${activeEle.dataset.name}]`
       );
       if (nextSelectedItem) {
         nextSelectedItem.classList.replace(
           "first-ingredient-item",
           "first-ingredient-item-selected"
         );
-        this.getSecondClassificationIngredient(activeEle.dataset.name);
+        this.set({
+          selectedFirstIngredient: activeEle.dataset.name,
+        });
+        this.getSecondClassificationIngredient();
+        this.renderSecondClassificationIngredient(activeEle.dataset.name);
+      }
+    }
+  };
+
+  secondIngredientClickHandler = (e) => {
+    const activeEle = e.target;
+    // 标签点击
+    if (
+      activeEle.classList.contains("ingredient-item") &&
+      !activeEle.classList.contains("second-ingredient-item-selected")
+    ) {
+      const currentSelectedItem = document.querySelector(
+        ".second-ingredient-item-selected"
+      );
+      if (currentSelectedItem) {
+        currentSelectedItem.classList.replace(
+          "second-ingredient-item-selected",
+          "second-ingredient-item"
+        );
+      }
+      const nextSelectedItem = document.querySelector(
+        `.second-panel [data-name=${activeEle.dataset.name}]`
+      );
+      if (nextSelectedItem) {
+        nextSelectedItem.classList.replace(
+          "second-ingredient-item",
+          "second-ingredient-item-selected"
+        );
+        this.set({
+          selectedSecondIngredient: activeEle.dataset.name,
+        });
+        const { selectedFirstIngredient } = this.get('selectedFirstIngredient');
+
+        
       }
     }
   };
@@ -172,8 +228,12 @@ class TasteMatching {
     this.element.$firstClassPanel.replaceChildren(firstPanelFragment);
   };
 
-  getSecondClassificationIngredient = (currentFirstIngredient) => {
-    const { startIndex, endIndex } = this.get("startIndex", "endIndex");
+  getSecondClassificationIngredient = () => {
+    const { startIndex, endIndex, selectedFirstIngredient } = this.get(
+      "startIndex",
+      "endIndex",
+      "selectedFirstIngredient"
+    );
 
     const currentData = this.data.slice(startIndex, endIndex);
     const uniqueProductBrandIngredientList = [
@@ -189,13 +249,14 @@ class TasteMatching {
       const secondIngredientList = currentData
         .filter((data) => data["品牌-产品名称-原料构成"] === item)
         .map((data) => data["加工后成分"]);
+
       // 排除一级成分后的二级成分
       const omitFirstSecondIngredientList = secondIngredientList.filter(
-        (ingredient) => ingredient !== currentFirstIngredient
+        (ingredient) => ingredient !== selectedFirstIngredient
       );
 
       // 统计二级成分出现次数
-      for (let ingredient in omitFirstSecondIngredientList) {
+      for (let ingredient of omitFirstSecondIngredientList) {
         if (secondIngredientCountMap.has(ingredient)) {
           secondIngredientCountMap.set(
             ingredient,
@@ -208,7 +269,7 @@ class TasteMatching {
     }
 
     // 获取二级创新成分分类:二级创新成分映射关系
-    const secondClassificationIngredientListMap = new Map(["all"], [[]]);
+    const secondClassificationIngredientListMap = new Map();
 
     for (let [ingredient] of secondIngredientCountMap.entries()) {
       // 获取二级成分对应的二级创新成分分类
@@ -216,11 +277,6 @@ class TasteMatching {
         .filter((data) => data["加工后成分"] === ingredient)
         .map((data) => data["成分分类"]);
       const [secondClassification] = secondClassificationList;
-
-      secondClassificationIngredientListMap.set(
-        "all",
-        secondClassificationIngredientListMap.get("all").concat(ingredient)
-      );
 
       if (secondClassificationIngredientListMap.has(secondClassification)) {
         secondClassificationIngredientListMap.set(
@@ -237,9 +293,74 @@ class TasteMatching {
     }
 
     this.set({
-      firstClassification,
-      firstClassificationIngredientMap,
+      secondIngredientCountMap,
+      secondClassificationIngredientListMap,
     });
+  };
+
+  renderSecondClassificationIngredient = () => {
+    const {
+      secondIngredientCountMap,
+      secondClassificationIngredientListMap,
+      selectedSecondIngredient,
+    } = this.get(
+      "secondIngredientCountMap",
+      "secondClassificationIngredientListMap",
+      "selectedSecondIngredient"
+    );
+    const secondPanelFragment = document.createDocumentFragment();
+    // '其他口味'的索引
+    const secondClassificationIngredientArray = [
+      ...secondClassificationIngredientListMap,
+    ];
+    const otherIndex = secondClassificationIngredientArray.findIndex(
+      ([key]) => key === "其他口味"
+    );
+    const resortSecondClassificationIngredient = [
+      ...secondClassificationIngredientArray.slice(0, otherIndex),
+      ...secondClassificationIngredientArray.slice(otherIndex + 1),
+      secondClassificationIngredientArray[otherIndex],
+    ];
+
+    const secondClassificationWithCount =
+      this.getClassificationIngredientListTopN(
+        resortSecondClassificationIngredient,
+        10
+      );
+
+    for (let {
+      classification,
+      ingredientListWithCount,
+    } of secondClassificationWithCount) {
+      const panelItemInstance = new PanelItem({
+        type: "second",
+        classification,
+        ingredientList:ingredientListWithCount,
+        selectedSecondIngredient,
+      });
+      secondPanelFragment.appendChild(panelItemInstance.produce());
+    }
+    this.element.$secondClassPanel.replaceChildren(secondPanelFragment);
+  };
+
+  getClassificationIngredientListTopN = (
+    resortSecondClassificationIngredient,
+    n
+  ) => {
+    const { secondIngredientCountMap } = this.get("secondIngredientCountMap");
+
+    return resortSecondClassificationIngredient.map(
+      ([classification, ingredientList]) => ({
+        classification,
+        ingredientListWithCount: ingredientList
+          .map((ingredient) => ({
+            ingredient,
+            count: secondIngredientCountMap.get(ingredient),
+          }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, n),
+      })
+    );
   };
 }
 
@@ -254,22 +375,40 @@ class PanelItem {
   produce = () => {
     const { type, classification, ingredientList, selectedIngredient } = this;
     const panelEle = document.createElement("div");
-    panelEle.className = `panel ${type}-panel`;
-    panelEle.innerHTML = `<div class='panel-title ${type}-panel-title'>${classification}</div>`;
+    panelEle.className = `panel ${type}-panel ${type}-panel-${classification}`;
+    panelEle.innerHTML = `<div class='pannel-title-container'>
+    <div class='panel-title ${type}-panel-title'>${classification}</div>
+
+    </div>`;
     const ingredientWraper = document.createElement("div");
-    ingredientWraper.className = "ingredient-wrapper";
+    ingredientWraper.className = `ingredient-wrapper ${type}-ingredient-wrapper`;
     const panelFragment = document.createDocumentFragment();
-    ingredientList.forEach((ingredient) => {
-      const ingredientItem = document.createElement("div");
-      ingredientItem.dataset.name = ingredient;
-      ingredientItem.className = `ingredient-item ${
-        selectedIngredient === ingredient
-          ? `${type}-ingredient-item-selected`
-          : `${type}-ingredient-item`
-      }`;
-      ingredientItem.innerHTML = ingredient;
-      panelFragment.appendChild(ingredientItem);
-    });
+    if (type === "first") {
+      ingredientList.forEach((ingredient) => {
+        const ingredientItem = document.createElement("div");
+        ingredientItem.dataset.name = ingredient;
+        ingredientItem.className = `ingredient-item ${
+          selectedIngredient === ingredient
+            ? `${type}-ingredient-item-selected`
+            : `${type}-ingredient-item`
+        }`;
+        ingredientItem.innerHTML = ingredient;
+        panelFragment.appendChild(ingredientItem);
+      });
+    } else if (type === "second") {
+      ingredientList.forEach(({ ingredient, count }) => {
+        const ingredientItem = document.createElement("div");
+        ingredientItem.dataset.name = ingredient;
+        ingredientItem.className = `ingredient-item ${
+          selectedIngredient === ingredient
+            ? `${type}-ingredient-item-selected`
+            : `${type}-ingredient-item`
+        }`;
+        ingredientItem.innerHTML = `${ingredient} | ${count}°`;
+        panelFragment.appendChild(ingredientItem);
+      });
+    }
+
     ingredientWraper.appendChild(panelFragment);
     panelEle.appendChild(ingredientWraper);
 

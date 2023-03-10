@@ -3,6 +3,7 @@ body{
     flex-direction: column;
     height: 100vh;
 }
+
 .taste-matching-date-picker{
     display: flex;
     align-items: center;
@@ -21,6 +22,7 @@ body{
 .taste-matching-content{
     flex: 1;
     margin: 12px 0 0;
+    padding: 0 0 20px;
     border-radius: 4px;
     background-color: var(--color-primary-white);
     overflow-y: auto;
@@ -30,10 +32,23 @@ body{
     margin: 12px 24px;
 }
 
-#firstClassPanel{
+#firstClassPanel, #secondClassPanel{
     display: flex;
-    height: 430px;
-    padding: 0 6px 0 36px;
+    height: 390px;
+    margin: 0 24px;
+    padding: 10px 16px 16px;
+    border-radius: 4px;
+}
+#firstClassPanel{
+    border: 1px solid var(--color-primary-blue)
+}
+
+#secondClassPanel{
+    border: 1px solid var(--ui-green)
+}
+
+.second-class-section{
+    margin: 24px 0 12px;
 }
 
 .panel{
@@ -42,13 +57,24 @@ body{
    flex: 1;
 }
 
+
+.pannel-title-container{
+    display: flex;
+    align-items: center;
+    margin: 0 0 20px;
+}
+
 .panel-title {
     font-weight:600;
-    margin: 0 0 10px;
 }
 
 .first-panel-title {
     color: var(--color-primary-blue);
+}
+
+
+.second-panel-title {
+    color: var(--ui-green);
 }
 
 .ingredient-wrapper {
@@ -58,10 +84,54 @@ body{
     overflow-y: overlay;
 }
 
-
-.panel:hover .ingredient-wrapper::-webkit-scrollbar-thumb:hover {
-    background-color: black;
+.panel ::-webkit-scrollbar {
+    display: block;
 }
+
+.first-panel:hover .ingredient-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-primary-blue);
+}
+
+.second-panel:hover .ingredient-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: var(--ui-green);
+}
+
+.classification-checkbox {
+    width: 18px;
+    height: 18px;
+}
+
+[is="ui-checkbox"]:checked {
+    color: var(--color-primary-blue);
+    background-color: var(--color-primary-blue);
+}
+
+.second-classification-checkbox:checked {
+    color: var(--ui-green);
+    background-color: var(--ui-green);
+}
+
+[is="ui-checkbox"]:focus {
+    color: var(--color-primary-blue);
+}
+
+.second-classification-checkbox:focus {
+    color: var(--ui-green);
+}
+
+.first-classification-checkbox:not(:disabled):checked:focus,
+.first-classification-checkbox:not(:disabled):checked:hover {
+    color: var(--color-primary-blue);
+    background-color: var(--color-primary-blue);
+}
+
+
+.second-classification-checkbox:not(:disabled):checked:focus,
+.second-classification-checkbox:not(:disabled):checked:hover {
+    color: var(--ui-green);
+    background-color: var(--ui-green);
+}
+
 
 .ingredient-item {
    font-size: 14px;
@@ -86,6 +156,17 @@ body{
     background-color: var(--color-primary-blue);
 }
 
-.second-panel-title {
+.second-ingredient-item {
     color: var(--ui-green);
+    border: 1px solid var(--ui-green);
+}
+
+.second-ingredient-item:hover {
+    background-color: rgba(89, 226, 153, 0.2);
+    color: var(--color-deep-dark);
+}
+
+.second-ingredient-item-selected {
+    color: var(--color-primary-white);
+    background-color: var(--ui-green);
 }
