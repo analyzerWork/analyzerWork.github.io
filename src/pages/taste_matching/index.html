@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="index.css" />
     <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/DateTime.js"></script>
     <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Dialog.js"></script>
+    <script src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Loading.js"></script>
+    
     
 </head>
 
@@ -24,13 +26,23 @@
     <div class="taste-matching-content">
         <section class="first-class-section">
             <div class="font-title section-title">创新成分概览</div>
+            <div class="search-container">
+                <span class="search-label">搜索成分:</span>
+                <span class="ui-input ui-input-search" align="end">
+                    <input type="search" placeholder="请输入">
+                    <button class="ui-icon-search">搜索</button>
+                </span>
+            </div>
+            
             <div id="firstClassPanel"></div>
         </section>
         <section class="second-class-section hide">
             <div class="font-title section-title">创新成分搭配热度Top10</div>
             <div id="secondClassPanel"></div>
             <dialog id="productDialog" is="ui-dialog" title="产品示例">
-                <table class="ui-table">
+                <div id="productLoading"  class="ui-loading" style="height: 100px;">计算中<ui-dot></ui-dot></div>
+
+                <table id="productTable" class="ui-table hide">
                     <thead>
                         <tr>
                             <th>品牌</th>

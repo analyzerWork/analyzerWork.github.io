@@ -26,7 +26,10 @@ class TasteMatching {
     $secondPanel: document.querySelector(".second-class-section"),
     $productDialog: document.querySelector("#productDialog"),
     $productTbody: document.querySelector("#productTbody"),
+    $productLoading: document.querySelector("#productLoading"),
+    $productTable: document.querySelector("#productTable"),
   };
+  timer = {};
   constructor(initData) {
     this.init(initData);
     this.bind();
@@ -46,7 +49,11 @@ class TasteMatching {
     });
     this.getFirstClassificationIngredient(0, this.data.length - 1);
     this.renderFirstClassificationIngredient();
+    this.element.$productDialog.setParams({
+      buttons: [],
+    });
   };
+
 
   get = (...keys) =>
     keys.reduce(
@@ -55,7 +62,7 @@ class TasteMatching {
         [key]: this.computedData[key],
       }),
       {}
-    );
+  );
 
   set = (data) => {
     this.computedData = {
@@ -77,8 +84,22 @@ class TasteMatching {
 
     this.element.$secondClassPanel.addEventListener(
       "click",
-      this.secondIngredientClickHandler
+      this.secondIngredientClickHandler,
     );
+
+    this.element.$productDialog.addEventListener('hide', event => {
+      this.element.$productLoading.classList.remove('hide');
+      this.element.$productTable.classList.add('hide');   
+      window.clearTimeout(this.timer.productLoading);    
+    })
+
+    this.element.$productDialog.addEventListener('show', event => {
+      this.timer.productLoading = window.setTimeout(() => {
+        this.element.$productLoading.classList.add('hide');
+        this.element.$productTable.classList.remove('hide');
+      }, 2000)         
+    })
+
   };
 
   dateChangeHandler(dateRange) {
@@ -133,46 +154,54 @@ class TasteMatching {
         });
         this.getSecondClassificationIngredient();
         this.renderSecondClassificationIngredient(activeEle.dataset.name);
+        this.element.$secondClassPanel.scrollIntoView({behavior: 'smooth'});
       }
     }
   };
 
   secondIngredientClickHandler = (e) => {
-    const activeEle = e.target;
+    let activeEle = e.target;
+    const isTagChild = ['ingredientText','ingredientHeat'].includes(activeEle.id);
+    activeEle = isTagChild ? activeEle.parentNode : activeEle;
     // 标签点击
     if (
-      activeEle.classList.contains("ingredient-item") &&
-      !activeEle.classList.contains("second-ingredient-item-selected")
+      activeEle.classList.contains("ingredient-item")
     ) {
-      const currentSelectedItem = document.querySelector(
-        ".second-ingredient-item-selected"
-      );
-      if (currentSelectedItem) {
-        currentSelectedItem.classList.replace(
-          "second-ingredient-item-selected",
-          "second-ingredient-item"
+    
+      if(!activeEle.classList.contains("second-ingredient-item-selected")){
+        const currentSelectedItem = document.querySelector(
+          ".second-ingredient-item-selected"
         );
+        if (currentSelectedItem) {
+          currentSelectedItem.classList.replace(
+            "second-ingredient-item-selected",
+            "second-ingredient-item"
+          );
+        }
+        const nextSelectedItem = document.querySelector(
+          `.second-panel [data-name=${activeEle.dataset.name}]`
+        );
+        if (nextSelectedItem) {
+          nextSelectedItem.classList.replace(
+            "second-ingredient-item",
+            "second-ingredient-item-selected"
+          );
+          this.set({
+            selectedSecondIngredient: activeEle.dataset.name,
+          });
+          const { selectedFirstIngredient } = this.get("selectedFirstIngredient");
+  
+          const productList = this.computeProduction(
+            selectedFirstIngredient,
+            activeEle.dataset.name
+          );
+  
+          this.loadProductList(productList);
+        }
+      } else {
+        this.element.$productDialog.show();
       }
-      const nextSelectedItem = document.querySelector(
-        `.second-panel [data-name=${activeEle.dataset.name}]`
-      );
-      if (nextSelectedItem) {
-        nextSelectedItem.classList.replace(
-          "second-ingredient-item",
-          "second-ingredient-item-selected"
-        );
-        this.set({
-          selectedSecondIngredient: activeEle.dataset.name,
-        });
-        const { selectedFirstIngredient } = this.get("selectedFirstIngredient");
-
-        const productList = this.computeProduction(
-          selectedFirstIngredient,
-          activeEle.dataset.name
-        );
-
-        this.loadProductList(productList);
-      }
+      
     }
   };
 
@@ -282,8 +311,6 @@ class TasteMatching {
       }
     }
 
-    console.log(uniqueProductBrandIngredientList, secondIngredientCountMap);
-
     // 获取二级创新成分分类:二级创新成分映射关系
     const secondClassificationIngredientListMap = new Map();
 
@@ -384,7 +411,6 @@ class TasteMatching {
     const secondIngredientList = currentData
       .filter((data) => data["加工后成分"] === secondIngredient)
       .map((data) => data["品牌-产品名称-原料构成"]);
-    console.log(firstIngredientList, secondIngredientList);
     const intersectionList = firstIngredientList.filter((item) =>
       secondIngredientList.includes(item)
     );
@@ -393,6 +419,7 @@ class TasteMatching {
   };
 
   loadProductList = (productList) => {
+    this.element.$productTbody.innerHTML = null;
     const tbodyFragment = document.createDocumentFragment();
     productList.forEach((item) => {
       const tr = document.createElement("tr");
@@ -405,7 +432,6 @@ class TasteMatching {
     });
 
     this.element.$productTbody.appendChild(tbodyFragment);
-    this.element.$productDialog.params.buttons = [];
 
     this.element.$productDialog.show();
   };
@@ -451,7 +477,7 @@ class PanelItem {
             ? `${type}-ingredient-item-selected`
             : `${type}-ingredient-item`
         }`;
-        ingredientItem.innerHTML = `<span>${ingredient}</span> <span>${count}°</span>`;
+        ingredientItem.innerHTML = `<span id="ingredientText" >${ingredient}</span> <span id="ingredientHeat">${count}°</span>`;
         panelFragment.appendChild(ingredientItem);
       });
     }

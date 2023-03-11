@@ -32,6 +32,17 @@ body{
     margin: 12px 24px;
 }
 
+.search-container{
+    display: flex;
+    align-items: center;
+    margin: 36px 24px 24px;
+    font-size: 14px;
+}
+
+.search-label{
+    margin: 0 10px 0 0;
+}
+
 #firstClassPanel, #secondClassPanel{
     display: flex;
     height: 410px;
@@ -144,6 +155,7 @@ body{
    margin: 0 12px 12px 0;
 }
 
+
 .first-ingredient-item {
     color: var(--color-primary-blue);
     border: 1px solid var(--color-primary-blue);
@@ -182,6 +194,15 @@ body{
     background-color: var(--ui-green);
 }
 
-.productSuggestion{
+#productDialog .ui-dialog-body{
+    max-height: 400px;
+    overflow-y: auto;
+}
 
+#productDialog .ui-dialog-body::-webkit-scrollbar {
+    display: block;
+}
+
+#productTbody{
+    font-family:MicrosoftYaHei
 }
