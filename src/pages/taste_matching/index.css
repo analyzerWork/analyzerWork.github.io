@@ -34,7 +34,7 @@ body{
 
 #firstClassPanel, #secondClassPanel{
     display: flex;
-    height: 390px;
+    height: 410px;
     margin: 0 24px;
     padding: 10px 16px 16px;
     border-radius: 4px;
@@ -84,6 +84,9 @@ body{
     overflow-y: overlay;
 }
 
+.second-ingredient-wrapper{
+    display: block;
+}
 .panel ::-webkit-scrollbar {
     display: block;
 }
@@ -157,6 +160,10 @@ body{
 }
 
 .second-ingredient-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 200px;
     color: var(--ui-green);
     border: 1px solid var(--ui-green);
 }
@@ -167,6 +174,14 @@ body{
 }
 
 .second-ingredient-item-selected {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 200px;
     color: var(--color-primary-white);
     background-color: var(--ui-green);
+}
+
+.productSuggestion{
+
 }

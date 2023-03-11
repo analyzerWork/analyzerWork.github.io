@@ -1,6 +1,7 @@
 class TasteMatching {
   data = [];
   computedData = {
+    currentData: [],
     firstClassification: [],
     firstClassificationIngredientMap: new Map(),
     startIndex: 0,
@@ -10,11 +11,21 @@ class TasteMatching {
     selectedFirstIngredient: "",
     selectedSecondIngredient: "",
   };
+  classificationPriorityMap = new Map([
+    ["果味", 6],
+    ["茶底", 5],
+    ["花香", 4],
+    ["其他口味", 3],
+    ["乳基底", 2],
+    ["小料", 1],
+  ]);
   element = {
     $datePicker: document.querySelector("#taste-matching-date-picker"),
     $firstClassPanel: document.querySelector("#firstClassPanel"),
     $secondClassPanel: document.querySelector("#secondClassPanel"),
     $secondPanel: document.querySelector(".second-class-section"),
+    $productDialog: document.querySelector("#productDialog"),
+    $productTbody: document.querySelector("#productTbody"),
   };
   constructor(initData) {
     this.init(initData);
@@ -28,9 +39,10 @@ class TasteMatching {
     this.element.$datePicker.value = `${lastDate} 至 ${lastDate}`;
     this.element.$datePicker.min = dateRange[0];
     this.element.$datePicker.max = lastDate;
+    const startIndex = this.data.findIndex((d) => d["月份"] === lastDate);
+    const endIndex = this.data.findLastIndex((d) => d["月份"] === lastDate);
     this.set({
-      startIndex: this.data.findIndex((d) => d["月份"] === lastDate),
-      endIndex: this.data.findLastIndex((d) => d["月份"] === lastDate),
+      currentData: this.data.slice(startIndex, endIndex),
     });
     this.getFirstClassificationIngredient(0, this.data.length - 1);
     this.renderFirstClassificationIngredient();
@@ -73,11 +85,10 @@ class TasteMatching {
     const [startDate, endDate] = dateRange
       .split("至")
       .map((value) => value.trim());
-    const startDateIndex = this.data.findIndex((d) => d["月份"] === startDate);
-    const endDateIndex = this.data.findLastIndex((d) => d["月份"] === endDate);
+    const startIndex = this.data.findIndex((d) => d["月份"] === startDate);
+    const endIndex = this.data.findLastIndex((d) => d["月份"] === endDate);
     this.set({
-      startIndex: startDateIndex,
-      endIndex: endDateIndex,
+      currentData: this.data.slice(startIndex, endIndex),
     });
     // 清除已选
     this.set({
@@ -153,23 +164,26 @@ class TasteMatching {
         this.set({
           selectedSecondIngredient: activeEle.dataset.name,
         });
-        const { selectedFirstIngredient } = this.get('selectedFirstIngredient');
+        const { selectedFirstIngredient } = this.get("selectedFirstIngredient");
 
-        
+        const productList = this.computeProduction(
+          selectedFirstIngredient,
+          activeEle.dataset.name
+        );
+
+        this.loadProductList(productList);
       }
     }
   };
 
   getFirstClassificationIngredient = () => {
-    const { startIndex, endIndex } = this.get("startIndex", "endIndex");
+    const { currentData } = this.get("currentData");
     const firstClassification = [
-      ...new Set(
-        this.data.slice(startIndex, endIndex).map((item) => item["成分分类"])
-      ),
+      ...new Set(currentData.map((item) => item["成分分类"])),
     ];
     const firstClassificationIngredientMap = new Map();
 
-    this.data.slice(startIndex, endIndex).forEach((item) => {
+    currentData.forEach((item) => {
       if (firstClassificationIngredientMap.has(item["成分分类"])) {
         firstClassificationIngredientMap.set(
           item["成分分类"],
@@ -197,26 +211,25 @@ class TasteMatching {
 
   renderFirstClassificationIngredient = (selectedIngredient) => {
     const { firstClassificationIngredientMap } = this.get(
-      "firstClassification",
       "firstClassificationIngredientMap"
     );
     const firstPanelFragment = document.createDocumentFragment();
-    // '其他口味'的索引
     const firstClassificationIngredientArray = [
       ...firstClassificationIngredientMap,
-    ];
-    const otherIndex = firstClassificationIngredientArray.findIndex(
-      ([key]) => key === "其他口味"
-    );
-    const resortFirstClassificationIngredient = [
-      ...firstClassificationIngredientArray.slice(0, otherIndex),
-      ...firstClassificationIngredientArray.slice(otherIndex + 1),
-      firstClassificationIngredientArray[otherIndex],
-    ];
-    for (let [
+    ].map(([classification, ingredientList]) => ({
       classification,
       ingredientList,
-    ] of resortFirstClassificationIngredient) {
+      priority: this.classificationPriorityMap.get(classification),
+    }));
+
+    const resortFirstClassificationIngredient =
+      firstClassificationIngredientArray
+        .sort((a, b) => b.priority - a.priority)
+        .filter(({ classification }) => classification !== "小料");
+    for (let {
+      classification,
+      ingredientList,
+    } of resortFirstClassificationIngredient) {
       const panelItemInstance = new PanelItem({
         type: "first",
         classification,
@@ -229,15 +242,16 @@ class TasteMatching {
   };
 
   getSecondClassificationIngredient = () => {
-    const { startIndex, endIndex, selectedFirstIngredient } = this.get(
-      "startIndex",
-      "endIndex",
+    const { currentData, selectedFirstIngredient } = this.get(
+      "currentData",
       "selectedFirstIngredient"
     );
-
-    const currentData = this.data.slice(startIndex, endIndex);
     const uniqueProductBrandIngredientList = [
-      ...new Set(currentData.map((item) => item["品牌-产品名称-原料构成"])),
+      ...new Set(
+        currentData
+          .filter((data) => data["加工后成分"] === selectedFirstIngredient)
+          .map((item) => item["品牌-产品名称-原料构成"])
+      ),
     ];
 
     // 二级成分:出现次数映射关系
@@ -267,6 +281,8 @@ class TasteMatching {
         }
       }
     }
+
+    console.log(uniqueProductBrandIngredientList, secondIngredientCountMap);
 
     // 获取二级创新成分分类:二级创新成分映射关系
     const secondClassificationIngredientListMap = new Map();
@@ -299,28 +315,25 @@ class TasteMatching {
   };
 
   renderSecondClassificationIngredient = () => {
-    const {
-      secondIngredientCountMap,
-      secondClassificationIngredientListMap,
-      selectedSecondIngredient,
-    } = this.get(
-      "secondIngredientCountMap",
-      "secondClassificationIngredientListMap",
-      "selectedSecondIngredient"
-    );
+    const { secondClassificationIngredientListMap, selectedSecondIngredient } =
+      this.get(
+        "secondClassificationIngredientListMap",
+        "selectedSecondIngredient"
+      );
     const secondPanelFragment = document.createDocumentFragment();
     // '其他口味'的索引
     const secondClassificationIngredientArray = [
       ...secondClassificationIngredientListMap,
-    ];
-    const otherIndex = secondClassificationIngredientArray.findIndex(
-      ([key]) => key === "其他口味"
-    );
-    const resortSecondClassificationIngredient = [
-      ...secondClassificationIngredientArray.slice(0, otherIndex),
-      ...secondClassificationIngredientArray.slice(otherIndex + 1),
-      secondClassificationIngredientArray[otherIndex],
-    ];
+    ].map(([classification, ingredientList]) => ({
+      classification,
+      ingredientList,
+      priority: this.classificationPriorityMap.get(classification),
+    }));
+
+    const resortSecondClassificationIngredient =
+      secondClassificationIngredientArray.sort(
+        (a, b) => b.priority - a.priority
+      );
 
     const secondClassificationWithCount =
       this.getClassificationIngredientListTopN(
@@ -335,7 +348,7 @@ class TasteMatching {
       const panelItemInstance = new PanelItem({
         type: "second",
         classification,
-        ingredientList:ingredientListWithCount,
+        ingredientList: ingredientListWithCount,
         selectedSecondIngredient,
       });
       secondPanelFragment.appendChild(panelItemInstance.produce());
@@ -350,7 +363,7 @@ class TasteMatching {
     const { secondIngredientCountMap } = this.get("secondIngredientCountMap");
 
     return resortSecondClassificationIngredient.map(
-      ([classification, ingredientList]) => ({
+      ({ classification, ingredientList }) => ({
         classification,
         ingredientListWithCount: ingredientList
           .map((ingredient) => ({
@@ -361,6 +374,40 @@ class TasteMatching {
           .slice(0, n),
       })
     );
+  };
+
+  computeProduction = (firstIngredient, secondIngredient) => {
+    const { currentData } = this.get("currentData");
+    const firstIngredientList = currentData
+      .filter((data) => data["加工后成分"] === firstIngredient)
+      .map((data) => data["品牌-产品名称-原料构成"]);
+    const secondIngredientList = currentData
+      .filter((data) => data["加工后成分"] === secondIngredient)
+      .map((data) => data["品牌-产品名称-原料构成"]);
+    console.log(firstIngredientList, secondIngredientList);
+    const intersectionList = firstIngredientList.filter((item) =>
+      secondIngredientList.includes(item)
+    );
+
+    return [...new Set(intersectionList)];
+  };
+
+  loadProductList = (productList) => {
+    const tbodyFragment = document.createDocumentFragment();
+    productList.forEach((item) => {
+      const tr = document.createElement("tr");
+      item.split("-").forEach((value) => {
+        const td = document.createElement("td");
+        td.innerHTML = value;
+        tr.appendChild(td);
+      });
+      tbodyFragment.appendChild(tr);
+    });
+
+    this.element.$productTbody.appendChild(tbodyFragment);
+    this.element.$productDialog.params.buttons = [];
+
+    this.element.$productDialog.show();
   };
 }
 
@@ -404,7 +451,7 @@ class PanelItem {
             ? `${type}-ingredient-item-selected`
             : `${type}-ingredient-item`
         }`;
-        ingredientItem.innerHTML = `${ingredient} | ${count}°`;
+        ingredientItem.innerHTML = `<span>${ingredient}</span> <span>${count}°</span>`;
         panelFragment.appendChild(ingredientItem);
       });
     }

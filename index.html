@@ -27,8 +27,7 @@
         <nav>
             <ul class="nav" id="nav">
                 <template id="navTemplate" rule="v-">
-                    <li v-for="route in CONFIG.routes" class="menu-item default-menu"
-                        data-menu='${route.pathname}'>
+                    <li v-for="route in CONFIG.routes" class="menu-item default-menu" data-menu='${route.pathname}'>
                         <span class='menu-icon ${route.pathname}'></span>
                         <span>${route.name}</span>
                     </li>
