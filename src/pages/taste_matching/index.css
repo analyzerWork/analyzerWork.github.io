@@ -206,3 +206,15 @@ body{
 #productTbody{
     font-family:MicrosoftYaHei
 }
+
+.empty-content{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#emptyText{
+    margin: 20px 0 0;
+}

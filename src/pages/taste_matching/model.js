@@ -10,6 +10,9 @@ class TasteMatching {
     secondClassificationIngredientListMap: new Map(),
     selectedFirstIngredient: "",
     selectedSecondIngredient: "",
+    productList:[],
+    searchValue: '',
+    searchFlag: false
   };
   classificationPriorityMap = new Map([
     ["果味", 6],
@@ -28,6 +31,8 @@ class TasteMatching {
     $productTbody: document.querySelector("#productTbody"),
     $productLoading: document.querySelector("#productLoading"),
     $productTable: document.querySelector("#productTable"),
+    $ingredintSearch: document.querySelector("#ingredintSearch"),
+    $emptySection: document.querySelector("#emptySection"),
   };
   timer = {};
   constructor(initData) {
@@ -47,8 +52,10 @@ class TasteMatching {
     this.set({
       currentData: this.data.slice(startIndex, endIndex),
     });
-    this.getFirstClassificationIngredient(0, this.data.length - 1);
-    this.renderFirstClassificationIngredient();
+    const shouldRender = this.getFirstClassificationIngredient();
+    if(shouldRender){
+      this.renderFirstClassificationIngredient();
+    }
     this.element.$productDialog.setParams({
       buttons: [],
     });
@@ -87,22 +94,52 @@ class TasteMatching {
       this.secondIngredientClickHandler,
     );
 
-    this.element.$productDialog.addEventListener('hide', event => {
-      this.element.$productLoading.classList.remove('hide');
-      this.element.$productTable.classList.add('hide');   
-      window.clearTimeout(this.timer.productLoading);    
-    })
+    this.element.$productDialog.addEventListener('hide', this.productDialogHideHandler);
 
-    this.element.$productDialog.addEventListener('show', event => {
-      this.timer.productLoading = window.setTimeout(() => {
-        this.element.$productLoading.classList.add('hide');
-        this.element.$productTable.classList.remove('hide');
-      }, 2000)         
-    })
+    this.element.$productDialog.addEventListener('show', this.productDialogShowHandler);
+
+    this.element.$ingredintSearch.addEventListener('change', this.ingredientSearchChangeHandler);
+
+    this.element.$ingredintSearch.addEventListener('keyup', this.ingredientOnSearchHandler)
 
   };
 
+  productDialogHideHandler = () => {
+    this.element.$productLoading.classList.remove('hide');
+    this.element.$productTable.classList.add('hide');   
+    window.clearTimeout(this.timer.productLoading);    
+  }
+
+  productDialogShowHandler = () => {
+    const { productList } = this.get('productList');
+    this.timer.productLoading = window.setTimeout(() => {
+      this.element.$productLoading.classList.add('hide');
+      this.element.$productTable.classList.remove('hide');
+    }, productList.length > 10 ? 4000 : 2000)  
+  }
+
+
+  ingredientSearchChangeHandler = (e) => {
+    this.set({
+      searchValue:e.target.value.trim(),
+      searchFlag: false,
+    });
+
+    if(e.target.value === ''){
+      this.handleFirstClassificationRender('')
+    }
+  }
+
+  ingredientOnSearchHandler = (e) => {
+    const { searchValue,searchFlag } = this.get('searchValue','searchFlag');
+  
+    if(e.key === 'Enter' && !searchFlag) {
+      this.handleFirstClassificationRender(searchValue);
+    }
+  }
+
   dateChangeHandler(dateRange) {
+    const { searchValue } = this.get('searchValue')
     const [startDate, endDate] = dateRange
       .split("至")
       .map((value) => value.trim());
@@ -118,8 +155,21 @@ class TasteMatching {
     });
     // 隐藏二级
     this.element.$secondPanel.classList.add("hide");
-    this.getFirstClassificationIngredient();
-    this.renderFirstClassificationIngredient();
+    // 重新渲染一级
+    this.handleFirstClassificationRender(searchValue);
+  }
+
+  handleFirstClassificationRender = (searchValue) => {
+    const shouldRender = this.getFirstClassificationIngredient(searchValue);
+    this.element.$firstClassPanel.innerHTML = null;
+    if(shouldRender) {
+      this.renderFirstClassificationIngredient();
+    } else {
+      this.element.$firstClassPanel.appendChild(this.element.$emptySection.content.cloneNode(true));
+      document.querySelector("#emptyText").innerHTML = '暂无搜索结果，请重新输入关键词';
+    }
+
+    this.set({'searchFlag':true})
   }
 
   firstIngredientClickHandler = (e) => {
@@ -195,6 +245,10 @@ class TasteMatching {
             selectedFirstIngredient,
             activeEle.dataset.name
           );
+
+          this.set({
+            productList,
+          });
   
           this.loadProductList(productList);
         }
@@ -205,14 +259,20 @@ class TasteMatching {
     }
   };
 
-  getFirstClassificationIngredient = () => {
+  getFirstClassificationIngredient = (searchKey) => {
     const { currentData } = this.get("currentData");
-    const firstClassification = [
-      ...new Set(currentData.map((item) => item["成分分类"])),
-    ];
+    // const firstClassification = [
+    //   ...new Set(currentData.map((item) => item["成分分类"])),
+    // ];
     const firstClassificationIngredientMap = new Map();
 
-    currentData.forEach((item) => {
+    const filterData = !!searchKey ? currentData.filter((data)=>data['加工后成分'].includes(searchKey)) : currentData;
+
+    if(filterData.length === 0) {
+      return false;
+    }
+
+    filterData.forEach((item) => {
       if (firstClassificationIngredientMap.has(item["成分分类"])) {
         firstClassificationIngredientMap.set(
           item["成分分类"],
@@ -233,9 +293,10 @@ class TasteMatching {
     }
 
     this.set({
-      firstClassification,
       firstClassificationIngredientMap,
     });
+
+    return true;
   };
 
   renderFirstClassificationIngredient = (selectedIngredient) => {
@@ -420,18 +481,24 @@ class TasteMatching {
 
   loadProductList = (productList) => {
     this.element.$productTbody.innerHTML = null;
-    const tbodyFragment = document.createDocumentFragment();
-    productList.forEach((item) => {
-      const tr = document.createElement("tr");
-      item.split("-").forEach((value) => {
-        const td = document.createElement("td");
-        td.innerHTML = value;
-        tr.appendChild(td);
+    if (productList.length === 0) {
+      this.element.$productTbody.appendChild(this.element.$emptySection.content.cloneNode(true));
+      document.querySelector("#emptyText").innerHTML = '暂无示例结果';
+    } else {
+      const tbodyFragment = document.createDocumentFragment();
+      productList.forEach((item) => {
+        const tr = document.createElement("tr");
+        item.split("-").forEach((value) => {
+          const td = document.createElement("td");
+          td.innerHTML = value;
+          tr.appendChild(td);
+        });
+        tbodyFragment.appendChild(tr);
       });
-      tbodyFragment.appendChild(tr);
-    });
-
-    this.element.$productTbody.appendChild(tbodyFragment);
+  
+      this.element.$productTbody.appendChild(tbodyFragment);
+    }
+    
 
     this.element.$productDialog.show();
   };
