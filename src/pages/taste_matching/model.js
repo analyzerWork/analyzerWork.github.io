@@ -115,7 +115,7 @@ class TasteMatching {
     this.timer.productLoading = window.setTimeout(() => {
       this.element.$productLoading.classList.add('hide');
       this.element.$productTable.classList.remove('hide');
-    }, productList.length > 10 ? 4000 : 2000)  
+    }, productList.length > 10 ? 3000 : 1500)  
   }
 
 
