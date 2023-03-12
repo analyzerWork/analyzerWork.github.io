@@ -1,3 +1,4 @@
+
 import os
 import sys
 
@@ -9,6 +10,7 @@ sys.path.append(
 
 from py_package.utils import message
 
+print(pd.__version__)
 
 class TasteMatching:
 
@@ -20,7 +22,7 @@ class TasteMatching:
         if self.opions.get('isDataTransfer') == True:
             self.transToJSON()
 
-        self.data = self.get_data()
+        # self.data = self.get_data()
 
     # 读取原始数据,转换为json格式
     def transToJSON(self):
