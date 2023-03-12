@@ -51,7 +51,7 @@ body{
     border-radius: 4px;
 }
 #firstClassPanel{
-    border: 1px solid var(--color-primary-blue)
+    padding: 0;
 }
 
 #secondClassPanel{
@@ -68,6 +68,16 @@ body{
    flex: 1;
 }
 
+.first-panel{
+    border: 1px solid var(--color-primary-blue);
+    border-radius: 4px;
+    padding: 10px;
+    margin: 0 16px 0 0;
+}
+
+.first-panel:last-child{
+    margin: 0;
+}
 
 .pannel-title-container{
     display: flex;
@@ -93,6 +103,10 @@ body{
     flex-wrap: wrap;
     margin: 0 16px 0 0;
     overflow-y: overlay;
+}
+
+.first-ingredient-wrapper{
+    margin: 0;
 }
 
 .second-ingredient-wrapper{
@@ -217,4 +231,8 @@ body{
 
 #emptyText{
     margin: 20px 0 0;
+}
+
+.has-selected-ingredient{
+    color: var(--ui-red);
 }

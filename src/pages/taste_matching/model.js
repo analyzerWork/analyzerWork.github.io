@@ -3,6 +3,7 @@ class TasteMatching {
   computedData = {
     currentData: [],
     firstClassification: [],
+    firstIngredientCountMap: new Map(),
     firstClassificationIngredientMap: new Map(),
     startIndex: 0,
     endIndex: 0,
@@ -10,9 +11,9 @@ class TasteMatching {
     secondClassificationIngredientListMap: new Map(),
     selectedFirstIngredient: "",
     selectedSecondIngredient: "",
-    productList:[],
-    searchValue: '',
-    searchFlag: false
+    productList: [],
+    searchValue: "",
+    searchFlag: false,
   };
   classificationPriorityMap = new Map([
     ["果味", 6],
@@ -53,14 +54,13 @@ class TasteMatching {
       currentData: this.data.slice(startIndex, endIndex),
     });
     const shouldRender = this.getFirstClassificationIngredient();
-    if(shouldRender){
+    if (shouldRender) {
       this.renderFirstClassificationIngredient();
     }
     this.element.$productDialog.setParams({
       buttons: [],
     });
   };
-
 
   get = (...keys) =>
     keys.reduce(
@@ -69,7 +69,7 @@ class TasteMatching {
         [key]: this.computedData[key],
       }),
       {}
-  );
+    );
 
   set = (data) => {
     this.computedData = {
@@ -91,55 +91,68 @@ class TasteMatching {
 
     this.element.$secondClassPanel.addEventListener(
       "click",
-      this.secondIngredientClickHandler,
+      this.secondIngredientClickHandler
     );
 
-    this.element.$productDialog.addEventListener('hide', this.productDialogHideHandler);
+    this.element.$productDialog.addEventListener(
+      "hide",
+      this.productDialogHideHandler
+    );
 
-    this.element.$productDialog.addEventListener('show', this.productDialogShowHandler);
+    this.element.$productDialog.addEventListener(
+      "show",
+      this.productDialogShowHandler
+    );
 
-    this.element.$ingredintSearch.addEventListener('change', this.ingredientSearchChangeHandler);
+    this.element.$ingredintSearch.addEventListener(
+      "change",
+      this.ingredientSearchChangeHandler
+    );
 
-    this.element.$ingredintSearch.addEventListener('keyup', this.ingredientOnSearchHandler)
-
+    this.element.$ingredintSearch.addEventListener(
+      "keyup",
+      this.ingredientOnSearchHandler
+    );
   };
 
   productDialogHideHandler = () => {
-    this.element.$productLoading.classList.remove('hide');
-    this.element.$productTable.classList.add('hide');   
-    window.clearTimeout(this.timer.productLoading);    
-  }
+    this.element.$productLoading.classList.remove("hide");
+    this.element.$productTable.classList.add("hide");
+    window.clearTimeout(this.timer.productLoading);
+  };
 
   productDialogShowHandler = () => {
-    const { productList } = this.get('productList');
-    this.timer.productLoading = window.setTimeout(() => {
-      this.element.$productLoading.classList.add('hide');
-      this.element.$productTable.classList.remove('hide');
-    }, productList.length > 10 ? 3000 : 1500)  
-  }
-
+    const { productList } = this.get("productList");
+    this.timer.productLoading = window.setTimeout(
+      () => {
+        this.element.$productLoading.classList.add("hide");
+        this.element.$productTable.classList.remove("hide");
+      },
+      productList.length > 10 ? 3000 : 1500
+    );
+  };
 
   ingredientSearchChangeHandler = (e) => {
     this.set({
-      searchValue:e.target.value.trim(),
+      searchValue: e.target.value.trim(),
       searchFlag: false,
     });
 
-    if(e.target.value === ''){
-      this.handleFirstClassificationRender('')
+    if (e.target.value === "") {
+      this.handleFirstClassificationRender("");
     }
-  }
+  };
 
   ingredientOnSearchHandler = (e) => {
-    const { searchValue,searchFlag } = this.get('searchValue','searchFlag');
-  
-    if(e.key === 'Enter' && !searchFlag) {
+    const { searchValue, searchFlag } = this.get("searchValue", "searchFlag");
+
+    if (e.key === "Enter" && !searchFlag) {
       this.handleFirstClassificationRender(searchValue);
     }
-  }
+  };
 
   dateChangeHandler(dateRange) {
-    const { searchValue } = this.get('searchValue')
+    const { searchValue } = this.get("searchValue");
     const [startDate, endDate] = dateRange
       .split("至")
       .map((value) => value.trim());
@@ -162,15 +175,18 @@ class TasteMatching {
   handleFirstClassificationRender = (searchValue) => {
     const shouldRender = this.getFirstClassificationIngredient(searchValue);
     this.element.$firstClassPanel.innerHTML = null;
-    if(shouldRender) {
+    if (shouldRender) {
       this.renderFirstClassificationIngredient();
     } else {
-      this.element.$firstClassPanel.appendChild(this.element.$emptySection.content.cloneNode(true));
-      document.querySelector("#emptyText").innerHTML = '暂无搜索结果，请重新输入关键词';
+      this.element.$firstClassPanel.appendChild(
+        this.element.$emptySection.content.cloneNode(true)
+      );
+      document.querySelector("#emptyText").innerHTML =
+        "暂无搜索结果，请重新输入关键词";
     }
 
-    this.set({'searchFlag':true})
-  }
+    this.set({ searchFlag: true });
+  };
 
   firstIngredientClickHandler = (e) => {
     const activeEle = e.target;
@@ -204,21 +220,20 @@ class TasteMatching {
         });
         this.getSecondClassificationIngredient();
         this.renderSecondClassificationIngredient(activeEle.dataset.name);
-        this.element.$secondClassPanel.scrollIntoView({behavior: 'smooth'});
+        this.element.$secondClassPanel.scrollIntoView({ behavior: "smooth" });
       }
     }
   };
 
   secondIngredientClickHandler = (e) => {
     let activeEle = e.target;
-    const isTagChild = ['ingredientText','ingredientHeat'].includes(activeEle.id);
+    const isTagChild = ["ingredientText", "ingredientHeat"].includes(
+      activeEle.id
+    );
     activeEle = isTagChild ? activeEle.parentNode : activeEle;
     // 标签点击
-    if (
-      activeEle.classList.contains("ingredient-item")
-    ) {
-    
-      if(!activeEle.classList.contains("second-ingredient-item-selected")){
+    if (activeEle.classList.contains("ingredient-item")) {
+      if (!activeEle.classList.contains("second-ingredient-item-selected")) {
         const currentSelectedItem = document.querySelector(
           ".second-ingredient-item-selected"
         );
@@ -239,8 +254,10 @@ class TasteMatching {
           this.set({
             selectedSecondIngredient: activeEle.dataset.name,
           });
-          const { selectedFirstIngredient } = this.get("selectedFirstIngredient");
-  
+          const { selectedFirstIngredient } = this.get(
+            "selectedFirstIngredient"
+          );
+
           const productList = this.computeProduction(
             selectedFirstIngredient,
             activeEle.dataset.name
@@ -249,13 +266,12 @@ class TasteMatching {
           this.set({
             productList,
           });
-  
+
           this.loadProductList(productList);
         }
       } else {
         this.element.$productDialog.show();
       }
-      
     }
   };
 
@@ -264,26 +280,45 @@ class TasteMatching {
     // const firstClassification = [
     //   ...new Set(currentData.map((item) => item["成分分类"])),
     // ];
+
+    const firstIngredientCountMap = new Map();
+
     const firstClassificationIngredientMap = new Map();
 
-    const filterData = !!searchKey ? currentData.filter((data)=>data['加工后成分'].includes(searchKey)) : currentData;
+    const filterData = !!searchKey
+      ? currentData.filter((data) => data["加工后成分"].includes(searchKey))
+      : currentData;
 
-    if(filterData.length === 0) {
+    if (filterData.length === 0) {
       return false;
     }
 
     filterData.forEach((item) => {
-      if (firstClassificationIngredientMap.has(item["成分分类"])) {
+      const key = item["加工后成分"];
+      if (firstIngredientCountMap.has(key)) {
+        firstIngredientCountMap.set(key, firstIngredientCountMap.get(key) + 1);
+      } else {
+        firstIngredientCountMap.set(key, 1);
+      }
+    });
+
+    const sortedData = filterData
+      .map((item) => ({
+        ...item,
+        count: firstIngredientCountMap.get(item["加工后成分"]),
+      }))
+      .sort((a, b) => b.count - a.count);
+
+    sortedData.forEach((item) => {
+      const key = item["成分分类"];
+      const value = item["加工后成分"];
+      if (firstClassificationIngredientMap.has(key)) {
         firstClassificationIngredientMap.set(
-          item["成分分类"],
-          firstClassificationIngredientMap
-            .get(item["成分分类"])
-            .concat(item["加工后成分"])
+          key,
+          firstClassificationIngredientMap.get(key).concat(value)
         );
       } else {
-        firstClassificationIngredientMap.set(item["成分分类"], [
-          item["加工后成分"],
-        ]);
+        firstClassificationIngredientMap.set(key, [value]);
       }
     });
 
@@ -294,15 +329,15 @@ class TasteMatching {
 
     this.set({
       firstClassificationIngredientMap,
+      firstIngredientCountMap,
     });
 
     return true;
   };
 
   renderFirstClassificationIngredient = (selectedIngredient) => {
-    const { firstClassificationIngredientMap } = this.get(
-      "firstClassificationIngredientMap"
-    );
+    const { firstClassificationIngredientMap, firstIngredientCountMap } =
+      this.get("firstClassificationIngredientMap", "firstIngredientCountMap");
     const firstPanelFragment = document.createDocumentFragment();
     const firstClassificationIngredientArray = [
       ...firstClassificationIngredientMap,
@@ -325,6 +360,7 @@ class TasteMatching {
         classification,
         ingredientList,
         selectedIngredient,
+        firstIngredientCountMap,
       });
       firstPanelFragment.appendChild(panelItemInstance.produce());
     }
@@ -480,10 +516,16 @@ class TasteMatching {
   };
 
   loadProductList = (productList) => {
+    const { selectedFirstIngredient, selectedSecondIngredient } = this.get(
+      "selectedFirstIngredient",
+      "selectedSecondIngredient"
+    );
     this.element.$productTbody.innerHTML = null;
     if (productList.length === 0) {
-      this.element.$productTbody.appendChild(this.element.$emptySection.content.cloneNode(true));
-      document.querySelector("#emptyText").innerHTML = '暂无示例结果';
+      this.element.$productTbody.appendChild(
+        this.element.$emptySection.content.cloneNode(true)
+      );
+      document.querySelector("#emptyText").innerHTML = "暂无示例结果";
     } else {
       const tbodyFragment = document.createDocumentFragment();
       productList.forEach((item) => {
@@ -495,21 +537,27 @@ class TasteMatching {
         });
         tbodyFragment.appendChild(tr);
       });
-  
+      this.element.$productDialog.params.title = `现制饮品搭配产品示例： <span class="has-selected-ingredient">${selectedFirstIngredient}<span> & <span class="has-selected-ingredient">${selectedSecondIngredient}</span>`;
       this.element.$productTbody.appendChild(tbodyFragment);
     }
-    
 
     this.element.$productDialog.show();
   };
 }
 
 class PanelItem {
-  constructor({ type, classification, ingredientList, selectedIngredient }) {
+  constructor({
+    type,
+    classification,
+    ingredientList,
+    selectedIngredient,
+    firstIngredientCountMap,
+  }) {
     this.type = type;
     this.classification = classification;
     this.ingredientList = ingredientList;
     this.selectedIngredient = selectedIngredient;
+    this.firstIngredientCountMap = firstIngredientCountMap;
   }
 
   produce = () => {
@@ -532,7 +580,9 @@ class PanelItem {
             ? `${type}-ingredient-item-selected`
             : `${type}-ingredient-item`
         }`;
-        ingredientItem.innerHTML = ingredient;
+        ingredientItem.innerHTML = `${ingredient} | ${this.firstIngredientCountMap.get(
+          ingredient
+        )}`;
         panelFragment.appendChild(ingredientItem);
       });
     } else if (type === "second") {
