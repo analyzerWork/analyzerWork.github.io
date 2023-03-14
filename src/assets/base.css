@@ -1,12 +1,13 @@
 
 header {
     display: flex;
+    justify-content: space-between;
     background-color: var(--color-primary-dark);
 }
 .header-content {
     display: flex;
     align-items: center;
-    width: 240px;
+    justify-content: space-between;
     padding: 12px 24px;
 }
 .logo {
@@ -21,7 +22,16 @@ header {
     font-size:32px;
     color: var(--color-primary-white);
 }
+.user-info{
+    display: flex;
+    align-items: center;
+    margin: 0 24px;
+}
 
+#user{
+    color: var(--color-primary-white);
+    margin-left: 14px;
+}
 .content-body{
     height: calc(100vh - 62px);
     display: flex;

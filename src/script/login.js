@@ -34,6 +34,7 @@ class LoginModel {
 
     if (currentUser.isAdmin || currentUser.password === password){
         new LightTip('登录成功', 'success');
+        window.localStorage.setItem('analyzer-login-user', accountValue)
         window.setTimeout(()=>{
             Utils.locateToPage()
         },1000)

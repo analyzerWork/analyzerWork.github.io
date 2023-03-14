@@ -1,8 +1,26 @@
 
 class AnalyzerModel {
+
+    element = {
+        $user: document.querySelector('#user'),
+
+    }
    
     init = () => {
+        this.setup();
         this.bind()
+    }
+
+    setup = () => {
+
+        const user = window.localStorage.getItem('analyzer-login-user');
+        const currentUser = USER_INFO.find(({name}) => name === user);
+
+        if(!user || !currentUser){
+            window.location.href = '/login.html';
+            return;
+        }
+        this.element.$user.innerHTML = user;
     }
 
     bind = () => {
@@ -10,7 +28,12 @@ class AnalyzerModel {
             this.initRenderPage()
         });
 
-        const navEle = document.querySelector('#nav');
+        window.addEventListener("unload", () => {
+            window.localStorage.removeItem('analyzer-login-user')
+        });
+        const navEle = document.querySelector('#nav')
+
+        
         navEle.addEventListener('click', (e) => this.switchMenuHandler(e,navEle))
     }
 
