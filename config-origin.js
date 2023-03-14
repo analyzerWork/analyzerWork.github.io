@@ -25,6 +25,6 @@ const USER_INFO = Object.freeze([
   },
   {
     name: "杜冰",
-    password: "dubing",
+    password: "yili1234!",
   },
 ]);

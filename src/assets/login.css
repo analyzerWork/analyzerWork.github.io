@@ -102,8 +102,13 @@ body{
 
   .login-btn{
     width: 100%;
+    background-color: rgba(19,34,122, 0.75);
+    transition: all .5;
+  }
+
+  .login-btn:hover{
     border-color: var(--color-primary-blue);
-    background-color: rgba(19,34,122, 0.8);
+    background-color: rgba(19,34,122, 0.85);
   }
 
   
