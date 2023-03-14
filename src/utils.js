@@ -1,5 +1,5 @@
 const Utils = {
-    locateToPage: (path) => {
+    locateToPage: (path = '') => {
         window.location.href = `/${path}`;
     }
 }
