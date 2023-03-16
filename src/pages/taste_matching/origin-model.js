@@ -127,6 +127,9 @@ class TasteMatching {
       () => {
         this.element.$productLoading.classList.add("hide");
         this.element.$productTable.classList.remove("hide");
+        if(productList.length > 0){
+          this.element.$productDialog.params.title += `产品示例 (共 ${productList.length} 条)`;
+        }
       },
       productList.length > 10 ? 3000 : 1500
     );
@@ -537,7 +540,7 @@ class TasteMatching {
         });
         tbodyFragment.appendChild(tr);
       });
-      this.element.$productDialog.params.title = `现制饮品搭配 <span class="has-selected-ingredient">${selectedFirstIngredient} & ${selectedSecondIngredient}</span> 产品示例 (共 ${productList.length} 条) `;
+      this.element.$productDialog.params.title = `现制饮品搭配 <span class="has-selected-ingredient">${selectedFirstIngredient} & ${selectedSecondIngredient}</span> `;
       this.element.$productTbody.appendChild(tbodyFragment);
     }
 
