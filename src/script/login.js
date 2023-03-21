@@ -1,7 +1,7 @@
 
-class LoginModel {
+class LoginModel extends Cookie {
   constructor() {
-    this.init()
+    super();
   }
   element = {
     $loginBtn: document.querySelector("#loginBtn"),
@@ -34,9 +34,9 @@ class LoginModel {
 
     if (currentUser.isAdmin || currentUser.password === password){
         new LightTip('登录成功', 'success');
-        window.localStorage.setItem('analyzer-login-user', accountValue)
+        super.set('name', currentUser.name);
         window.setTimeout(()=>{
-            Utils.locateToPage()
+          ANAlYZER_UTILS.locateToPage()
         },1000)
 
         return;
@@ -58,4 +58,5 @@ class LoginModel {
   }
 }
 
-new LoginModel().init()
+const loginInstance = new LoginModel();
+loginInstance.init()

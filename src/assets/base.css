@@ -1,4 +1,25 @@
 
+
+#waterMarkContainer{
+    min-height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+.watermark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 10001;
+    background-repeat: repeat;
+}
 header {
     display: flex;
     justify-content: space-between;
