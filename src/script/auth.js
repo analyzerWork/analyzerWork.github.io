@@ -35,7 +35,7 @@ class Cookie {
     this.cookieMap.set(key, value);
 
     const date = new Date();
-    const ms = 20/3600 * 3600 * 1000;
+    const ms = 12 * 3600 * 1000;
     date.setTime(date.getTime() + ms);
 
     document.cookie = `${key}=${encodeURIComponent(
