@@ -12,22 +12,9 @@ const VALUES = {
   },
 };
 
-
-
 const INIT_PASSWORD = "yili1234!";
 
-const ADMIN_GROUP = [
-  {
-    name: "曹海涛",
-    password: "caohaitao",
-    isAdmin: true,
-  },
-  {
-    name: "董慧",
-    password: "donghui",
-    isAdmin: true,
-  },
-];
+const ADMIN_GROUP = ["曹海涛", "董慧"];
 
 const RESEARCH_GROUP = [
   "杜冰",
@@ -37,7 +24,7 @@ const RESEARCH_GROUP = [
   "冯月婵",
   "梁喜望",
   "郑旭",
-]
+];
 
 const MARKETING_GROUP = [
   "李鹏",
@@ -51,7 +38,7 @@ const MARKETING_GROUP = [
   "谭咏琳",
   "王珊",
   "王琨",
-]
+];
 
 const RD_GROUP = [
   "温红瑞",
@@ -65,9 +52,9 @@ const RD_GROUP = [
   "郭强",
   "李岩",
   "李凤英",
-]
+];
 
-const DIRECTOR_GROUP = ["刘云俊", "李伟", "徐海军"]
+const DIRECTOR_GROUP = ["刘云俊", "李伟", "徐海军"];
 
 const SALES_GROUP = [
   "徐玉朋",
@@ -82,21 +69,29 @@ const SALES_GROUP = [
   "张报",
   "臧猛蛟",
   "郝轶",
-]
+];
 
-const OTHER_GROUP = ["郑楠", "闫志强", "李春红"]
+const OTHER_GROUP = ["郑楠", "闫志强", "李春红"];
 
+const CUSTOM_PASS_GROUP_MAP = new Map([
+  ["曹海涛", ""],
+  ["董慧", "donghui"],
+]);
+
+const ALL_USER = [
+  ...ADMIN_GROUP,
+  ...DIRECTOR_GROUP,
+  ...RESEARCH_GROUP,
+  ...MARKETING_GROUP,
+  ...RD_GROUP,
+  ...SALES_GROUP,
+  ...OTHER_GROUP,
+];
 
 const USER_INFO = Object.freeze(
-  ADMIN_GROUP.concat(
-    [...DIRECTOR_GROUP,
-    ...RESEARCH_GROUP,
-    ...MARKETING_GROUP,
-    ...RD_GROUP,
-    ...SALES_GROUP,
-    ...OTHER_GROUP].map((name) => ({
-      name,
-      password: INIT_PASSWORD,
-    }))
+  ALL_USER.map((name) =>
+    CUSTOM_PASS_GROUP_MAP.has(name)
+      ? { name, password: CUSTOM_PASS_GROUP_MAP.get(name) }
+      : { name, password: INIT_PASSWORD }
   )
 );

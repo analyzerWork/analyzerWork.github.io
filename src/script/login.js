@@ -32,7 +32,7 @@ class LoginModel extends Cookie {
         return
     }
 
-    if (currentUser.isAdmin || currentUser.password === password){
+    if (currentUser.password === password){
         new LightTip('登录成功', 'success');
         super.set('name', currentUser.name);
         window.setTimeout(()=>{
