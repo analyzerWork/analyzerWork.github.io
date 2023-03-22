@@ -23,11 +23,11 @@ class Cookie {
     const currentUser = USER_INFO.find(({ name }) => name === user);
     if (!user || !currentUser) {
         if(window.location.pathname !== "/login.html"){
-            window.location.href = "/login.html";
+          ANAlYZER_UTILS.locateToPage({path:'login.html'});
         }      
     } else {
         if(window.location.pathname === "/login.html"){
-            ANAlYZER_UTILS.locateToPage();
+            ANAlYZER_UTILS.locateToPage({type:'replace'});
         }
     }
   }

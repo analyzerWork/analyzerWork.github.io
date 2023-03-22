@@ -36,7 +36,7 @@ class LoginModel extends Cookie {
         new LightTip('登录成功', 'success');
         super.set('name', currentUser.name);
         window.setTimeout(()=>{
-          ANAlYZER_UTILS.locateToPage()
+          ANAlYZER_UTILS.locateToPage({type: 'replace'})
         },1000)
 
         return;
