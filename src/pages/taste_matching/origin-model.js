@@ -142,6 +142,7 @@ class TasteMatching {
     });
 
     if (e.target.value === "") {
+      this.element.$secondPanel.classList.add("hide");
       this.handleFirstClassificationRender("");
     }
   };
@@ -150,6 +151,8 @@ class TasteMatching {
     const { searchValue, searchFlag } = this.get("searchValue", "searchFlag");
 
     if (e.key === "Enter" && !searchFlag) {
+      this.element.$secondPanel.classList.add("hide");
+
       this.handleFirstClassificationRender(searchValue);
     }
   };
