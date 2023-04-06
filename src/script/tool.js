@@ -4,8 +4,8 @@ window.ANAlYZER_UTILS = {
         data[key] = val 
     },
     requestData(url){
-        return fetch(url).then(response => response.json()).then(data => data)
-    },
+        return fetch(url, {cache: 'no-cache'}).then(response => response.json()).then(data => data)
+      },
     locateToPage: (params) => {
         const {path = '',type = 'href'} = params;
         if(type === 'href'){
