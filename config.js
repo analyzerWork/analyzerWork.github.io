@@ -1,1 +1,98 @@
-function _0x48f6(_0x48c7e4,_0x2bab45){const _0x4175ce=_0x2303();return _0x48f6=function(_0x41bc74,_0x4a60a4){_0x41bc74=_0x41bc74-(0x697+-0x4fd*-0x7+-0x1*0x284b);let _0x430c9b=_0x4175ce[_0x41bc74];return _0x430c9b;},_0x48f6(_0x48c7e4,_0x2bab45);}function _0x2303(){const _0x1da0a0=['5900040CBkBYE','default-me','yili1234!','张永龙','taste_matc','map','test','4402208enPwal','刘云俊','4jArBUZ','韩正威','陈茜曦','谷晓青','敖宏伟','freeze','134337HWoSfv','active-men','李霄燕','李龙秀','侯文举','325622GWSBsr','闫志强','宋乐燕','get','李凤英','曹海涛','蔡桂林','李东新','138ODbHNo','donghui','李春红','李墨岚','1275052JZuLkX','耿建成','董长河','温红瑞','Todo','hing','常静娟','冯月婵','18086346bbKKVb','1657773DlJTxR','梁明珠','梁喜旺','臧猛蛟','林珍妮','徐海军','谭咏琳','口味创意搭配','包铁柱','刘祖琪','has','徐玉朋'];_0x2303=function(){return _0x1da0a0;};return _0x2303();}const _0x20620b=_0x48f6;(function(_0x3cb89e,_0x2b62e1){const _0x100892=_0x48f6,_0x92bbca=_0x3cb89e();while(!![]){try{const _0x415bb9=-parseInt(_0x100892(0x14a))/(0xf72+-0x25c7+0x1656)*(-parseInt(_0x100892(0x155))/(0xbc+-0xee1+0x1*0xe27))+parseInt(_0x100892(0x16a))/(0x329+-0x495+0x16f)+parseInt(_0x100892(0x161))/(-0x780+0x8*-0x27a+0x1b54)+parseInt(_0x100892(0x141))/(-0x1b31+0x3*-0x76d+-0x107f*-0x3)+-parseInt(_0x100892(0x15d))/(0x1*-0x23ed+0x23ee+0x5)*(parseInt(_0x100892(0x150))/(-0x59b+-0x891*-0x1+-0x2ef*0x1))+parseInt(_0x100892(0x148))/(0x2109+-0x67a+-0x1a87)+-parseInt(_0x100892(0x169))/(-0xfb7+-0x6a9*-0x1+0x917);if(_0x415bb9===_0x2b62e1)break;else _0x92bbca['push'](_0x92bbca['shift']());}catch(_0x59b016){_0x92bbca['push'](_0x92bbca['shift']());}}}(_0x2303,-0x5*-0x2cb3+0x1*-0x1ee57+0xd4b3f));const CONFIG={'routes':[{'pathname':_0x20620b(0x145)+_0x20620b(0x166),'name':_0x20620b(0x13c)},{'pathname':_0x20620b(0x147),'name':_0x20620b(0x165)}]},VALUES={'nav':{'defaultClass':_0x20620b(0x142)+'nu','activeClass':_0x20620b(0x151)+'u'}},INIT_PASSWORD=_0x20620b(0x143),ADMIN_GROUP=[_0x20620b(0x15a),'董慧'],RESEARCH_GROUP=['杜冰','孙婉',_0x20620b(0x167),_0x20620b(0x139),_0x20620b(0x168),_0x20620b(0x137),'郑旭'],MARKETING_GROUP=['李鹏',_0x20620b(0x157),_0x20620b(0x14c),_0x20620b(0x153),_0x20620b(0x16b),'王艳',_0x20620b(0x13e),_0x20620b(0x160),_0x20620b(0x13b),'王珊','王琨'],RD_GROUP=[_0x20620b(0x164),_0x20620b(0x154),'张冲','张奎','李楠',_0x20620b(0x14d),_0x20620b(0x15b),_0x20620b(0x152),'郭强','李岩',_0x20620b(0x159)],DIRECTOR_GROUP=[_0x20620b(0x149),'李伟',_0x20620b(0x13a)],SALES_GROUP=[_0x20620b(0x140),_0x20620b(0x13d),_0x20620b(0x162),_0x20620b(0x15c),_0x20620b(0x144),_0x20620b(0x14b),'朱祥',_0x20620b(0x14e),_0x20620b(0x163),'张报',_0x20620b(0x138),'郝轶'],OTHER_GROUP=['郑楠',_0x20620b(0x156),_0x20620b(0x15f)],CUSTOM_PASS_GROUP_MAP=new Map([[_0x20620b(0x15a),''],['董慧',_0x20620b(0x15e)]]),ALL_USER=[...ADMIN_GROUP,...DIRECTOR_GROUP,...RESEARCH_GROUP,...MARKETING_GROUP,...RD_GROUP,...SALES_GROUP,...OTHER_GROUP],USER_INFO=Object[_0x20620b(0x14f)](ALL_USER[_0x20620b(0x146)](_0x41bc74=>CUSTOM_PASS_GROUP_MAP[_0x20620b(0x13f)](_0x41bc74)?{'name':_0x41bc74,'password':CUSTOM_PASS_GROUP_MAP[_0x20620b(0x158)](_0x41bc74)}:{'name':_0x41bc74,'password':INIT_PASSWORD}));
+const CONFIG = {
+    routes: [
+      { pathname: "taste_matching", name: "口味创意搭配" },
+      { pathname: "test", name: "Todo" },
+    ],
+  };
+  
+  const VALUES = {
+    nav: {
+      defaultClass: "default-menu",
+      activeClass: "active-menu",
+    },
+  };
+  
+  const INIT_PASSWORD = "ly2023!";
+  
+  const ADMIN_GROUP = ["曹海涛", "董慧"];
+  
+  const RESEARCH_GROUP = [
+    "杜冰",
+    "孙婉",
+    "常静娟",
+    "林珍妮",
+    "谢玉洁",
+    "梁喜旺",
+    "郑旭",
+  ];
+  
+  const MARKETING_GROUP = [
+    "李鹏",
+    "宋乐燕",
+    "陈茜曦",
+    "李龙秀",
+    "梁明珠",
+    "王艳",
+    "文小娟",
+    "李墨岚",
+    "谭咏琳",
+    "王珊",
+    "王琨",
+  ];
+  
+  const RD_GROUP = [
+    "温红瑞",
+    "侯文举",
+    "张冲",
+    "张奎",
+    "李楠",
+    "谷晓青",
+    "蔡桂林",
+    "李霄燕",
+    "郭强",
+    "李岩",
+    "李凤英",
+  ];
+  
+  const DIRECTOR_GROUP = ["刘云俊", "李伟", "徐海军"];
+  
+  const SALES_GROUP = [
+    "徐玉朋",
+    "包铁柱",
+    "耿建成",
+    "李东新",
+    "张永龙",
+    "韩正威",
+    "朱祥",
+    "敖宏伟",
+    "董长河",
+    "张报",
+    "臧猛蛟",
+    "郝轶",
+  ];
+  
+  const OTHER_GROUP = ["郑楠", "闫志强", "李春红"];
+  
+  const CUSTOM_PASS_GROUP_MAP = new Map([
+    ["曹海涛", ""],
+    ["董慧", "donghui"],
+  ]);
+  
+  const ALL_USER = [
+    ...ADMIN_GROUP,
+    ...DIRECTOR_GROUP,
+    ...RESEARCH_GROUP,
+    ...MARKETING_GROUP,
+    ...RD_GROUP,
+    ...SALES_GROUP,
+    ...OTHER_GROUP,
+  ];
+  
+  const USER_INFO = Object.freeze(
+    ALL_USER.map((name) =>
+      CUSTOM_PASS_GROUP_MAP.has(name)
+        ? { name, password: CUSTOM_PASS_GROUP_MAP.get(name) }
+        : { name, password: INIT_PASSWORD }
+    )
+  );
+  
