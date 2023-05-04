@@ -12,7 +12,7 @@ const VALUES = {
   },
 };
 
-const INIT_PASSWORD = "yili1234!";
+const INIT_PASSWORD = "ly2023!";
 
 const ADMIN_GROUP = ["曹海涛", "董慧"];
 
@@ -21,7 +21,7 @@ const RESEARCH_GROUP = [
   "孙婉",
   "常静娟",
   "林珍妮",
-  "冯月婵",
+  "谢玉洁",
   "梁喜旺",
   "郑旭",
 ];
@@ -33,7 +33,7 @@ const MARKETING_GROUP = [
   "李龙秀",
   "梁明珠",
   "王艳",
-  "刘祖琪",
+  "文小娟",
   "李墨岚",
   "谭咏琳",
   "王珊",
