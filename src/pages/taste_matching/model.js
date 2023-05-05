@@ -1,1 +1,640 @@
-const _0x1db214=_0x1dd1;function _0x1dd1(_0x3896b0,_0x593f8a){const _0x1a5960=_0x1a00();return _0x1dd1=function(_0x4752ef,_0x2a70f9){_0x4752ef=_0x4752ef-(0x212+0x165d+-0x16ef*0x1);let _0x2feeff=_0x1a5960[_0x4752ef];return _0x2feeff;},_0x1dd1(_0x3896b0,_0x593f8a);}(function(_0x145547,_0x31f3a0){const _0x2f408c=_0x1dd1,_0x214cae=_0x145547();while(!![]){try{const _0x59feaf=parseInt(_0x2f408c(0x2a0))/(-0x1*0x25cf+0x2698+0x28*-0x5)*(parseInt(_0x2f408c(0x1ae))/(-0x2158+0x1737+-0xf*-0xad))+-parseInt(_0x2f408c(0x2b0))/(-0x2414+-0x4d*0x55+0x3da8)+parseInt(_0x2f408c(0x195))/(-0x7*0x563+-0x91b+-0x4a*-0xa2)*(-parseInt(_0x2f408c(0x1d9))/(-0x697+-0x6ad+0xd49))+parseInt(_0x2f408c(0x2aa))/(0xdbb*-0x1+-0x2*0x12ff+0x33bf)+parseInt(_0x2f408c(0x27f))/(0x7e*0x3b+-0x14f7+-0x4*0x203)*(parseInt(_0x2f408c(0x2a4))/(0x1015+-0x2063+0x1056))+parseInt(_0x2f408c(0x1b4))/(-0xc31+0x11a3+0x569*-0x1)*(-parseInt(_0x2f408c(0x24f))/(0x24d1+-0x2d*-0xa6+-0x41f5))+parseInt(_0x2f408c(0x272))/(0x1bd4+0x2*-0x5bb+-0x1053);if(_0x59feaf===_0x31f3a0)break;else _0x214cae['push'](_0x214cae['shift']());}catch(_0x12e7fe){_0x214cae['push'](_0x214cae['shift']());}}}(_0x1a00,0x163681+-0xd3633*-0x1+-0x15b5ac));class TasteMatching{[_0x1db214(0x228)]=[];[_0x1db214(0x19c)+'ta']={'currentData':[],'firstClassification':[],'firstIngredientCountMap':new Map(),'firstClassificationIngredientMap':new Map(),'startIndex':0x0,'endIndex':0x0,'secondIngredientCountMap':new Map(),'secondClassificationIngredientListMap':new Map(),'selectedFirstIngredient':'','selectedSecondIngredient':'','productList':[],'searchValue':'','searchFlag':![]};[_0x1db214(0x1b3)+_0x1db214(0x1bb)+_0x1db214(0x281)]=new Map([['果味',0x10c1+-0xe52+-0x1*0x269],['茶底',0xb31*-0x2+-0x265e+0x3cc5],['花香',0x50d+-0x1e02+0x18f9],[_0x1db214(0x221),0x7f*-0x35+0x1*-0xfa9+0x29f7],[_0x1db214(0x203),-0x55*-0x9+0x1f6e*0x1+-0x17*0x17f],['小料',-0x5*0x281+0xd04+-0x12*0x7]]);[_0x1db214(0x2af)]={'$datePicker':document[_0x1db214(0x201)+_0x1db214(0x2bc)](_0x1db214(0x2b8)+_0x1db214(0x209)+_0x1db214(0x1b7)),'$firstClassPanel':document[_0x1db214(0x201)+_0x1db214(0x2bc)](_0x1db214(0x1e5)+_0x1db214(0x251)),'$secondClassPanel':document[_0x1db214(0x201)+_0x1db214(0x2bc)](_0x1db214(0x219)+_0x1db214(0x253)),'$secondPanel':document[_0x1db214(0x201)+_0x1db214(0x2bc)](_0x1db214(0x1c2)+_0x1db214(0x288)+'n'),'$productDialog':document[_0x1db214(0x201)+_0x1db214(0x2bc)](_0x1db214(0x29c)+_0x1db214(0x279)),'$productTbody':document[_0x1db214(0x201)+_0x1db214(0x2bc)](_0x1db214(0x270)+_0x1db214(0x261)),'$productLoading':document[_0x1db214(0x201)+_0x1db214(0x2bc)](_0x1db214(0x215)+_0x1db214(0x25a)),'$productTable':document[_0x1db214(0x201)+_0x1db214(0x2bc)](_0x1db214(0x239)+_0x1db214(0x1dd)),'$ingredintSearch':document[_0x1db214(0x201)+_0x1db214(0x2bc)](_0x1db214(0x28d)+_0x1db214(0x191)),'$emptySection':document[_0x1db214(0x201)+_0x1db214(0x2bc)](_0x1db214(0x1fb)+_0x1db214(0x1e4))};[_0x1db214(0x1b5)]={};constructor(_0x5abf56){const _0x462fe5=_0x1db214;this[_0x462fe5(0x22b)](_0x5abf56),this[_0x462fe5(0x214)]();}[_0x1db214(0x22b)]=_0x114a8f=>{const _0x15df77=_0x1db214,_0x4fa1a9={'ZTYNq':function(_0x391d9a,_0x1beabe){return _0x391d9a-_0x1beabe;}};this[_0x15df77(0x228)]=_0x114a8f;const _0x5a597c=[...new Set(this[_0x15df77(0x228)][_0x15df77(0x1bd)](_0x10c2fb=>_0x10c2fb['月份']))],_0x458cc7=_0x5a597c[_0x4fa1a9[_0x15df77(0x1a8)](_0x5a597c[_0x15df77(0x292)],-0xc1*-0x1b+0x1dcf+-0x1*0x3229)];this[_0x15df77(0x2af)][_0x15df77(0x207)+'r'][_0x15df77(0x271)]=_0x458cc7+_0x15df77(0x196)+_0x458cc7,this[_0x15df77(0x2af)][_0x15df77(0x207)+'r'][_0x15df77(0x194)]=_0x5a597c[0x223a*0x1+-0x159c+-0xc9e],this[_0x15df77(0x2af)][_0x15df77(0x207)+'r'][_0x15df77(0x26b)]=_0x458cc7;const _0x50b5c4=this[_0x15df77(0x228)][_0x15df77(0x1b2)](_0x555c6a=>_0x555c6a['月份']===_0x458cc7),_0x16780e=this[_0x15df77(0x228)][_0x15df77(0x1ff)+_0x15df77(0x2b7)](_0x3f7721=>_0x3f7721['月份']===_0x458cc7);this[_0x15df77(0x2a6)]({'currentData':this[_0x15df77(0x228)][_0x15df77(0x18b)](_0x50b5c4,_0x16780e)});const _0x2c05c7=this[_0x15df77(0x1d2)+_0x15df77(0x1e7)+_0x15df77(0x188)+'nt']();_0x2c05c7&&this[_0x15df77(0x1f1)+_0x15df77(0x1f9)+_0x15df77(0x225)+_0x15df77(0x193)](),this[_0x15df77(0x2af)][_0x15df77(0x1f8)+_0x15df77(0x279)][_0x15df77(0x24e)]({'buttons':[]});};[_0x1db214(0x1cf)]=(..._0x590c2a)=>_0x590c2a[_0x1db214(0x28b)]((_0x6f75d2,_0x4e07ef)=>({..._0x6f75d2,[_0x4e07ef]:this[_0x1db214(0x19c)+'ta'][_0x4e07ef]}),{});[_0x1db214(0x2a6)]=_0x1ffb10=>{const _0x4df0e9=_0x1db214;this[_0x4df0e9(0x19c)+'ta']={...this[_0x4df0e9(0x19c)+'ta'],..._0x1ffb10};};[_0x1db214(0x214)]=()=>{const _0x56ced9=_0x1db214,_0x3f7082={'VxqFw':_0x56ced9(0x22e),'yOGsc':_0x56ced9(0x29a),'uUBYm':_0x56ced9(0x1ed),'WafIG':_0x56ced9(0x18a),'VdqIi':_0x56ced9(0x206)},_0x421adb=this;this[_0x56ced9(0x2af)][_0x56ced9(0x207)+'r'][_0x56ced9(0x1e3)+_0x56ced9(0x1cc)](_0x3f7082[_0x56ced9(0x21a)],function(){const _0x552e14=_0x56ced9;_0x421adb[_0x552e14(0x230)+_0x552e14(0x183)](this[_0x552e14(0x271)]);}),this[_0x56ced9(0x2af)][_0x56ced9(0x181)+_0x56ced9(0x251)][_0x56ced9(0x1e3)+_0x56ced9(0x1cc)](_0x3f7082[_0x56ced9(0x284)],this[_0x56ced9(0x18c)+_0x56ced9(0x268)+_0x56ced9(0x183)]),this[_0x56ced9(0x2af)][_0x56ced9(0x250)+_0x56ced9(0x253)][_0x56ced9(0x1e3)+_0x56ced9(0x1cc)](_0x3f7082[_0x56ced9(0x284)],this[_0x56ced9(0x243)+_0x56ced9(0x23a)+_0x56ced9(0x187)]),this[_0x56ced9(0x2af)][_0x56ced9(0x1f8)+_0x56ced9(0x279)][_0x56ced9(0x1e3)+_0x56ced9(0x1cc)](_0x3f7082[_0x56ced9(0x287)],this[_0x56ced9(0x226)+_0x56ced9(0x1eb)+_0x56ced9(0x1e0)]),this[_0x56ced9(0x2af)][_0x56ced9(0x1f8)+_0x56ced9(0x279)][_0x56ced9(0x1e3)+_0x56ced9(0x1cc)](_0x3f7082[_0x56ced9(0x27e)],this[_0x56ced9(0x226)+_0x56ced9(0x236)+_0x56ced9(0x1e0)]),this[_0x56ced9(0x2af)][_0x56ced9(0x262)+_0x56ced9(0x191)][_0x56ced9(0x1e3)+_0x56ced9(0x1cc)](_0x3f7082[_0x56ced9(0x21a)],this[_0x56ced9(0x204)+_0x56ced9(0x20a)+_0x56ced9(0x190)]),this[_0x56ced9(0x2af)][_0x56ced9(0x262)+_0x56ced9(0x191)][_0x56ced9(0x1e3)+_0x56ced9(0x1cc)](_0x3f7082[_0x56ced9(0x200)],this[_0x56ced9(0x204)+_0x56ced9(0x1e1)+_0x56ced9(0x19f)]);};[_0x1db214(0x226)+_0x1db214(0x1eb)+_0x1db214(0x1e0)]=()=>{const _0x2235e6=_0x1db214,_0x57ed5e={'yfUWP':_0x2235e6(0x1ed)};this[_0x2235e6(0x2af)][_0x2235e6(0x1d3)+_0x2235e6(0x25a)][_0x2235e6(0x231)][_0x2235e6(0x283)](_0x57ed5e[_0x2235e6(0x264)]),this[_0x2235e6(0x2af)][_0x2235e6(0x1d8)+_0x2235e6(0x1dd)][_0x2235e6(0x231)][_0x2235e6(0x1de)](_0x57ed5e[_0x2235e6(0x264)]),window[_0x2235e6(0x23d)+'ut'](this[_0x2235e6(0x1b5)][_0x2235e6(0x1a9)+_0x2235e6(0x211)]);};[_0x1db214(0x226)+_0x1db214(0x236)+_0x1db214(0x1e0)]=()=>{const _0x549f93=_0x1db214,_0x265a45={'dMoDs':_0x549f93(0x1ed),'PWCOp':function(_0x1e96fc,_0x984813){return _0x1e96fc>_0x984813;},'hXGQI':_0x549f93(0x1d6)+'t','yGhxS':function(_0x27e119,_0x3bd401){return _0x27e119>_0x3bd401;}},{productList:_0x292fdd}=this[_0x549f93(0x1cf)](_0x265a45[_0x549f93(0x217)]);this[_0x549f93(0x1b5)][_0x549f93(0x1a9)+_0x549f93(0x211)]=window[_0x549f93(0x1ea)](()=>{const _0x4fc11d=_0x549f93;this[_0x4fc11d(0x2af)][_0x4fc11d(0x1d3)+_0x4fc11d(0x25a)][_0x4fc11d(0x231)][_0x4fc11d(0x1de)](_0x265a45[_0x4fc11d(0x2a8)]),this[_0x4fc11d(0x2af)][_0x4fc11d(0x1d8)+_0x4fc11d(0x1dd)][_0x4fc11d(0x231)][_0x4fc11d(0x283)](_0x265a45[_0x4fc11d(0x2a8)]),_0x265a45[_0x4fc11d(0x1ef)](_0x292fdd[_0x4fc11d(0x292)],0x750+0x13e5*0x1+-0x1b35*0x1)&&(this[_0x4fc11d(0x2af)][_0x4fc11d(0x1f8)+_0x4fc11d(0x279)][_0x4fc11d(0x233)][_0x4fc11d(0x242)]+=_0x4fc11d(0x282)+_0x292fdd[_0x4fc11d(0x292)]+_0x4fc11d(0x18d));},_0x265a45[_0x549f93(0x299)](_0x292fdd[_0x549f93(0x292)],0x10fa*0x1+-0x3b2+-0xd3e)?-0x1d48+0x1993+-0x167*-0xb:0x349+-0x7e1+0xa74);};[_0x1db214(0x204)+_0x1db214(0x20a)+_0x1db214(0x190)]=_0x5e7200=>{const _0x479795=_0x1db214,_0x4bcd5a={'CLIjj':function(_0x35ccd6,_0x4dc55b){return _0x35ccd6===_0x4dc55b;},'LVlNZ':_0x479795(0x1ed)};this[_0x479795(0x2a6)]({'searchValue':_0x5e7200[_0x479795(0x1fc)][_0x479795(0x271)][_0x479795(0x260)](),'searchFlag':![]}),_0x4bcd5a[_0x479795(0x208)](_0x5e7200[_0x479795(0x1fc)][_0x479795(0x271)],'')&&(this[_0x479795(0x2af)][_0x479795(0x1ac)+'el'][_0x479795(0x231)][_0x479795(0x1de)](_0x4bcd5a[_0x479795(0x25e)]),this[_0x479795(0x2ac)+_0x479795(0x1f9)+_0x479795(0x185)+'r'](''));};[_0x1db214(0x204)+_0x1db214(0x1e1)+_0x1db214(0x19f)]=_0x5ca2d6=>{const _0x2d9d2f=_0x1db214,_0x8df80f={'NXAMW':_0x2d9d2f(0x2b1)+'e','NESza':_0x2d9d2f(0x1f2),'UYcYp':function(_0x285733,_0x5791bd){return _0x285733===_0x5791bd;},'FUlBt':_0x2d9d2f(0x25f),'gQkrz':_0x2d9d2f(0x1ed)},{searchValue:_0x444263,searchFlag:_0x4200a2}=this[_0x2d9d2f(0x1cf)](_0x8df80f[_0x2d9d2f(0x1b8)],_0x8df80f[_0x2d9d2f(0x238)]);_0x8df80f[_0x2d9d2f(0x1c6)](_0x5ca2d6[_0x2d9d2f(0x224)],_0x8df80f[_0x2d9d2f(0x1e9)])&&!_0x4200a2&&(this[_0x2d9d2f(0x2af)][_0x2d9d2f(0x1ac)+'el'][_0x2d9d2f(0x231)][_0x2d9d2f(0x1de)](_0x8df80f[_0x2d9d2f(0x266)]),this[_0x2d9d2f(0x2ac)+_0x2d9d2f(0x1f9)+_0x2d9d2f(0x185)+'r'](_0x444263));};[_0x1db214(0x230)+_0x1db214(0x183)](_0x1c9a27){const _0x4d41f1=_0x1db214,_0x2742f3={'ITwLq':_0x4d41f1(0x2b1)+'e','SQIyy':_0x4d41f1(0x1ed)},{searchValue:_0x309ba4}=this[_0x4d41f1(0x1cf)](_0x2742f3[_0x4d41f1(0x1c8)]),[_0x4fe724,_0x57d206]=_0x1c9a27[_0x4d41f1(0x234)]('至')[_0x4d41f1(0x1bd)](_0x81af79=>_0x81af79[_0x4d41f1(0x260)]()),_0x111bbb=this[_0x4d41f1(0x228)][_0x4d41f1(0x1b2)](_0x870ccd=>_0x870ccd['月份']===_0x4fe724),_0x818c7e=this[_0x4d41f1(0x228)][_0x4d41f1(0x1ff)+_0x4d41f1(0x2b7)](_0x32df20=>_0x32df20['月份']===_0x57d206);this[_0x4d41f1(0x2a6)]({'currentData':this[_0x4d41f1(0x228)][_0x4d41f1(0x18b)](_0x111bbb,_0x818c7e)}),this[_0x4d41f1(0x2a6)]({'selectedFirstIngredient':'','selectedSecondIngredient':''}),this[_0x4d41f1(0x2af)][_0x4d41f1(0x1ac)+'el'][_0x4d41f1(0x231)][_0x4d41f1(0x1de)](_0x2742f3[_0x4d41f1(0x23c)]),this[_0x4d41f1(0x2ac)+_0x4d41f1(0x1f9)+_0x4d41f1(0x185)+'r'](_0x309ba4);}[_0x1db214(0x2ac)+_0x1db214(0x1f9)+_0x1db214(0x185)+'r']=_0x3fc1af=>{const _0x1a18e4=_0x1db214,_0x4fe987={'ETaUG':_0x1a18e4(0x218),'Dpmrj':_0x1a18e4(0x291)+_0x1a18e4(0x277)},_0x4ca4d2=this[_0x1a18e4(0x1d2)+_0x1a18e4(0x1e7)+_0x1a18e4(0x188)+'nt'](_0x3fc1af);this[_0x1a18e4(0x2af)][_0x1a18e4(0x181)+_0x1a18e4(0x251)][_0x1a18e4(0x23b)]=null,_0x4ca4d2?this[_0x1a18e4(0x1f1)+_0x1a18e4(0x1f9)+_0x1a18e4(0x225)+_0x1a18e4(0x193)]():(this[_0x1a18e4(0x2af)][_0x1a18e4(0x181)+_0x1a18e4(0x251)][_0x1a18e4(0x247)+'d'](this[_0x1a18e4(0x2af)][_0x1a18e4(0x202)+_0x1a18e4(0x1e4)][_0x1a18e4(0x1da)][_0x1a18e4(0x189)](!![])),document[_0x1a18e4(0x201)+_0x1a18e4(0x2bc)](_0x4fe987[_0x1a18e4(0x19a)])[_0x1a18e4(0x23b)]=_0x4fe987[_0x1a18e4(0x22d)]),this[_0x1a18e4(0x2a6)]({'searchFlag':!![]});};[_0x1db214(0x18c)+_0x1db214(0x268)+_0x1db214(0x183)]=_0x554f21=>{const _0x3f97cf=_0x1db214,_0x17d891={'LBMCe':_0x3f97cf(0x204)+_0x3f97cf(0x29e),'dfkok':_0x3f97cf(0x1a2)+_0x3f97cf(0x27a)+_0x3f97cf(0x1d7),'vXVqH':_0x3f97cf(0x1ed),'iynXF':_0x3f97cf(0x216)+_0x3f97cf(0x278)+_0x3f97cf(0x29f)+'d','viDIq':_0x3f97cf(0x1a2)+_0x3f97cf(0x27a)+'m','QlnNX':_0x3f97cf(0x24a),'uZpJO':_0x3f97cf(0x1a5)},_0x419362=_0x554f21[_0x3f97cf(0x1fc)];if(_0x419362[_0x3f97cf(0x231)][_0x3f97cf(0x22a)](_0x17d891[_0x3f97cf(0x29d)])&&!_0x419362[_0x3f97cf(0x231)][_0x3f97cf(0x22a)](_0x17d891[_0x3f97cf(0x257)])){this[_0x3f97cf(0x2af)][_0x3f97cf(0x1ac)+'el'][_0x3f97cf(0x231)][_0x3f97cf(0x22a)](_0x17d891[_0x3f97cf(0x296)])&&this[_0x3f97cf(0x2af)][_0x3f97cf(0x1ac)+'el'][_0x3f97cf(0x231)][_0x3f97cf(0x283)](_0x17d891[_0x3f97cf(0x296)]);const _0x7a97a6=document[_0x3f97cf(0x201)+_0x3f97cf(0x2bc)](_0x17d891[_0x3f97cf(0x237)]);_0x7a97a6&&_0x7a97a6[_0x3f97cf(0x231)][_0x3f97cf(0x20e)](_0x17d891[_0x3f97cf(0x257)],_0x17d891[_0x3f97cf(0x1a1)]);const _0x30536e=document[_0x3f97cf(0x201)+_0x3f97cf(0x2bc)](_0x3f97cf(0x1f4)+_0x3f97cf(0x2ae)+_0x3f97cf(0x26f)+_0x419362[_0x3f97cf(0x1c9)][_0x3f97cf(0x1c3)]+']');if(_0x30536e){const _0x1ae285=_0x17d891[_0x3f97cf(0x220)][_0x3f97cf(0x234)]('|');let _0x27e341=-0x2329+-0x1a35*-0x1+0x8f4;while(!![]){switch(_0x1ae285[_0x27e341++]){case'0':this[_0x3f97cf(0x28f)+_0x3f97cf(0x1fd)+_0x3f97cf(0x1fe)+_0x3f97cf(0x229)](_0x419362[_0x3f97cf(0x1c9)][_0x3f97cf(0x1c3)]);continue;case'1':this[_0x3f97cf(0x26c)+_0x3f97cf(0x1e8)+_0x3f97cf(0x1d0)+_0x3f97cf(0x235)]();continue;case'2':this[_0x3f97cf(0x2a6)]({'selectedFirstIngredient':_0x419362[_0x3f97cf(0x1c9)][_0x3f97cf(0x1c3)]});continue;case'3':_0x30536e[_0x3f97cf(0x231)][_0x3f97cf(0x20e)](_0x17d891[_0x3f97cf(0x1a1)],_0x17d891[_0x3f97cf(0x257)]);continue;case'4':this[_0x3f97cf(0x2af)][_0x3f97cf(0x250)+_0x3f97cf(0x253)][_0x3f97cf(0x1d4)+_0x3f97cf(0x294)]({'behavior':_0x17d891[_0x3f97cf(0x21c)]});continue;}break;}}}};[_0x1db214(0x243)+_0x1db214(0x23a)+_0x1db214(0x187)]=_0xd15129=>{const _0x4c72ea=_0x1db214,_0x464b1a={'nZdds':_0x4c72ea(0x204)+_0x4c72ea(0x1dc),'RIIns':_0x4c72ea(0x204)+_0x4c72ea(0x2a5),'YVgIh':_0x4c72ea(0x204)+_0x4c72ea(0x29e),'QqFPw':_0x4c72ea(0x248)+_0x4c72ea(0x278)+_0x4c72ea(0x29f)+'d','RAhQo':_0x4c72ea(0x20f)+_0x4c72ea(0x1f0)+_0x4c72ea(0x1ee)+'ed','uqlRG':_0x4c72ea(0x248)+_0x4c72ea(0x278)+'em','kCZhI':_0x4c72ea(0x2b3)+_0x4c72ea(0x286)+_0x4c72ea(0x235)};let _0x2dc3c3=_0xd15129[_0x4c72ea(0x1fc)];const _0x44744d=[_0x464b1a[_0x4c72ea(0x1e6)],_0x464b1a[_0x4c72ea(0x1a7)]][_0x4c72ea(0x25b)](_0x2dc3c3['id']);_0x2dc3c3=_0x44744d?_0x2dc3c3[_0x4c72ea(0x259)]:_0x2dc3c3;if(_0x2dc3c3[_0x4c72ea(0x231)][_0x4c72ea(0x22a)](_0x464b1a[_0x4c72ea(0x2b5)])){if(!_0x2dc3c3[_0x4c72ea(0x231)][_0x4c72ea(0x22a)](_0x464b1a[_0x4c72ea(0x24d)])){const _0x1b8577=document[_0x4c72ea(0x201)+_0x4c72ea(0x2bc)](_0x464b1a[_0x4c72ea(0x19d)]);_0x1b8577&&_0x1b8577[_0x4c72ea(0x231)][_0x4c72ea(0x20e)](_0x464b1a[_0x4c72ea(0x24d)],_0x464b1a[_0x4c72ea(0x23e)]);const _0x41e452=document[_0x4c72ea(0x201)+_0x4c72ea(0x2bc)](_0x4c72ea(0x28a)+_0x4c72ea(0x23f)+_0x4c72ea(0x1b9)+_0x2dc3c3[_0x4c72ea(0x1c9)][_0x4c72ea(0x1c3)]+']');if(_0x41e452){_0x41e452[_0x4c72ea(0x231)][_0x4c72ea(0x20e)](_0x464b1a[_0x4c72ea(0x23e)],_0x464b1a[_0x4c72ea(0x24d)]),this[_0x4c72ea(0x2a6)]({'selectedSecondIngredient':_0x2dc3c3[_0x4c72ea(0x1c9)][_0x4c72ea(0x1c3)]});const {selectedFirstIngredient:_0x380e0d}=this[_0x4c72ea(0x1cf)](_0x464b1a[_0x4c72ea(0x184)]),_0x1f4c24=this[_0x4c72ea(0x1a3)+_0x4c72ea(0x295)](_0x380e0d,_0x2dc3c3[_0x4c72ea(0x1c9)][_0x4c72ea(0x1c3)]);this[_0x4c72ea(0x2a6)]({'productList':_0x1f4c24}),this[_0x4c72ea(0x26e)+_0x4c72ea(0x24b)](_0x1f4c24);}}else this[_0x4c72ea(0x2af)][_0x4c72ea(0x1f8)+_0x4c72ea(0x279)][_0x4c72ea(0x18a)]();}};[_0x1db214(0x1d2)+_0x1db214(0x1e7)+_0x1db214(0x188)+'nt']=_0x3a6f00=>{const _0x5c6819=_0x1db214,_0x4bc786={'vAJee':_0x5c6819(0x28e),'OIGKF':function(_0x45b860,_0x2cf1cc){return _0x45b860+_0x2cf1cc;},'Vsvjj':_0x5c6819(0x1b6),'VyyIj':_0x5c6819(0x18e)+'a','gFGer':function(_0x564137,_0x5b1985){return _0x564137===_0x5b1985;}},{currentData:_0x286369}=this[_0x5c6819(0x1cf)](_0x4bc786[_0x5c6819(0x1d1)]),_0x1b3c3c=new Map(),_0x315a59=new Map(),_0xf5339d=!!_0x3a6f00?_0x286369[_0x5c6819(0x27d)](_0x5b6ed5=>_0x5b6ed5[_0x5c6819(0x28e)][_0x5c6819(0x25b)](_0x3a6f00)):_0x286369;if(_0x4bc786[_0x5c6819(0x27b)](_0xf5339d[_0x5c6819(0x292)],-0x1*-0x1c36+-0x1f2d+0x2f7))return![];_0xf5339d[_0x5c6819(0x213)](_0xb3fdcc=>{const _0x3891a9=_0x5c6819,_0x4c5584=_0xb3fdcc[_0x4bc786[_0x3891a9(0x29b)]];_0x1b3c3c[_0x3891a9(0x2b2)](_0x4c5584)?_0x1b3c3c[_0x3891a9(0x2a6)](_0x4c5584,_0x4bc786[_0x3891a9(0x1e2)](_0x1b3c3c[_0x3891a9(0x1cf)](_0x4c5584),0x413+0x9fa+0x4*-0x383)):_0x1b3c3c[_0x3891a9(0x2a6)](_0x4c5584,0xa*-0x322+-0x6c4+0x2619);});const _0x16dcad=_0xf5339d[_0x5c6819(0x1bd)](_0x3939aa=>({..._0x3939aa,'count':_0x1b3c3c[_0x5c6819(0x1cf)](_0x3939aa[_0x5c6819(0x28e)])}))[_0x5c6819(0x1fa)]((_0x48b24c,_0x1e4cb9)=>_0x1e4cb9[_0x5c6819(0x2a3)]-_0x48b24c[_0x5c6819(0x2a3)]);_0x16dcad[_0x5c6819(0x213)](_0x1f32d1=>{const _0x7a05c6=_0x5c6819,_0x25634a=_0x1f32d1[_0x4bc786[_0x7a05c6(0x19e)]],_0x3825e5=_0x1f32d1[_0x4bc786[_0x7a05c6(0x29b)]];_0x315a59[_0x7a05c6(0x2b2)](_0x25634a)?_0x315a59[_0x7a05c6(0x2a6)](_0x25634a,_0x315a59[_0x7a05c6(0x1cf)](_0x25634a)[_0x7a05c6(0x198)](_0x3825e5)):_0x315a59[_0x7a05c6(0x2a6)](_0x25634a,[_0x3825e5]);});for(let [_0xfca66b,_0x1d0366]of _0x315a59[_0x5c6819(0x210)]()){_0x315a59[_0x5c6819(0x2a6)](_0xfca66b,[...new Set(_0x1d0366)]);}return this[_0x5c6819(0x2a6)]({'firstClassificationIngredientMap':_0x315a59,'firstIngredientCountMap':_0x1b3c3c}),!![];};[_0x1db214(0x1f1)+_0x1db214(0x1f9)+_0x1db214(0x225)+_0x1db214(0x193)]=_0x3b6b83=>{const _0x5a26ed=_0x1db214,_0x416cd2={'YVoMh':_0x5a26ed(0x255)+_0x5a26ed(0x289)+_0x5a26ed(0x1af)+'ap','rJicV':_0x5a26ed(0x18c)+_0x5a26ed(0x205)+_0x5a26ed(0x192),'EaxPr':_0x5a26ed(0x1b0)},{firstClassificationIngredientMap:_0x30a21d,firstIngredientCountMap:_0x17f6ca}=this[_0x5a26ed(0x1cf)](_0x416cd2[_0x5a26ed(0x1ca)],_0x416cd2[_0x5a26ed(0x2a2)]),_0x348174=document[_0x5a26ed(0x274)+_0x5a26ed(0x21e)+'nt'](),_0x35487d=[..._0x30a21d][_0x5a26ed(0x1bd)](([_0x38a26f,_0x200ff3])=>({'classification':_0x38a26f,'ingredientList':_0x200ff3,'priority':this[_0x5a26ed(0x1b3)+_0x5a26ed(0x1bb)+_0x5a26ed(0x281)][_0x5a26ed(0x1cf)](_0x38a26f)})),_0x1b1dd4=_0x35487d[_0x5a26ed(0x1fa)]((_0x3a2e30,_0xc53e50)=>_0xc53e50[_0x5a26ed(0x2a7)]-_0x3a2e30[_0x5a26ed(0x2a7)])[_0x5a26ed(0x27d)](({classification:_0x7e43cc})=>_0x7e43cc!=='小料');for(let {classification:_0x56edd6,ingredientList:_0x2adb35}of _0x1b1dd4){const _0x28b963=new PanelItem({'type':_0x416cd2[_0x5a26ed(0x223)],'classification':_0x56edd6,'ingredientList':_0x2adb35,'selectedIngredient':_0x3b6b83,'firstIngredientCountMap':_0x17f6ca});_0x348174[_0x5a26ed(0x247)+'d'](_0x28b963[_0x5a26ed(0x273)]());}this[_0x5a26ed(0x2af)][_0x5a26ed(0x181)+_0x5a26ed(0x251)][_0x5a26ed(0x21d)+_0x5a26ed(0x21f)](_0x348174);};[_0x1db214(0x26c)+_0x1db214(0x1e8)+_0x1db214(0x1d0)+_0x1db214(0x235)]=()=>{const _0x11b15c=_0x1db214,_0x17ca57={'KRNoo':_0x11b15c(0x18e)+'a','ITOzZ':_0x11b15c(0x2b3)+_0x11b15c(0x286)+_0x11b15c(0x235),'RWaya':function(_0x2a6fe4,_0x4c5e23){return _0x2a6fe4+_0x4c5e23;}},{currentData:_0x1b755a,selectedFirstIngredient:_0x1f4ba9}=this[_0x11b15c(0x1cf)](_0x17ca57[_0x11b15c(0x1ec)],_0x17ca57[_0x11b15c(0x182)]),_0x577f25=[...new Set(_0x1b755a[_0x11b15c(0x27d)](_0x29601a=>_0x29601a[_0x11b15c(0x28e)]===_0x1f4ba9)[_0x11b15c(0x1bd)](_0x1240e6=>_0x1240e6[_0x11b15c(0x1f6)+'构成']))],_0x1ddbe8=new Map();for(let _0x916ed5 of _0x577f25){const _0x41966e=_0x1b755a[_0x11b15c(0x27d)](_0x2bc8e0=>_0x2bc8e0[_0x11b15c(0x1f6)+'构成']===_0x916ed5)[_0x11b15c(0x1bd)](_0x157d14=>_0x157d14[_0x11b15c(0x28e)]),_0x5084df=_0x41966e[_0x11b15c(0x27d)](_0x5d762f=>_0x5d762f!==_0x1f4ba9);for(let _0x572338 of _0x5084df){_0x1ddbe8[_0x11b15c(0x2b2)](_0x572338)?_0x1ddbe8[_0x11b15c(0x2a6)](_0x572338,_0x17ca57[_0x11b15c(0x240)](_0x1ddbe8[_0x11b15c(0x1cf)](_0x572338),0x151*0xb+0xa49+0x841*-0x3)):_0x1ddbe8[_0x11b15c(0x2a6)](_0x572338,-0xdbd*-0x1+-0x436+-0x986);}}const _0x4f43c4=new Map();for(let [_0x4b7664]of _0x1ddbe8[_0x11b15c(0x210)]()){const _0x4eb2e0=_0x1b755a[_0x11b15c(0x27d)](_0xcf863b=>_0xcf863b[_0x11b15c(0x28e)]===_0x4b7664)[_0x11b15c(0x1bd)](_0x149685=>_0x149685[_0x11b15c(0x1b6)]),[_0x46ad72]=_0x4eb2e0;_0x4f43c4[_0x11b15c(0x2b2)](_0x46ad72)?_0x4f43c4[_0x11b15c(0x2a6)](_0x46ad72,_0x4f43c4[_0x11b15c(0x1cf)](_0x46ad72)[_0x11b15c(0x198)](_0x4b7664)):_0x4f43c4[_0x11b15c(0x2a6)](_0x46ad72,[_0x4b7664]);}this[_0x11b15c(0x2a6)]({'secondIngredientCountMap':_0x1ddbe8,'secondClassificationIngredientListMap':_0x4f43c4});};[_0x1db214(0x28f)+_0x1db214(0x1fd)+_0x1db214(0x1fe)+_0x1db214(0x229)]=()=>{const _0x194ceb=_0x1db214,_0x4e2651={'grnyF':_0x194ceb(0x298)+_0x194ceb(0x263)+_0x194ceb(0x26a)+_0x194ceb(0x2a9),'iCcsT':_0x194ceb(0x269)+_0x194ceb(0x290)+_0x194ceb(0x265),'HWuSl':_0x194ceb(0x2ad)},{secondClassificationIngredientListMap:_0x39222c,selectedSecondIngredient:_0x28ecf7}=this[_0x194ceb(0x1cf)](_0x4e2651[_0x194ceb(0x28c)],_0x4e2651[_0x194ceb(0x256)]),_0x1ebd74=document[_0x194ceb(0x274)+_0x194ceb(0x21e)+'nt'](),_0x38a03f=[..._0x39222c][_0x194ceb(0x1bd)](([_0x4d022f,_0x2578c1])=>({'classification':_0x4d022f,'ingredientList':_0x2578c1,'priority':this[_0x194ceb(0x1b3)+_0x194ceb(0x1bb)+_0x194ceb(0x281)][_0x194ceb(0x1cf)](_0x4d022f)})),_0x404526=_0x38a03f[_0x194ceb(0x1fa)]((_0x49f6cc,_0x24c6cd)=>_0x24c6cd[_0x194ceb(0x2a7)]-_0x49f6cc[_0x194ceb(0x2a7)]),_0x259a78=this[_0x194ceb(0x22f)+_0x194ceb(0x1c7)+_0x194ceb(0x2ab)+_0x194ceb(0x222)](_0x404526,-0x2636+0x1950+0x2e*0x48);for(let {classification:_0x12f176,ingredientListWithCount:_0x572bf6}of _0x259a78){const _0x4c5408=new PanelItem({'type':_0x4e2651[_0x194ceb(0x1ce)],'classification':_0x12f176,'ingredientList':_0x572bf6,'selectedSecondIngredient':_0x28ecf7});_0x1ebd74[_0x194ceb(0x247)+'d'](_0x4c5408[_0x194ceb(0x273)]());}this[_0x194ceb(0x2af)][_0x194ceb(0x250)+_0x194ceb(0x253)][_0x194ceb(0x21d)+_0x194ceb(0x21f)](_0x1ebd74);};[_0x1db214(0x22f)+_0x1db214(0x1c7)+_0x1db214(0x2ab)+_0x1db214(0x222)]=(_0x1f4cc6,_0x29474e)=>{const _0x23ebcc=_0x1db214,_0x17336f={'dJHqg':_0x23ebcc(0x243)+_0x23ebcc(0x1cd)+_0x23ebcc(0x1a0)},{secondIngredientCountMap:_0x5cb634}=this[_0x23ebcc(0x1cf)](_0x17336f[_0x23ebcc(0x254)]);return _0x1f4cc6[_0x23ebcc(0x1bd)](({classification:_0x290f3e,ingredientList:_0x58f065})=>({'classification':_0x290f3e,'ingredientListWithCount':_0x58f065[_0x23ebcc(0x1bd)](_0x2dc406=>({'ingredient':_0x2dc406,'count':_0x5cb634[_0x23ebcc(0x1cf)](_0x2dc406)}))[_0x23ebcc(0x1fa)]((_0x3e033b,_0x1a7d6d)=>_0x1a7d6d[_0x23ebcc(0x2a3)]-_0x3e033b[_0x23ebcc(0x2a3)])[_0x23ebcc(0x18b)](-0xa*0x1a8+0x1*-0x48e+0x385*0x6,_0x29474e)}));};[_0x1db214(0x1a3)+_0x1db214(0x295)]=(_0x5a6a50,_0x4810b1)=>{const _0x5b33bb=_0x1db214,_0x5ccb48={'EhJPk':_0x5b33bb(0x18e)+'a'},{currentData:_0xad5cf7}=this[_0x5b33bb(0x1cf)](_0x5ccb48[_0x5b33bb(0x22c)]),_0x5d90ca=_0xad5cf7[_0x5b33bb(0x27d)](_0x33f70f=>_0x33f70f[_0x5b33bb(0x28e)]===_0x5a6a50)[_0x5b33bb(0x1bd)](_0x25871d=>_0x25871d[_0x5b33bb(0x1f6)+'构成']),_0x16a745=_0xad5cf7[_0x5b33bb(0x27d)](_0x56f046=>_0x56f046[_0x5b33bb(0x28e)]===_0x4810b1)[_0x5b33bb(0x1bd)](_0x13f9ae=>_0x13f9ae[_0x5b33bb(0x1f6)+'构成']),_0x33c21a=_0x5d90ca[_0x5b33bb(0x27d)](_0x5995d2=>_0x16a745[_0x5b33bb(0x25b)](_0x5995d2));return[...new Set(_0x33c21a)];};[_0x1db214(0x26e)+_0x1db214(0x24b)]=_0x4449c6=>{const _0x589602=_0x1db214,_0x44f9a6={'VJOSY':_0x589602(0x2b3)+_0x589602(0x286)+_0x589602(0x235),'pApHS':_0x589602(0x269)+_0x589602(0x290)+_0x589602(0x265),'GFLxE':function(_0x2ed45f,_0x208279){return _0x2ed45f===_0x208279;},'zAWVq':_0x589602(0x218),'wfzAy':_0x589602(0x2b4)},{selectedFirstIngredient:_0x3a9dbc,selectedSecondIngredient:_0x4d549e}=this[_0x589602(0x1cf)](_0x44f9a6[_0x589602(0x1c4)],_0x44f9a6[_0x589602(0x18f)]);this[_0x589602(0x2af)][_0x589602(0x21b)+_0x589602(0x261)][_0x589602(0x23b)]=null;if(_0x44f9a6[_0x589602(0x24c)](_0x4449c6[_0x589602(0x292)],0x42c*-0x3+-0x1cba*0x1+0x293e*0x1))this[_0x589602(0x2af)][_0x589602(0x21b)+_0x589602(0x261)][_0x589602(0x247)+'d'](this[_0x589602(0x2af)][_0x589602(0x202)+_0x589602(0x1e4)][_0x589602(0x1da)][_0x589602(0x189)](!![])),document[_0x589602(0x201)+_0x589602(0x2bc)](_0x44f9a6[_0x589602(0x2ba)])[_0x589602(0x23b)]=_0x44f9a6[_0x589602(0x212)];else{const _0x31f525=document[_0x589602(0x274)+_0x589602(0x21e)+'nt']();_0x4449c6[_0x589602(0x213)](_0x4d1762=>{const _0x3f9f8e=_0x589602,_0x24cb33=document[_0x3f9f8e(0x245)+_0x3f9f8e(0x235)]('tr');_0x4d1762[_0x3f9f8e(0x234)]('-')[_0x3f9f8e(0x213)](_0x2a4b67=>{const _0x336fb8=_0x3f9f8e,_0x1fee02=document[_0x336fb8(0x245)+_0x336fb8(0x235)]('td');_0x1fee02[_0x336fb8(0x23b)]=_0x2a4b67,_0x24cb33[_0x336fb8(0x247)+'d'](_0x1fee02);}),_0x31f525[_0x3f9f8e(0x247)+'d'](_0x24cb33);}),this[_0x589602(0x2af)][_0x589602(0x1f8)+_0x589602(0x279)][_0x589602(0x233)][_0x589602(0x242)]=_0x589602(0x2b6)+_0x589602(0x1be)+_0x589602(0x19b)+_0x589602(0x244)+_0x589602(0x1ab)+_0x3a9dbc+_0x589602(0x276)+_0x4d549e+_0x589602(0x1a4),this[_0x589602(0x2af)][_0x589602(0x21b)+_0x589602(0x261)][_0x589602(0x247)+'d'](_0x31f525);}this[_0x589602(0x2af)][_0x589602(0x1f8)+_0x589602(0x279)][_0x589602(0x18a)]();};}class PanelItem{constructor({type:_0x4ec8ca,classification:_0x4348b2,ingredientList:_0x59b53c,selectedIngredient:_0x3c45aa,firstIngredientCountMap:_0x46b180}){const _0x2d2149=_0x1db214,_0x1644c1={'OEMLl':_0x2d2149(0x1c0)},_0x4489f3=_0x1644c1[_0x2d2149(0x26d)][_0x2d2149(0x234)]('|');let _0x55bf5e=-0x2*-0xb3c+0x6ce+-0x1d46;while(!![]){switch(_0x4489f3[_0x55bf5e++]){case'0':this[_0x2d2149(0x204)+_0x2d2149(0x197)]=_0x59b53c;continue;case'1':this[_0x2d2149(0x246)]=_0x4ec8ca;continue;case'2':this[_0x2d2149(0x1b3)+_0x2d2149(0x186)]=_0x4348b2;continue;case'3':this[_0x2d2149(0x293)+_0x2d2149(0x180)]=_0x3c45aa;continue;case'4':this[_0x2d2149(0x18c)+_0x2d2149(0x205)+_0x2d2149(0x192)]=_0x46b180;continue;}break;}}[_0x1db214(0x273)]=()=>{const _0x1f0c76=_0x1db214,_0xc1d653={'dQVXq':_0x1f0c76(0x20d),'zJifm':function(_0x331cb4,_0x19250c){return _0x331cb4===_0x19250c;},'plIAV':function(_0x3792ac,_0x43520a){return _0x3792ac===_0x43520a;},'hgsfG':_0x1f0c76(0x1b0),'LYJcH':_0x1f0c76(0x2ad)},{type:_0x356175,classification:_0x33d76e,ingredientList:_0x3e16d0,selectedIngredient:_0x1c505c}=this,_0x293c4e=document[_0x1f0c76(0x245)+_0x1f0c76(0x235)](_0xc1d653[_0x1f0c76(0x1c5)]);_0x293c4e[_0x1f0c76(0x249)]=_0x1f0c76(0x1ad)+_0x356175+_0x1f0c76(0x199)+_0x356175+_0x1f0c76(0x2bb)+_0x33d76e,_0x293c4e[_0x1f0c76(0x23b)]=_0x1f0c76(0x232)+_0x1f0c76(0x2a1)+_0x1f0c76(0x1a6)+_0x1f0c76(0x25d)+_0x1f0c76(0x1ba)+_0x1f0c76(0x1bc)+_0x1f0c76(0x1c1)+_0x356175+(_0x1f0c76(0x1f7)+_0x1f0c76(0x1cb))+_0x33d76e+(_0x1f0c76(0x1f5)+_0x1f0c76(0x1b1)+_0x1f0c76(0x227));const _0x15fc04=document[_0x1f0c76(0x245)+_0x1f0c76(0x235)](_0xc1d653[_0x1f0c76(0x1c5)]);_0x15fc04[_0x1f0c76(0x249)]=_0x1f0c76(0x204)+_0x1f0c76(0x20c)+_0x356175+(_0x1f0c76(0x1db)+_0x1f0c76(0x1d5));const _0x27def1=document[_0x1f0c76(0x274)+_0x1f0c76(0x21e)+'nt']();if(_0xc1d653[_0x1f0c76(0x275)](_0x356175,_0xc1d653[_0x1f0c76(0x1f3)]))_0x3e16d0[_0x1f0c76(0x213)](_0x41cd69=>{const _0x1032a8=_0x1f0c76,_0x226ff8=document[_0x1032a8(0x245)+_0x1032a8(0x235)](_0xc1d653[_0x1032a8(0x1c5)]);_0x226ff8[_0x1032a8(0x1c9)][_0x1032a8(0x1c3)]=_0x41cd69,_0x226ff8[_0x1032a8(0x249)]=_0x1032a8(0x204)+_0x1032a8(0x241)+(_0xc1d653[_0x1032a8(0x275)](_0x1c505c,_0x41cd69)?_0x356175+(_0x1032a8(0x1db)+_0x1032a8(0x280)+_0x1032a8(0x1aa)):_0x356175+(_0x1032a8(0x1db)+_0x1032a8(0x1df))),_0x226ff8[_0x1032a8(0x23b)]=_0x41cd69+_0x1032a8(0x25c)+this[_0x1032a8(0x18c)+_0x1032a8(0x205)+_0x1032a8(0x192)][_0x1032a8(0x1cf)](_0x41cd69),_0x27def1[_0x1032a8(0x247)+'d'](_0x226ff8);});else _0xc1d653[_0x1f0c76(0x275)](_0x356175,_0xc1d653[_0x1f0c76(0x258)])&&_0x3e16d0[_0x1f0c76(0x213)](({ingredient:_0x355b2e,count:_0x1aa23d})=>{const _0x583e7d=_0x1f0c76,_0x4a5acb=document[_0x583e7d(0x245)+_0x583e7d(0x235)](_0xc1d653[_0x583e7d(0x1c5)]);_0x4a5acb[_0x583e7d(0x1c9)][_0x583e7d(0x1c3)]=_0x355b2e,_0x4a5acb[_0x583e7d(0x249)]=_0x583e7d(0x204)+_0x583e7d(0x241)+(_0xc1d653[_0x583e7d(0x252)](_0x1c505c,_0x355b2e)?_0x356175+(_0x583e7d(0x1db)+_0x583e7d(0x280)+_0x583e7d(0x1aa)):_0x356175+(_0x583e7d(0x1db)+_0x583e7d(0x1df))),_0x4a5acb[_0x583e7d(0x23b)]=_0x583e7d(0x2b9)+_0x583e7d(0x204)+_0x583e7d(0x1bf)+_0x355b2e+(_0x583e7d(0x297)+_0x583e7d(0x285)+_0x583e7d(0x27c)+_0x583e7d(0x267))+_0x1aa23d+_0x583e7d(0x20b),_0x27def1[_0x583e7d(0x247)+'d'](_0x4a5acb);});return _0x15fc04[_0x1f0c76(0x247)+'d'](_0x27def1),_0x293c4e[_0x1f0c76(0x247)+'d'](_0x15fc04),_0x293c4e;};}function _0x1a00(){const _0x60810b=['logHideHan','KRNoo','hide','tem-select','PWCOp','gredient-i','renderFirs','searchFlag','hgsfG','.first-pan','</div>\x0a\x20\x20\x20','品牌-产品名称-原料','-panel-tit','$productDi','tClassific','sort','#emptySect','target','ndClassifi','cationIngr','findLastIn','VdqIi','querySelec','$emptySect','乳基底','ingredient','dientCount','keyup','$datePicke','CLIjj','ching-date','SearchChan','°</span>','-wrapper\x20','div','replace','.second-in','entries','ding','wfzAy','forEach','bind','#productLo','.first-ing','hXGQI','#emptyText','#secondCla','VxqFw','$productTb','uZpJO','replaceChi','mentFragme','ldren','QlnNX','其他口味','tTopN','EaxPr','key','ationIngre','productDia','</div>','data','edient','contains','init','EhJPk','Dpmrj','change','getClassif','dateChange','classList','<div\x20class','params','split','ent','logShowHan','iynXF','NESza','#productTa','edientClic','innerHTML','SQIyy','clearTimeo','uqlRG','nel\x20[data-','RWaya','-item\x20','title','secondIngr','ed-ingredi','createElem','type','appendChil','second-ing','className','3|2|1|0|4','tList','GFLxE','QqFPw','setParams','3730eWUFem','$secondCla','sPanel','plIAV','ssPanel','dJHqg','firstClass','iCcsT','dfkok','LYJcH','parentNode','ading','includes','\x20|\x20','iner\x27>\x0a\x20\x20\x20','LVlNZ','Enter','trim','ody','$ingredint','sification','yfUWP','ient','gQkrz','at\x22>','dientClick','selectedSe','Ingredient','max','getSecondC','OEMLl','loadProduc','ame=','#productTb','value','1971629gOVZWX','produce','createDocu','zJifm','\x20&\x20','输入关键词','redient-it','alog','edient-ite','gFGer','gredientHe','filter','WafIG','189ssGQFL','t-item-sel','tyMap','产品示例\x20(共\x20','remove','yOGsc','pan\x20id=\x22in','rstIngredi','uUBYm','ass-sectio','ificationI','.second-pa','reduce','grnyF','#ingredint','加工后成分','renderSeco','condIngred','暂无搜索结果，请重新','length','selectedIn','View','duction','vXVqH','</span>\x20<s','secondClas','yGhxS','click','vAJee','#productDi','LBMCe','-item','em-selecte','1OxwyNs','=\x27pannel-t','rJicV','count','482808ikaUaO','Heat','set','priority','dMoDs','ListMap','5018268LZqCEh','redientLis','handleFirs','second','el\x20[data-n','element','5206668KkJaiv','searchValu','has','selectedFi','暂无示例结果','YVgIh','现制饮品搭配\x20<sp','dex','#taste-mat','<span\x20id=\x22','zAWVq','-panel-','tor','gredient','$firstClas','ITOzZ','Handler','kCZhI','ationRende','tion','kHandler','onIngredie','cloneNode','show','slice','firstIngre','\x20条)','currentDat','pApHS','geHandler','Search','Map','dient','min','106540eORBoP','\x20至\x20','List','concat','-panel\x20','ETaUG','has-select','computedDa','RAhQo','Vsvjj','ndler','tMap','viDIq','first-ingr','computePro','</span>\x20','smooth','itle-conta','RIIns','ZTYNq','productLoa','ected','ent\x22>','$secondPan','panel\x20','2497126mJuxXD','ngredientM','first','\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20','findIndex','classifica','6606UDTfop','timer','成分分类','-picker','NXAMW','name=','\x20\x20\x20\x20\x20<div\x20','tionPriori','class=\x27pan','map','an\x20class=\x22','Text\x22\x20>','1|2|0|3|4','el-title\x20','.second-cl','name','VJOSY','dQVXq','UYcYp','icationIng','ITwLq','dataset','YVoMh','le\x27>','stener','edientCoun','HWuSl','get','ionIngredi','VyyIj','getFirstCl','$productLo','scrollInto','t-wrapper','productLis','m-selected','$productTa','185dZUoGp','content','-ingredien','Text','ble','add','t-item','dler','OnSearchHa','OIGKF','addEventLi','ion','#firstClas','nZdds','assificati','lassificat','FUlBt','setTimeout'];_0x1a00=function(){return _0x60810b;};return _0x1a00();}
+class TasteMatching {
+  data = [];
+  computedData = {
+    currentData: [],
+    activeIcon: 'table',
+    firstClassification: [],
+    firstIngredientCountMap: new Map(),
+    firstClassificationIngredientMap: new Map(),
+    startIndex: 0,
+    endIndex: 0,
+    secondIngredientCountMap: new Map(),
+    secondClassificationIngredientListMap: new Map(),
+    selectedFirstIngredient: "",
+    selectedSecondIngredient: "",
+    productList: [],
+    searchValue: "",
+    searchFlag: false,
+  };
+  classificationPriorityMap = new Map([
+    ["果味", 6],
+    ["茶底", 5],
+    ["花香", 4],
+    ["其他口味", 3],
+    ["乳基底", 2],
+    ["小料", 1],
+  ]);
+  element = {
+    $datePicker: document.querySelector("#taste-matching-date-picker"),
+    $switchIconButton: document.querySelector("#switchIconButton"),
+    $tableIcon: document.querySelector("#tableIcon"),
+    $chartIcon: document.querySelector("#chartIcon"),
+    $firstClassPanel: document.querySelector("#firstClassPanel"),
+    $secondClassPanel: document.querySelector("#secondClassPanel"),
+    $secondPanel: document.querySelector(".second-class-section"),
+    $productDialog: document.querySelector("#productDialog"),
+    $productTbody: document.querySelector("#productTbody"),
+    $productLoading: document.querySelector("#productLoading"),
+    $productTable: document.querySelector("#productTable"),
+    $ingredintSearch: document.querySelector("#ingredintSearch"),
+    $emptySection: document.querySelector("#emptySection"),
+  };
+  timer = {};
+  constructor(initData) {
+    this.init(initData);
+    this.bind();
+  }
+
+  init = (initData) => {
+    this.data = initData;
+    const dateRange = [...new Set(this.data.map((item) => item["月份"]))];
+    const lastDate = dateRange[dateRange.length - 1];
+    this.element.$datePicker.value = `${lastDate} 至 ${lastDate}`;
+    this.element.$datePicker.min = dateRange[0];
+    this.element.$datePicker.max = lastDate;
+    const startIndex = this.data.findIndex((d) => d["月份"] === lastDate);
+    const endIndex = this.data.findLastIndex((d) => d["月份"] === lastDate);
+    this.set({
+      currentData: this.data.slice(startIndex, endIndex),
+    });
+    this.element.$tableIcon.classList.toggle("table-icon-active");
+    const shouldRender = this.getFirstClassificationIngredient();
+    if (shouldRender) {
+      this.renderFirstClassificationIngredient();
+    }
+    this.element.$productDialog.setParams({
+      buttons: [],
+    });
+  };
+
+  get = (...keys) =>
+    keys.reduce(
+      (prev, key) => ({
+        ...prev,
+        [key]: this.computedData[key],
+      }),
+      {}
+    );
+
+  set = (data) => {
+    this.computedData = {
+      ...this.computedData,
+      ...data,
+    };
+  };
+
+  bind = () => {
+    const instance = this;
+    this.element.$datePicker.addEventListener("change", function () {
+      instance.dateChangeHandler(this.value);
+    });
+
+    this.element.$switchIconButton.addEventListener(
+      "click",
+      this.switchIconClickHandler
+    );
+
+    this.element.$firstClassPanel.addEventListener(
+      "click",
+      this.firstIngredientClickHandler
+    );
+
+    this.element.$secondClassPanel.addEventListener(
+      "click",
+      this.secondIngredientClickHandler
+    );
+
+    this.element.$productDialog.addEventListener(
+      "hide",
+      this.productDialogHideHandler
+    );
+
+    this.element.$productDialog.addEventListener(
+      "show",
+      this.productDialogShowHandler
+    );
+
+    this.element.$ingredintSearch.addEventListener(
+      "change",
+      this.ingredientSearchChangeHandler
+    );
+
+    this.element.$ingredintSearch.addEventListener(
+      "keyup",
+      this.ingredientOnSearchHandler
+    );
+  };
+
+  productDialogHideHandler = () => {
+    this.element.$productLoading.classList.remove("hide");
+    this.element.$productTable.classList.add("hide");
+    window.clearTimeout(this.timer.productLoading);
+  };
+
+  productDialogShowHandler = () => {
+    const { productList } = this.get("productList");
+    this.timer.productLoading = window.setTimeout(
+      () => {
+        this.element.$productLoading.classList.add("hide");
+        this.element.$productTable.classList.remove("hide");
+        if (productList.length > 0) {
+          this.element.$productDialog.params.title += `产品示例 (共 ${productList.length} 条)`;
+        }
+      },
+      productList.length > 10 ? 3000 : 1500
+    );
+  };
+
+  switchIconClickHandler = (e) => {
+    const activeEle = e.target;
+    if (activeEle.classList.contains("switch-icon")) {
+      if (activeEle.classList.contains("table-icon")) {
+        // TODO:
+        activeEle.classList.toggle("table-icon-active");
+        this.element.$chartIcon.classList.toggle("chart-icon-active");
+
+      }
+      if (activeEle.classList.contains("chart-icon")) {
+        activeEle.classList.toggle("chart-icon-active");
+        this.element.$tableIcon.classList.toggle("table-icon-active");
+
+      }
+    }
+  };
+
+  ingredientSearchChangeHandler = (e) => {
+    this.set({
+      searchValue: e.target.value.trim(),
+      searchFlag: false,
+    });
+
+    if (e.target.value === "") {
+      this.element.$secondPanel.classList.add("hide");
+      this.handleFirstClassificationRender("");
+    }
+  };
+
+  ingredientOnSearchHandler = (e) => {
+    const { searchValue, searchFlag } = this.get("searchValue", "searchFlag");
+
+    if (e.key === "Enter" && !searchFlag) {
+      this.element.$secondPanel.classList.add("hide");
+
+      this.handleFirstClassificationRender(searchValue);
+    }
+  };
+
+  dateChangeHandler(dateRange) {
+    const { searchValue } = this.get("searchValue");
+    const [startDate, endDate] = dateRange
+      .split("至")
+      .map((value) => value.trim());
+    const startIndex = this.data.findIndex((d) => d["月份"] === startDate);
+    const endIndex = this.data.findLastIndex((d) => d["月份"] === endDate);
+    this.set({
+      currentData: this.data.slice(startIndex, endIndex),
+    });
+    // 清除已选
+    this.set({
+      selectedFirstIngredient: "",
+      selectedSecondIngredient: "",
+    });
+    // 隐藏二级
+    this.element.$secondPanel.classList.add("hide");
+    // 重新渲染一级
+    this.handleFirstClassificationRender(searchValue);
+  }
+
+  handleFirstClassificationRender = (searchValue) => {
+    const shouldRender = this.getFirstClassificationIngredient(searchValue);
+    this.element.$firstClassPanel.innerHTML = null;
+    if (shouldRender) {
+      this.renderFirstClassificationIngredient();
+    } else {
+      this.element.$firstClassPanel.appendChild(
+        this.element.$emptySection.content.cloneNode(true)
+      );
+      document.querySelector("#emptyText").innerHTML =
+        "暂无搜索结果，请重新输入关键词";
+    }
+
+    this.set({ searchFlag: true });
+  };
+
+  firstIngredientClickHandler = (e) => {
+    const activeEle = e.target;
+    // 标签点击
+    if (
+      activeEle.classList.contains("ingredient-item") &&
+      !activeEle.classList.contains("first-ingredient-item-selected")
+    ) {
+      if (this.element.$secondPanel.classList.contains("hide")) {
+        this.element.$secondPanel.classList.remove("hide");
+      }
+      const currentSelectedItem = document.querySelector(
+        ".first-ingredient-item-selected"
+      );
+      if (currentSelectedItem) {
+        currentSelectedItem.classList.replace(
+          "first-ingredient-item-selected",
+          "first-ingredient-item"
+        );
+      }
+      const nextSelectedItem = document.querySelector(
+        `.first-panel [data-name=${activeEle.dataset.name}]`
+      );
+      if (nextSelectedItem) {
+        nextSelectedItem.classList.replace(
+          "first-ingredient-item",
+          "first-ingredient-item-selected"
+        );
+        this.set({
+          selectedFirstIngredient: activeEle.dataset.name,
+        });
+        this.getSecondClassificationIngredient();
+        this.renderSecondClassificationIngredient(activeEle.dataset.name);
+        this.element.$secondClassPanel.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
+  secondIngredientClickHandler = (e) => {
+    let activeEle = e.target;
+    const isTagChild = ["ingredientText", "ingredientHeat"].includes(
+      activeEle.id
+    );
+    activeEle = isTagChild ? activeEle.parentNode : activeEle;
+    // 标签点击
+    if (activeEle.classList.contains("ingredient-item")) {
+      if (!activeEle.classList.contains("second-ingredient-item-selected")) {
+        const currentSelectedItem = document.querySelector(
+          ".second-ingredient-item-selected"
+        );
+        if (currentSelectedItem) {
+          currentSelectedItem.classList.replace(
+            "second-ingredient-item-selected",
+            "second-ingredient-item"
+          );
+        }
+        const nextSelectedItem = document.querySelector(
+          `.second-panel [data-name=${activeEle.dataset.name}]`
+        );
+        if (nextSelectedItem) {
+          nextSelectedItem.classList.replace(
+            "second-ingredient-item",
+            "second-ingredient-item-selected"
+          );
+          this.set({
+            selectedSecondIngredient: activeEle.dataset.name,
+          });
+          const { selectedFirstIngredient } = this.get(
+            "selectedFirstIngredient"
+          );
+
+          const productList = this.computeProduction(
+            selectedFirstIngredient,
+            activeEle.dataset.name
+          );
+
+          this.set({
+            productList,
+          });
+
+          this.loadProductList(productList);
+        }
+      } else {
+        this.element.$productDialog.show();
+      }
+    }
+  };
+
+  getFirstClassificationIngredient = (searchKey) => {
+    const { currentData } = this.get("currentData");
+    // const firstClassification = [
+    //   ...new Set(currentData.map((item) => item["成分分类"])),
+    // ];
+
+    const firstIngredientCountMap = new Map();
+
+    const firstClassificationIngredientMap = new Map();
+
+    const filterData = !!searchKey
+      ? currentData.filter((data) => data["加工后成分"].includes(searchKey))
+      : currentData;
+
+    if (filterData.length === 0) {
+      return false;
+    }
+
+    filterData.forEach((item) => {
+      const key = item["加工后成分"];
+      if (firstIngredientCountMap.has(key)) {
+        firstIngredientCountMap.set(key, firstIngredientCountMap.get(key) + 1);
+      } else {
+        firstIngredientCountMap.set(key, 1);
+      }
+    });
+
+    const sortedData = filterData
+      .map((item) => ({
+        ...item,
+        count: firstIngredientCountMap.get(item["加工后成分"]),
+      }))
+      .sort((a, b) => b.count - a.count);
+
+    sortedData.forEach((item) => {
+      const key = item["成分分类"];
+      const value = item["加工后成分"];
+      if (firstClassificationIngredientMap.has(key)) {
+        firstClassificationIngredientMap.set(
+          key,
+          firstClassificationIngredientMap.get(key).concat(value)
+        );
+      } else {
+        firstClassificationIngredientMap.set(key, [value]);
+      }
+    });
+
+    // 加工后成分去重
+    for (let [key, value] of firstClassificationIngredientMap.entries()) {
+      firstClassificationIngredientMap.set(key, [...new Set(value)]);
+    }
+
+    this.set({
+      firstClassificationIngredientMap,
+      firstIngredientCountMap,
+    });
+
+    return true;
+  };
+
+  renderFirstClassificationIngredient = (selectedIngredient) => {
+    const { firstClassificationIngredientMap, firstIngredientCountMap } =
+      this.get("firstClassificationIngredientMap", "firstIngredientCountMap");
+    const firstPanelFragment = document.createDocumentFragment();
+    const firstClassificationIngredientArray = [
+      ...firstClassificationIngredientMap,
+    ].map(([classification, ingredientList]) => ({
+      classification,
+      ingredientList,
+      priority: this.classificationPriorityMap.get(classification),
+    }));
+
+    const resortFirstClassificationIngredient =
+      firstClassificationIngredientArray
+        .sort((a, b) => b.priority - a.priority)
+        .filter(({ classification }) => classification !== "小料");
+    for (let {
+      classification,
+      ingredientList,
+    } of resortFirstClassificationIngredient) {
+      const panelItemInstance = new PanelItem({
+        type: "first",
+        classification,
+        ingredientList,
+        selectedIngredient,
+        firstIngredientCountMap,
+      });
+      firstPanelFragment.appendChild(panelItemInstance.produce());
+    }
+    this.element.$firstClassPanel.replaceChildren(firstPanelFragment);
+  };
+
+  getSecondClassificationIngredient = () => {
+    const { currentData, selectedFirstIngredient } = this.get(
+      "currentData",
+      "selectedFirstIngredient"
+    );
+    const uniqueProductBrandIngredientList = [
+      ...new Set(
+        currentData
+          .filter((data) => data["加工后成分"] === selectedFirstIngredient)
+          .map((item) => item["品牌-产品名称-原料构成"])
+      ),
+    ];
+
+    // 二级成分:出现次数映射关系
+    const secondIngredientCountMap = new Map();
+
+    // 计算二级成分:出现次数映射关系
+    for (let item of uniqueProductBrandIngredientList) {
+      // 获取品牌、产品名称、原料构成对应的二级成分
+      const secondIngredientList = currentData
+        .filter((data) => data["品牌-产品名称-原料构成"] === item)
+        .map((data) => data["加工后成分"]);
+
+      // 排除一级成分后的二级成分
+      const omitFirstSecondIngredientList = secondIngredientList.filter(
+        (ingredient) => ingredient !== selectedFirstIngredient
+      );
+
+      // 统计二级成分出现次数
+      for (let ingredient of omitFirstSecondIngredientList) {
+        if (secondIngredientCountMap.has(ingredient)) {
+          secondIngredientCountMap.set(
+            ingredient,
+            secondIngredientCountMap.get(ingredient) + 1
+          );
+        } else {
+          secondIngredientCountMap.set(ingredient, 1);
+        }
+      }
+    }
+
+    // 获取二级创新成分分类:二级创新成分映射关系
+    const secondClassificationIngredientListMap = new Map();
+
+    for (let [ingredient] of secondIngredientCountMap.entries()) {
+      // 获取二级成分对应的二级创新成分分类
+      const secondClassificationList = currentData
+        .filter((data) => data["加工后成分"] === ingredient)
+        .map((data) => data["成分分类"]);
+      const [secondClassification] = secondClassificationList;
+
+      if (secondClassificationIngredientListMap.has(secondClassification)) {
+        secondClassificationIngredientListMap.set(
+          secondClassification,
+          secondClassificationIngredientListMap
+            .get(secondClassification)
+            .concat(ingredient)
+        );
+      } else {
+        secondClassificationIngredientListMap.set(secondClassification, [
+          ingredient,
+        ]);
+      }
+    }
+
+    this.set({
+      secondIngredientCountMap,
+      secondClassificationIngredientListMap,
+    });
+  };
+
+  renderSecondClassificationIngredient = () => {
+    const { secondClassificationIngredientListMap, selectedSecondIngredient } =
+      this.get(
+        "secondClassificationIngredientListMap",
+        "selectedSecondIngredient"
+      );
+    const secondPanelFragment = document.createDocumentFragment();
+    // '其他口味'的索引
+    const secondClassificationIngredientArray = [
+      ...secondClassificationIngredientListMap,
+    ].map(([classification, ingredientList]) => ({
+      classification,
+      ingredientList,
+      priority: this.classificationPriorityMap.get(classification),
+    }));
+
+    const resortSecondClassificationIngredient =
+      secondClassificationIngredientArray.sort(
+        (a, b) => b.priority - a.priority
+      );
+
+    const secondClassificationWithCount =
+      this.getClassificationIngredientListTopN(
+        resortSecondClassificationIngredient,
+        10
+      );
+
+    for (let {
+      classification,
+      ingredientListWithCount,
+    } of secondClassificationWithCount) {
+      const panelItemInstance = new PanelItem({
+        type: "second",
+        classification,
+        ingredientList: ingredientListWithCount,
+        selectedSecondIngredient,
+      });
+      secondPanelFragment.appendChild(panelItemInstance.produce());
+    }
+    this.element.$secondClassPanel.replaceChildren(secondPanelFragment);
+  };
+
+  getClassificationIngredientListTopN = (
+    resortSecondClassificationIngredient,
+    n
+  ) => {
+    const { secondIngredientCountMap } = this.get("secondIngredientCountMap");
+
+    return resortSecondClassificationIngredient.map(
+      ({ classification, ingredientList }) => ({
+        classification,
+        ingredientListWithCount: ingredientList
+          .map((ingredient) => ({
+            ingredient,
+            count: secondIngredientCountMap.get(ingredient),
+          }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, n),
+      })
+    );
+  };
+
+  computeProduction = (firstIngredient, secondIngredient) => {
+    const { currentData } = this.get("currentData");
+    const firstIngredientList = currentData
+      .filter((data) => data["加工后成分"] === firstIngredient)
+      .map((data) => data["品牌-产品名称-原料构成"]);
+    const secondIngredientList = currentData
+      .filter((data) => data["加工后成分"] === secondIngredient)
+      .map((data) => data["品牌-产品名称-原料构成"]);
+    const intersectionList = firstIngredientList.filter((item) =>
+      secondIngredientList.includes(item)
+    );
+
+    return [...new Set(intersectionList)];
+  };
+
+  loadProductList = (productList) => {
+    const { selectedFirstIngredient, selectedSecondIngredient } = this.get(
+      "selectedFirstIngredient",
+      "selectedSecondIngredient"
+    );
+    this.element.$productTbody.innerHTML = null;
+    if (productList.length === 0) {
+      this.element.$productTbody.appendChild(
+        this.element.$emptySection.content.cloneNode(true)
+      );
+      document.querySelector("#emptyText").innerHTML = "暂无示例结果";
+    } else {
+      const tbodyFragment = document.createDocumentFragment();
+      productList.forEach((item) => {
+        const tr = document.createElement("tr");
+        item.split("-").forEach((value) => {
+          const td = document.createElement("td");
+          td.innerHTML = value;
+          tr.appendChild(td);
+        });
+        tbodyFragment.appendChild(tr);
+      });
+      this.element.$productDialog.params.title = `现制饮品搭配 <span class="has-selected-ingredient">${selectedFirstIngredient} & ${selectedSecondIngredient}</span> `;
+      this.element.$productTbody.appendChild(tbodyFragment);
+    }
+
+    this.element.$productDialog.show();
+  };
+}
+
+class PanelItem {
+  constructor({
+    type,
+    classification,
+    ingredientList,
+    selectedIngredient,
+    firstIngredientCountMap,
+  }) {
+    this.type = type;
+    this.classification = classification;
+    this.ingredientList = ingredientList;
+    this.selectedIngredient = selectedIngredient;
+    this.firstIngredientCountMap = firstIngredientCountMap;
+  }
+
+  produce = () => {
+    const { type, classification, ingredientList, selectedIngredient } = this;
+    const panelEle = document.createElement("div");
+    panelEle.className = `panel ${type}-panel ${type}-panel-${classification}`;
+    panelEle.innerHTML = `<div class='pannel-title-container'>
+        <div class='panel-title ${type}-panel-title'>${classification}</div>
+    
+        </div>`;
+    const ingredientWraper = document.createElement("div");
+    ingredientWraper.className = `ingredient-wrapper ${type}-ingredient-wrapper`;
+    const panelFragment = document.createDocumentFragment();
+    if (type === "first") {
+      ingredientList.forEach((ingredient) => {
+        const ingredientItem = document.createElement("div");
+        ingredientItem.dataset.name = ingredient;
+        ingredientItem.className = `ingredient-item ${
+          selectedIngredient === ingredient
+            ? `${type}-ingredient-item-selected`
+            : `${type}-ingredient-item`
+        }`;
+        ingredientItem.innerHTML = `${ingredient} | ${this.firstIngredientCountMap.get(
+          ingredient
+        )}`;
+        panelFragment.appendChild(ingredientItem);
+      });
+    } else if (type === "second") {
+      ingredientList.forEach(({ ingredient, count }) => {
+        const ingredientItem = document.createElement("div");
+        ingredientItem.dataset.name = ingredient;
+        ingredientItem.className = `ingredient-item ${
+          selectedIngredient === ingredient
+            ? `${type}-ingredient-item-selected`
+            : `${type}-ingredient-item`
+        }`;
+        ingredientItem.innerHTML = `<span id="ingredientText" >${ingredient}</span> <span id="ingredientHeat">${count}°</span>`;
+        panelFragment.appendChild(ingredientItem);
+      });
+    }
+
+    ingredientWraper.appendChild(panelFragment);
+    panelEle.appendChild(ingredientWraper);
+
+    return panelEle;
+  };
+}
