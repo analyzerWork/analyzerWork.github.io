@@ -42,7 +42,7 @@ body{
 .view-switch-container {
     display: flex;
     align-items: center;
-    margin-inline: 24px;
+    margin-inline: 36px;
 }
 
 .search-container{
@@ -58,8 +58,8 @@ body{
     display: flex;
     align-items: center;
     width: 84px;
-    height: 40px;
-    border: 1px solid var(--color-primary-dark);
+    height: 38px;
+    border: 1px solid var(--ui-border);
     border-radius: 4px;
     padding-inline: 10px 0;
 }
@@ -103,6 +103,12 @@ body{
 .first-tree-map {
     width: 900px;
     height: 420px;
+    margin-inline: 70px;
+}
+
+.second-tree-map {
+    width: 940px;
+    height: 600px;
     margin-inline: 70px;
 }
 
