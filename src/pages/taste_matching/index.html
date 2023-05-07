@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../../assets/reset.css" />
     <link rel="stylesheet" href="index.css" />
     <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/DateTime.js"></script>
+    <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Select.js"></script>
     <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Dialog.js"></script>
 
 
@@ -25,26 +26,41 @@
     <div class="taste-matching-content">
         <section class="first-class-section">
             <div class="font-title section-title">创新成分概览</div>
-            <div class="search-container">
-                <span class="search-label">搜索成分:</span>
-                <span class="ui-input ui-input-search" align="end">
-                    <input id="ingredintSearch" type="search" placeholder="请输入">
-                    <button class="ui-icon-search">搜索</button>
-                </span>
+            <div class="tool-bar">
+                <div class="search-container">
+                    <span class="search-label">搜索成分:</span>
+                    <span class="ui-input ui-input-search" align="end">
+                        <input id="ingredintSearch" type="search" placeholder="请输入">
+                        <button class="ui-icon-search">搜索</button>
+                    </span>
+                </div>
+                <div class="view-switch-container">
+                    <span>视图模式：</span>
+                    <div id="switchIconButton" class="switch-button-container">
+                        <span id="tableIcon" class="switch-icon table-icon"></span>
+                        <span id="chartIcon" class="switch-icon chart-icon"></span>
+                    </div>
+                </div>
+                <div id="selectWrapper" class="select-container hide-block">
+                    <span class="text">选择分类：</span>
+                    <select id="firstClassSelect" is="ui-select"></select>
+                </div>
             </div>
 
-            <div id="switchIconButton" class="switch-button-container">
-                <span id="tableIcon" class="switch-icon table-icon"></span>
-                <span id="chartIcon"  class="switch-icon chart-icon"></span>
-            </div>
 
-            <div id="firstClassPanel">
+            <div id="firstClassPanel" class="first-class-panel"></div>
+            <div id="firstClassChart" class="first-class-chart hide-block">
 
+
+                <div id="firstTreeMap" class="first-tree-map"></div>
             </div>
         </section>
         <section class="second-class-section hide">
             <div class="font-title section-title">创新成分搭配热度Top10</div>
-            <div id="secondClassPanel"></div>
+            <div id="secondClassPanel" class="second-class-panel"></div>
+            <div id="secondClassChart" class="second-class-chart hide-block">
+                <div id="secondTreeMap" class="second-tree-map"></div>
+            </div>
             <dialog id="productDialog" is="ui-dialog" title="">
                 <div id="productLoading" class="ui-loading" style="height: 100px;">计算中<ui-dot></ui-dot></div>
 
@@ -75,6 +91,11 @@
             <div id="emptyText"></div>
         </div>
     </template>
+
+    <script src="./computed.js"></script>
+
+    <script src="../../chartConfig/treemap.js"></script>
+
 
     <script src="./model.js"></script>
 

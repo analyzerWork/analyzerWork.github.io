@@ -61,3 +61,8 @@ a{
 .hide {
     display: none;
 }
+.text {
+    font-size: 14px;
+    color: var(--color-primary-dark);
+
+}

@@ -1,8 +1,10 @@
 class TasteMatching {
   data = [];
+  firstTreeMapInstance = null;
+  secondTreeMapInstance = null;
   computedData = {
     currentData: [],
-    activeIcon: 'table',
+    activeIcon: "table",
     firstClassification: [],
     firstIngredientCountMap: new Map(),
     firstClassificationIngredientMap: new Map(),
@@ -16,21 +18,18 @@ class TasteMatching {
     searchValue: "",
     searchFlag: false,
   };
-  classificationPriorityMap = new Map([
-    ["果味", 6],
-    ["茶底", 5],
-    ["花香", 4],
-    ["其他口味", 3],
-    ["乳基底", 2],
-    ["小料", 1],
-  ]);
+
   element = {
     $datePicker: document.querySelector("#taste-matching-date-picker"),
     $switchIconButton: document.querySelector("#switchIconButton"),
     $tableIcon: document.querySelector("#tableIcon"),
     $chartIcon: document.querySelector("#chartIcon"),
+    $firstClassSelect: document.querySelector("#firstClassSelect"),
     $firstClassPanel: document.querySelector("#firstClassPanel"),
+    $firstClassChart: document.querySelector("#firstClassChart"),
+    $secondClassSelect: document.querySelector("#secondClassSelect"),
     $secondClassPanel: document.querySelector("#secondClassPanel"),
+    $secondClassChart: document.querySelector("#secondClassChart"),
     $secondPanel: document.querySelector(".second-class-section"),
     $productDialog: document.querySelector("#productDialog"),
     $productTbody: document.querySelector("#productTbody"),
@@ -38,6 +37,9 @@ class TasteMatching {
     $productTable: document.querySelector("#productTable"),
     $ingredintSearch: document.querySelector("#ingredintSearch"),
     $emptySection: document.querySelector("#emptySection"),
+    $selectWrapper: document.querySelector("#selectWrapper"),
+    $firstTreeMap: document.querySelector("#firstTreeMap"),
+    $secondTreeMap: document.querySelector("#secondTreeMap"),
   };
   timer = {};
   constructor(initData) {
@@ -94,6 +96,11 @@ class TasteMatching {
       this.switchIconClickHandler
     );
 
+    this.element.$firstClassSelect.addEventListener(
+      "change",
+      this.firstClassSelectChangeHandler
+    );
+
     this.element.$firstClassPanel.addEventListener(
       "click",
       this.firstIngredientClickHandler
@@ -148,19 +155,41 @@ class TasteMatching {
   switchIconClickHandler = (e) => {
     const activeEle = e.target;
     if (activeEle.classList.contains("switch-icon")) {
+      const { activeIcon } = this.get("activeIcon");
+      if (
+        (activeIcon === "table" &&
+          activeEle.classList.contains("table-icon")) ||
+        (activeIcon === "chart" && activeEle.classList.contains("chart-icon"))
+      ) {
+        return;
+      }
+
       if (activeEle.classList.contains("table-icon")) {
-        // TODO:
+        this.set({
+          activeIcon: "table",
+        });
         activeEle.classList.toggle("table-icon-active");
         this.element.$chartIcon.classList.toggle("chart-icon-active");
-
       }
       if (activeEle.classList.contains("chart-icon")) {
+        this.set({
+          activeIcon: "chart",
+        });
         activeEle.classList.toggle("chart-icon-active");
         this.element.$tableIcon.classList.toggle("table-icon-active");
-
       }
+      this.renderFirstClassificationIngredient();
+      this.element.$firstClassChart.classList.toggle("hide-block");
+      this.element.$firstClassPanel.classList.toggle("hide-block");
+      this.element.$secondClassChart.classList.toggle("hide-block");
+      this.element.$secondClassPanel.classList.toggle("hide-block");
+      this.element.$selectWrapper.classList.toggle("hide-block");
     }
   };
+
+  firstClassSelectChangeHandler = (e) => {
+    console.log(e);
+  }
 
   ingredientSearchChangeHandler = (e) => {
     this.set({
@@ -369,35 +398,79 @@ class TasteMatching {
   };
 
   renderFirstClassificationIngredient = (selectedIngredient) => {
-    const { firstClassificationIngredientMap, firstIngredientCountMap } =
-      this.get("firstClassificationIngredientMap", "firstIngredientCountMap");
-    const firstPanelFragment = document.createDocumentFragment();
-    const firstClassificationIngredientArray = [
-      ...firstClassificationIngredientMap,
-    ].map(([classification, ingredientList]) => ({
-      classification,
-      ingredientList,
-      priority: this.classificationPriorityMap.get(classification),
-    }));
-
+    const {
+      firstClassificationIngredientMap,
+      firstIngredientCountMap,
+      activeIcon,
+    } = this.get(
+      "firstClassificationIngredientMap",
+      "firstIngredientCountMap",
+      "activeIcon"
+    );
     const resortFirstClassificationIngredient =
-      firstClassificationIngredientArray
-        .sort((a, b) => b.priority - a.priority)
-        .filter(({ classification }) => classification !== "小料");
-    for (let {
-      classification,
-      ingredientList,
-    } of resortFirstClassificationIngredient) {
-      const panelItemInstance = new PanelItem({
-        type: "first",
+      computeResortClassificationIngredient(
+        firstClassificationIngredientMap,
+        "first"
+      );
+
+    if (activeIcon === "table") {
+      const firstPanelFragment = document.createDocumentFragment();
+
+      for (let {
         classification,
         ingredientList,
-        selectedIngredient,
-        firstIngredientCountMap,
-      });
-      firstPanelFragment.appendChild(panelItemInstance.produce());
+      } of resortFirstClassificationIngredient) {
+        const panelItemInstance = new PanelItem({
+          type: "first",
+          classification,
+          ingredientList,
+          selectedIngredient,
+          firstIngredientCountMap,
+        });
+        firstPanelFragment.appendChild(panelItemInstance.produce());
+      }
+      this.element.$firstClassPanel.replaceChildren(firstPanelFragment);
     }
-    this.element.$firstClassPanel.replaceChildren(firstPanelFragment);
+    if (activeIcon === "chart") {
+      // 生成一级成分下拉菜单
+      const firstClassificationList = resortFirstClassificationIngredient.map(
+        ({ classification }) => classification
+      );
+      const menuFragment = computedMenuOptionsFragment(firstClassificationList);
+      console.log(firstClassificationList);
+      this.element.$firstClassSelect.innerHTML = null;
+      this.element.$firstClassSelect.appendChild(menuFragment);
+      this.element.$firstClassSelect.value = firstClassificationList[0];
+      // 绘制矩阵图
+      this.renderIngredientTreemap(
+        resortFirstClassificationIngredient,
+        firstClassificationList[0],
+        "first"
+      );
+    }
+  };
+
+  renderIngredientTreemap = (
+    classificationIngredientList,
+    classification,
+    type
+  ) => {
+    const { firstIngredientCountMap } = this.get("firstIngredientCountMap");
+
+    if (type === "first") {
+      if (!this.firstTreeMapInstance) {
+        this.firstTreeMapInstance = window.parent.echarts.init(
+          this.element.$firstTreeMap
+        );
+      }
+      const data = computedFirstClassificationIngredientTreeData(
+        classificationIngredientList,
+        classification,
+        firstIngredientCountMap
+      );
+
+      this.firstTreeMapInstance.setOption(getTreemapOption(data));
+    }
   };
 
   getSecondClassificationIngredient = () => {
@@ -478,18 +551,10 @@ class TasteMatching {
         "selectedSecondIngredient"
       );
     const secondPanelFragment = document.createDocumentFragment();
-    // '其他口味'的索引
-    const secondClassificationIngredientArray = [
-      ...secondClassificationIngredientListMap,
-    ].map(([classification, ingredientList]) => ({
-      classification,
-      ingredientList,
-      priority: this.classificationPriorityMap.get(classification),
-    }));
 
     const resortSecondClassificationIngredient =
-      secondClassificationIngredientArray.sort(
-        (a, b) => b.priority - a.priority
+      computeResortClassificationIngredient(
+        secondClassificationIngredientListMap
       );
 
     const secondClassificationWithCount =
