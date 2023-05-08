@@ -19,6 +19,9 @@ body{
     font-family: 'RichBlack';
     color: var(--color-primary-dark);
 }
+
+
+
 .taste-matching-content{
     flex: 1;
     margin: 12px 0 0;
@@ -30,6 +33,12 @@ body{
 
 .section-title {
     margin: 12px 24px;
+}
+
+.hot-ingredient-select-container{
+    display: flex;
+    align-items: center;
+    margin: 24px;
 }
 
 .tool-bar {
@@ -52,6 +61,12 @@ body{
 
 .search-label{
     margin: 0 10px 0 0;
+}
+
+.hot-bar-map {
+    width: 1000px;
+    height: 400px;
+    margin-inline: 24px;
 }
 
 .switch-button-container{

@@ -1,7 +1,42 @@
 const TOOLTIP_MAP = new Map([
-  ['first','频次'],
-  ['second','热度']
+  ["first", "频次"],
+  ["second", "热度"],
 ]);
+
+const getFirstTreemapData = (data, selectedName) =>
+  data.map((item) => ({
+    ...item,
+    ...(item.name === selectedName
+      ? {
+          itemStyle: { borderWidth: 2, borderColor: "#fff" },
+          label: { fontSize: 18 },
+        }
+      : undefined),
+  }));
+
+const getSecondTreemapData = (data, selectedName) =>
+  data.map((item) => {
+    const currentDataItem = item.children.find(
+      ({ name }) => name === selectedName
+    );
+    const dataItem = currentDataItem
+      ? {
+          ...item,
+          children: item.children.map((childItem) => ({
+            ...childItem,
+            ...(childItem.name === selectedName
+              ? {
+                  itemStyle: { borderWidth: 2, borderColor: "#fff" },
+                  label: { fontSize: 18 },
+                }
+              : undefined),
+          })),
+        }
+      : item;
+
+    return dataItem;
+  });
+
 const getTreemapOption = (type, data, selectedName) => {
   const { format: formatUtil } = window.parent.echartsUtil;
   return {
@@ -15,7 +50,7 @@ const getTreemapOption = (type, data, selectedName) => {
         }
         return [
           `<div class="tooltip-title">成分：${formatUtil.encodeHTML(
-            treePath.join("/")
+            treePath.join(" / ")
           )}</div>`,
           `${TOOLTIP_MAP.get(type)}：${formatUtil.addCommas(value)}`,
         ].join("");
@@ -24,15 +59,10 @@ const getTreemapOption = (type, data, selectedName) => {
     series: [
       {
         type: "treemap",
-        data: data.map((item) => ({
-          ...item,
-          ...(item.name === selectedName
-            ? {
-                itemStyle: { borderWidth: 2, borderColor: "#fff" },
-                label: { fontSize: 18 },
-              }
-            : undefined),
-        })),
+        data:
+          type === "first"
+            ? getFirstTreemapData(data, selectedName)
+            : getSecondTreemapData(data, selectedName),
         upperLabel:
           type === "second"
             ? {
