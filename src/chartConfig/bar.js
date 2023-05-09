@@ -3,6 +3,16 @@ const getBarOptions = ({ x_data, y_data }) => {
     grid: {
         bottom: 100,
     },
+    tooltip: {
+      trigger: "axis",
+      formatter: function (params) {
+        const [{name,value}] = params;
+        return [
+          `<div class="tooltip-title">成分：${name}</div>`,
+          `频次：${value}`,
+        ].join("");
+      },
+    },
     xAxis: {
       type: "category",
       data: x_data,
@@ -12,6 +22,9 @@ const getBarOptions = ({ x_data, y_data }) => {
     },
     yAxis: {
       type: "value",
+      splitLine:{
+        show: false,
+      }
     },
     series: [
       {
@@ -23,8 +36,6 @@ const getBarOptions = ({ x_data, y_data }) => {
         },
       },
     ],
-    tooltip:{
-        trigger: "axis",
-    }
+
   };
 };

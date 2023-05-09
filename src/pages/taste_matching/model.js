@@ -384,13 +384,15 @@ class TasteMatching {
   };
 
   handleAfterClickFirstIngredient = () => {
+    const { activeIcon } = this.get("activeIcon");
     if (this.element.$secondPanel.classList.contains("hide")) {
       this.element.$secondPanel.classList.remove("hide");
     }
 
     this.getSecondClassificationIngredient();
     this.renderSecondClassificationIngredient();
-    this.element.$secondClassPanel.scrollIntoView({ behavior: "smooth" });
+    const secondContainer = activeIcon === "table" ? '$secondClassPanel' : '$secondClassChart';
+    this.element[secondContainer].scrollIntoView({ behavior: "smooth" });
   };
 
   secondIngredientClickHandler = (e) => {

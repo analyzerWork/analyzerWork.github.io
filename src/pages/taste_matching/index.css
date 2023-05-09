@@ -32,7 +32,7 @@ body{
 }
 
 .section-title {
-    margin: 12px 24px;
+    margin: 24px;
 }
 
 .hot-ingredient-select-container{
@@ -123,8 +123,8 @@ body{
 
 .second-tree-map {
     width: 940px;
-    height: 600px;
-    margin-inline: 70px;
+    height: 560px;
+    margin-inline: 95px 0;
 }
 
 
