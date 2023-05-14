@@ -25,7 +25,7 @@
 
     <div class="content-wrapper">
         <div class="taste-matching-content">
-            <div class="font-title section-title">热门成分Top15</div>
+            <div class="title section-title">热门成分Top15</div>
             <div class="hot-ingredient-select-container">
                 <span class="text">选择分类：</span>
                 <select id="hotIngredientSelect" is="ui-select"></select>
@@ -35,12 +35,12 @@
 
         <div class="taste-matching-content">
             <section class="first-class-section">
-                <div class="font-title section-title">创新成分概览</div>
+                <div class="title section-title">创新成分概览</div>
                 <div class="tool-bar">
                     <div class="search-container">
                         <span class="search-label">搜索成分:</span>
                         <span class="ui-input ui-input-search" align="end">
-                            <input id="ingredintSearch" type="search" placeholder="请输入">
+                            <input id="ingredientSearch" type="search" placeholder="请输入">
                             <button class="ui-icon-search">搜索</button>
                         </span>
                     </div>
@@ -66,7 +66,7 @@
                 </div>
             </section>
             <section class="second-class-section hide">
-                <div class="font-title section-title">创新成分搭配热度Top10</div>
+                <div class="title section-title">创新成分搭配热度Top10</div>
                 <div id="secondClassPanel" class="second-class-panel"></div>
                 <div id="secondClassChart" class="second-class-chart hide-block">
                     <div id="secondTreeMap" class="second-tree-map"></div>
@@ -104,11 +104,11 @@
             <div id="emptyText"></div>
         </div>
     </template>
-
+    <script src="../commonComputed.js"></script>
     <script src="./computed.js"></script>
 
-    <script src="../../chartConfig/treemap.js"></script>
-    <script src="../../chartConfig/bar.js"></script>
+    <script src="../../chartConfig/taste_matching/treemap.js"></script>
+    <script src="../../chartConfig/taste_matching/bar.js"></script>
 
 
 
@@ -116,7 +116,7 @@
 
     <script>
 
-        const SOURCE_PATH = './src/pages/taste_matching/datasource/';
+        const SOURCE_PATH = './src/pages/datasource/';
         const { ANAlYZER_UTILS } = window.parent;
 
 

@@ -41,7 +41,7 @@ class TasteMatching {
     $productTbody: document.querySelector("#productTbody"),
     $productLoading: document.querySelector("#productLoading"),
     $productTable: document.querySelector("#productTable"),
-    $ingredintSearch: document.querySelector("#ingredintSearch"),
+    $ingredientSearch: document.querySelector("#ingredientSearch"),
     $emptySection: document.querySelector("#emptySection"),
     $firstClassSelectWrapper: document.querySelector(
       "#firstClassSelectWrapper"
@@ -150,12 +150,12 @@ class TasteMatching {
       this.productDialogShowHandler
     );
 
-    this.element.$ingredintSearch.addEventListener(
+    this.element.$ingredientSearch.addEventListener(
       "change",
       this.ingredientSearchChangeHandler
     );
 
-    this.element.$ingredintSearch.addEventListener(
+    this.element.$ingredientSearch.addEventListener(
       "keyup",
       this.ingredientOnSearchHandler
     );

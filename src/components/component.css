@@ -1,0 +1,38 @@
+.select-panel-item {
+    margin-right: 12px
+}
+
+.select-panel-option-container {
+    max-height: 260px;
+    padding-inline: 0 6px;
+    overflow-y: auto;
+}
+
+.select-panel-option-container::-webkit-scrollbar {
+    display: block;
+}
+
+.select-panel-item-title {
+    margin-block: 12px;
+    padding-inline: 6px 0;
+}
+
+.select-panel-option {
+    max-width: 120px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.select-panel-option:not(.option-active):hover{
+    background-color: var(--color-background);
+}
+
+.option-active {
+    border:1px solid var(--ui-blue);
+    border-radius: 2px;
+    color:  var(--ui-blue);
+    cursor: default;
+}

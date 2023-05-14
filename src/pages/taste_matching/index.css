@@ -64,9 +64,8 @@ body{
 }
 
 .hot-bar-map {
-    width: 1000px;
+    width: 100%;
     height: 400px;
-    margin-inline: 24px;
 }
 
 .switch-button-container{
@@ -106,7 +105,7 @@ body{
     background-image: url('../../assets/icons/chart_active.svg');
 }
 
-.first-class-chart {
+.first-class-chart,.second-class-chart {
     margin-inline: 24px;
 }
 
@@ -118,13 +117,13 @@ body{
 .first-tree-map {
     width: 900px;
     height: 420px;
-    margin-inline: 70px;
+    margin: 0 auto;
 }
 
 .second-tree-map {
-    width: 940px;
+    width: 1000px;
+    margin: 0 auto;
     height: 560px;
-    margin-inline: 95px 0;
 }
 
 

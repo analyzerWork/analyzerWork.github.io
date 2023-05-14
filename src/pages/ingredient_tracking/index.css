@@ -1,0 +1,39 @@
+body{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.tool-bar{
+    display: flex;
+    align-items: center;
+    padding: 10px 24px;
+    border-radius: 4px;
+    background-color: var(--color-primary-white);
+}
+.base-label {
+    font-size: 14px;
+}
+#ingredient-track-date-picker{
+    width: 180px;
+    font-family: 'RichBlack';
+    color: var(--color-primary-dark);
+    margin-inline: 0 24px;
+}
+
+.content{
+    flex: 1;
+    margin: 12px 0 0;
+    padding: 0 0 20px;
+    border-radius: 4px;
+    background-color: var(--color-primary-white);
+    overflow-y: auto;
+}
+
+.section-title {
+    margin: 24px;
+}
+
+.ingredient-select{
+    width: 205px;
+}
