@@ -1,3 +1,13 @@
+.select-panel-container {
+    position: absolute;
+    margin-top: 6px;
+    padding: 14px 20px;
+    background-color: var(--color-primary-white);
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    z-index: 9999;
+
+}
 .select-panel-item {
     margin-right: 12px
 }
@@ -5,7 +15,7 @@
 .select-panel-option-container {
     max-height: 260px;
     padding-inline: 0 6px;
-    overflow-y: auto;
+    overflow-y: overlay;
 }
 
 .select-panel-option-container::-webkit-scrollbar {
@@ -13,8 +23,9 @@
 }
 
 .select-panel-item-title {
-    margin-block: 12px;
-    padding-inline: 6px 0;
+    margin: 12px 12px 12px 0;
+    padding-inline: 6px;
+    text-align: center;
 }
 
 .select-panel-option {
@@ -24,6 +35,8 @@
     text-overflow: ellipsis;
     padding: 6px;
     cursor: pointer;
+    text-align: center;
+    margin-inline: 0 6px;
 }
 
 .select-panel-option:not(.option-active):hover{

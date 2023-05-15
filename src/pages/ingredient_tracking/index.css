@@ -21,6 +21,10 @@ body{
     margin-inline: 0 24px;
 }
 
+#ingredientSelectContainer{
+    position: relative;
+}
+
 .content{
     flex: 1;
     margin: 12px 0 0;
@@ -32,6 +36,11 @@ body{
 
 .section-title {
     margin: 24px;
+}
+
+.ingredient-select-panel-container{
+    left: 400px;
+    top: 50px;
 }
 
 .ingredient-select{

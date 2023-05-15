@@ -1,23 +1,30 @@
 const SELECT_BUTTON_ID = "ingredient-track-select-button";
 
+const SELECT_BUTTON_TEXT_ID = "ingredient-track-select-button-text";
+
+const SELECT_PANEL_CONTAINER_ID = "ingredient-track-select-panel-container";
+
 const SELECT_PANEL_ID = "ingredient-track-select-panel";
 
-const SELECT_PANEL_SEARCH_INPUT_ID = "ingredient-track-select-panel-search-input";
-
+const SELECT_PANEL_SEARCH_INPUT_ID =
+  "ingredient-track-select-panel-search-input";
 
 const DEFAULT_SELECT_BUTTON_CONFIG = {
   label: "选择成分：",
   constainerClass: "text",
   labelClass: "",
   id: SELECT_BUTTON_ID,
+  textId: SELECT_BUTTON_TEXT_ID,
   buttonClass: "ingredient-select",
 };
 
 const DEFAULT_SELECT_PANEl_CONFIG = {
   seachable: true,
-  containerClass: "panel-container",
+  containerClass: "ingredient-select-panel-container",
   id: SELECT_PANEL_ID,
   searchInputId: SELECT_PANEL_SEARCH_INPUT_ID,
+  containerId: SELECT_PANEL_CONTAINER_ID,
+  maxLength: 20,
 };
 
 class IngredientTracking {
@@ -30,6 +37,7 @@ class IngredientTracking {
     endDateIndex: 0,
     selectedIngredient: "",
     currentRangeData: [],
+    keyword: "",
   };
 
   element = {
@@ -80,7 +88,8 @@ class IngredientTracking {
   };
 
   setup() {
-    this.renderSelectPanel();
+    this.renderSelectButton();
+    this.renderSelectPanelComponent();
   }
 
   get = (...keys) =>
@@ -109,7 +118,19 @@ class IngredientTracking {
       .getElementById(SELECT_BUTTON_ID)
       .addEventListener("click", this.ingreIndentSelectHandler);
 
-    // document.getElementById(SELECT_PANEL_SEARCH_INPUT_ID).addEventListener("keyup", this.ingredientSearchHandler)
+    document
+      .getElementById(SELECT_PANEL_SEARCH_INPUT_ID)
+      .addEventListener("keyup", this.ingredientSearchHandler);
+
+    document
+      .getElementById(SELECT_PANEL_SEARCH_INPUT_ID)
+      .addEventListener("input", this.ingredientSearchInputHandler);
+
+    document
+      .getElementById(SELECT_PANEL_ID)
+      .addEventListener("click", this.ingredientSelectHandler);
+
+    document.addEventListener("mouseup", this.hidePanel);
   };
 
   dateChangeHandler(dateRange) {
@@ -147,56 +168,103 @@ class IngredientTracking {
     });
   }
 
-  // 绘制成分选择下拉面板
-  renderSelectPanel = () => {
+  renderSelectButton = () => {
     const { selectedIngredient } = this.get("selectedIngredient");
-    this.element.$ingredientSelectContainer.innerHTML = getSelectButtonConfig({
-      ...DEFAULT_SELECT_BUTTON_CONFIG,
-      value: selectedIngredient,
-    });
-    const dialog = document.createElement("div");
-    dialog.style.width = '660px';
-    dialog.innerHTML = geSelectPanelConfig(
+
+    this.element.$ingredientSelectContainer.innerHTML = `${getSelectButtonConfig(
+      {
+        ...DEFAULT_SELECT_BUTTON_CONFIG,
+        value: selectedIngredient,
+      }
+    )}`;
+  };
+
+  renderSelectPanelComponent = () => {
+    const { selectedIngredient } = this.get("selectedIngredient");
+
+    const panelWraper = document.createElement("div");
+
+    panelWraper.innerHTML += `${geSelectPanelConfig(
       {
         ...DEFAULT_SELECT_PANEl_CONFIG,
         value: selectedIngredient,
-        data: this.classificationIngredientList,
+        data: getPanelDataByKeyword(this.classificationIngredientList),
       }
-    );
-    this.element.$ingredientSelectContainer.appendChild(dialog)
-
-
+    )}`;
+    document.body.appendChild(panelWraper)
   };
 
   ingreIndentSelectHandler = () => {
-    const { selectedIngredient } = this.get("selectedIngredient");
-    console.log('eefwefwefewf');
-    this.ingredientDropInstance.element.content.innerHTML = geSelectPanelConfig(
-      {
-        ...DEFAULT_SELECT_PANEl_CONFIG,
-        value: selectedIngredient,
-        data: this.classificationIngredientList,
-      }
-    );
-    // this.ingredientDropInstance.show();
+    document.getElementById(SELECT_PANEL_CONTAINER_ID).classList.toggle("hide");
+  };
+
+  ingredientSearchInputHandler = (e) => {
+    if (e.target.value.length === 0) {
+      const { selectedIngredient } = this.get("selectedIngredient");
+      const data = getPanelDataByKeyword(this.classificationIngredientList);
+      document.getElementById(SELECT_PANEL_ID).innerHTML =
+        computedSelectPanelList(data, selectedIngredient);
+      this.set({
+        keyword: "",
+      });
+    }
+  };
+
+  hidePanel = (event) => {
+    let eleClicked = event && event.target;
+    const elePanel = document.getElementById(SELECT_PANEL_CONTAINER_ID);
+    if (!eleClicked || elePanel.classList.contains('hide')) {
+      return;
+    }
+
+    if (
+      !elePanel.contains(eleClicked) ||
+      eleClicked.contains(elePanel)
+    ) {
+      elePanel.classList.add('hide');
+    }
   };
 
   // 搜索成分
   ingredientSearchHandler = (e) => {
-    console.log(e);
-    // 过滤,重新渲染 pannel
+    const keyword = e.target.value.trim();
+    if (e.key === "Enter" && keyword.length > 0) {
+      this.set({
+        keyword,
+      });
+      const { selectedIngredient } = this.get("selectedIngredient");
+
+      const data = getPanelDataByKeyword(
+        this.classificationIngredientList,
+        keyword
+      );
+      document.getElementById(SELECT_PANEL_ID).innerHTML =
+        computedSelectPanelList(data, selectedIngredient);
+    }
   };
 
   // 点击选择成分
-  ingredientSelectHandler = (ingredient) => {
-    // select 组件赋值
-    this.set({
-      selectedIngredient: ingredient,
-    });
-    // 重新计算data
-    this.updateCurrentRangeData(ingredient);
-
-    // 重新渲染新品、品牌趋势图
+  ingredientSelectHandler = (e) => {
+    if (e.target.classList.contains("select-panel-option")) {
+      const { keyword } = this.get("keyword");
+      const value = e.target.dataset.value;
+      // select 组件赋值
+      document.getElementById(SELECT_BUTTON_TEXT_ID).innerText = value;
+      // 隐藏 Panel
+      document
+        .getElementById(SELECT_PANEL_CONTAINER_ID)
+        .classList.toggle("hide");
+      // 重新计算 data
+      this.updateCurrentRangeData(value);
+      // 重新渲染panelList
+      const data = getPanelDataByKeyword(
+        this.classificationIngredientList,
+        keyword
+      );
+      document.getElementById(SELECT_PANEL_ID).innerHTML =
+        computedSelectPanelList(data, value);
+      // 重新渲染新品、品牌趋势图
+    }
   };
 
   // 绘制应用新品数量趋势

@@ -105,6 +105,7 @@ const getSelectButtonConfig = (config) => {
     id,
     buttonClass,
     value,
+    textId,
   } = config;
 
   return `<div style="display:flex;align-items: center;" class=${constainerClass}>
@@ -113,19 +114,15 @@ const getSelectButtonConfig = (config) => {
       id=${id}
       style="position: relative;"
       class="ui-select-button ${transClassName(buttonClass)}"
-    ><span style="display:inline-block;min-width:100px;max-width:200px;overflow:hidden;text-overflow: ellipsis;">${value}</span><i class="ui-select-icon" aria-hidden="true"></i></div>
+    ><span id=${textId} style="display:inline-block;min-width:100px;max-width:200px;overflow:hidden;text-overflow: ellipsis;">${value}</span><i class="ui-select-icon" aria-hidden="true"></i></div>
   </div>`;
 };
 
-const geSelectPanelConfig = (config) => {
-  const {
-    id,
-    searchInputId,
-    seachable,
-    containerClass,
-    data = [],
-    value,
-  } = config;
+// 计算 panel 渲染 dom
+const computedSelectPanelList = (data, value) => {
+  if (data.length === 0) {
+    return "<div>暂无搜索结果</div>";
+  }
 
   const panelListHTML = [];
 
@@ -135,27 +132,54 @@ const geSelectPanelConfig = (config) => {
       panelOptionsHTML.push(
         `<div class="select-panel-option ${
           value === option ? "option-active" : ""
-        }" ${option.length >= 10 ? `title=${option}` : ""} >${option}</div>`
+        }" ${option.length >= 10 ? `title=${option}` : ""} data-value=${option}>${option}</div>`
       );
     });
     panelListHTML.push(`<div class="select-panel-item"> 
     <div class="text-title select-panel-item-title">${title}</div> 
-    <div class="select-panel-option-container" >${panelOptionsHTML.join("")}</div>
+    <div class="text select-panel-option-container" >${panelOptionsHTML.join(
+      ""
+    )}</div>
     </div> `);
   });
 
+  return panelListHTML.join("");
+};
+// 计算Pannel渲染数据
+const getPanelDataByKeyword = (data, keyword) =>
+  !keyword
+    ? data
+    : data
+        .map(({ title, options }) => ({
+          title,
+          options: options.filter((option) => option.includes(keyword)),
+        }))
+        .filter(({ options }) => options.length > 0);
+
+const geSelectPanelConfig = (config) => {
+  const {
+    id,
+    containerId,
+    searchInputId,
+    seachable,
+    containerClass,
+    data = [],
+    value,
+    maxLength = 10,
+  } = config;
+
   return `
-        <div class=${transClassName(containerClass)}>
+        <div id=${containerId} class="select-panel-container hide ${transClassName(containerClass)}">
           ${
             seachable
               ? `<span class="ui-input ui-input-search">
-                <input type="search" placeholder="搜索成分关键字" id=${searchInputId} />
+                <input type="search" placeholder="搜索成分关键字" id=${searchInputId} maxLength=${maxLength} />
                 <span class="ui-icon-search cursor-default">搜索</span>
               </span>`
               : null
           }
           <div id=${id} style="display:flex;min-width:100px;margin-block: 12px 0;" >
-            ${panelListHTML.join('')}
+            ${computedSelectPanelList(data, value)}
           </div>
         </div>
       `;
