@@ -46,3 +46,8 @@ body{
 .ingredient-select{
     width: 205px;
 }
+
+.product-trend, .brand-trend{
+    width: 100%;
+    height: 400px;
+}

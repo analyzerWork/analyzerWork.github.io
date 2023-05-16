@@ -70,12 +70,12 @@ class IngredientTracking {
     this.element.$datePicker.value = `${startDate} 至 ${lastDate}`;
     this.element.$datePicker.min = dateRange[0];
     this.element.$datePicker.max = lastDate;
-    const startIndex = this.data.findIndex((d) => d["月份"] === startDate);
-    const endIndex = this.data.findLastIndex((d) => d["月份"] === lastDate);
+    const startDateIndex = this.data.findIndex((d) => d["月份"] === startDate);
+    const endDateIndex = this.data.findLastIndex((d) => d["月份"] === lastDate);
     this.set({
-      startIndex,
-      endIndex,
-      currentRangeData: this.data.slice(startIndex, endIndex),
+      startDateIndex,
+      endDateIndex,
+      currentRangeData: this.data.slice(startDateIndex, endDateIndex),
       selectedIngredient:
         resortFirstClassificationIngredient[0].ingredientList[0],
     });
@@ -90,6 +90,8 @@ class IngredientTracking {
   setup() {
     this.renderSelectButton();
     this.renderSelectPanelComponent();
+    this.renderNewProductTrend();
+    this.renderBrandTrend();
   }
 
   get = (...keys) =>
@@ -145,11 +147,10 @@ class IngredientTracking {
       endIndex,
     });
 
-    updateCurrentRangeData(selectedIngredient);
-    // 重新渲染热门top15
-    // this.renderTopHotIngredient();
-    // 重新渲染一级
-    // this.handleFirstClassificationRender(searchValue);
+    this.updateCurrentRangeData(selectedIngredient);
+    // 重新渲染
+    this.renderNewProductTrend();
+    this.renderBrandTrend();
   }
 
   updateCurrentRangeData(ingredient) {
@@ -256,6 +257,7 @@ class IngredientTracking {
         .classList.toggle("hide");
       // 重新计算 data
       this.updateCurrentRangeData(value);
+
       // 重新渲染panelList
       const data = getPanelDataByKeyword(
         this.classificationIngredientList,
@@ -264,12 +266,28 @@ class IngredientTracking {
       document.getElementById(SELECT_PANEL_ID).innerHTML =
         computedSelectPanelList(data, value);
       // 重新渲染新品、品牌趋势图
+      this.renderNewProductTrend();
+      this.renderBrandTrend();
     }
   };
 
   // 绘制应用新品数量趋势
-  renderNewProductTrend = () => {};
+  renderNewProductTrend = () => {
+    const { currentRangeData } = this.get("currentRangeData");
+
+    const productTrendData = computedTrendData(currentRangeData,'产品名称');
+
+    this.newProductTrendInstance.setOption(getTrendOptions({ ...productTrendData }));
+
+  };
 
   // 绘制应用品牌数量趋势
-  renderBrandTrend = () => {};
+  renderBrandTrend = () => {
+    const { currentRangeData } = this.get("currentRangeData");
+
+    const brandTrendData = computedTrendData(currentRangeData,'品牌');
+
+    this.brandTrendInstance.setOption(getTrendOptions({ ...brandTrendData }));
+
+  };
 }

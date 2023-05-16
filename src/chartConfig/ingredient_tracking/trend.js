@@ -1,15 +1,15 @@
-const getTrendOptions = ({}) => {
+const getTrendOptions = ({x_data, y_data}) => {
   return {
     xAxis: {
       type: "category",
-      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      data: x_data,
     },
     yAxis: {
       type: "value",
     },
     series: [
       {
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        data: y_data,
         type: "line",
         smooth: true,
       },
