@@ -140,11 +140,11 @@ class IngredientTracking {
     const [startDate, endDate] = dateRange
       .split("至")
       .map((value) => value.trim());
-    const startIndex = this.data.findIndex((d) => d["月份"] === startDate);
-    const endIndex = this.data.findLastIndex((d) => d["月份"] === endDate);
+    const startDateIndex = this.data.findIndex((d) => d["月份"] === startDate);
+    const endDateIndex = this.data.findLastIndex((d) => d["月份"] === endDate);
     this.set({
-      startIndex,
-      endIndex,
+      startDateIndex,
+      endDateIndex,
     });
 
     this.updateCurrentRangeData(selectedIngredient);
