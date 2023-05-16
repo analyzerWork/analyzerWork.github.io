@@ -132,7 +132,7 @@ class IngredientTracking {
       .getElementById(SELECT_PANEL_ID)
       .addEventListener("click", this.ingredientSelectHandler);
 
-    document.addEventListener("mouseup", this.hidePanel);
+    document.addEventListener("click", this.hidePanel);
   };
 
   dateChangeHandler(dateRange) {
@@ -185,17 +185,16 @@ class IngredientTracking {
 
     const panelWraper = document.createElement("div");
 
-    panelWraper.innerHTML += `${geSelectPanelConfig(
-      {
-        ...DEFAULT_SELECT_PANEl_CONFIG,
-        value: selectedIngredient,
-        data: getPanelDataByKeyword(this.classificationIngredientList),
-      }
-    )}`;
-    document.body.appendChild(panelWraper)
+    panelWraper.innerHTML += `${geSelectPanelConfig({
+      ...DEFAULT_SELECT_PANEl_CONFIG,
+      value: selectedIngredient,
+      data: getPanelDataByKeyword(this.classificationIngredientList),
+    })}`;
+    document.body.appendChild(panelWraper);
   };
 
-  ingreIndentSelectHandler = () => {
+  ingreIndentSelectHandler = (e) => {
+    e.stopPropagation();
     document.getElementById(SELECT_PANEL_CONTAINER_ID).classList.toggle("hide");
   };
 
@@ -214,15 +213,12 @@ class IngredientTracking {
   hidePanel = (event) => {
     let eleClicked = event && event.target;
     const elePanel = document.getElementById(SELECT_PANEL_CONTAINER_ID);
-    if (!eleClicked || elePanel.classList.contains('hide')) {
+    if (!eleClicked || elePanel.classList.contains("hide")) {
       return;
     }
 
-    if (
-      !elePanel.contains(eleClicked) ||
-      eleClicked.contains(elePanel)
-    ) {
-      elePanel.classList.add('hide');
+    if (!elePanel.contains(eleClicked)) {
+      elePanel.classList.add("hide");
     }
   };
 
@@ -275,19 +271,19 @@ class IngredientTracking {
   renderNewProductTrend = () => {
     const { currentRangeData } = this.get("currentRangeData");
 
-    const productTrendData = computedTrendData(currentRangeData,'产品名称');
+    const productTrendData = computedTrendData(currentRangeData, "产品名称");
 
-    this.newProductTrendInstance.setOption(getTrendOptions({ ...productTrendData }));
-
+    this.newProductTrendInstance.setOption(
+      getTrendOptions({ ...productTrendData })
+    );
   };
 
   // 绘制应用品牌数量趋势
   renderBrandTrend = () => {
     const { currentRangeData } = this.get("currentRangeData");
 
-    const brandTrendData = computedTrendData(currentRangeData,'品牌');
+    const brandTrendData = computedTrendData(currentRangeData, "品牌");
 
     this.brandTrendInstance.setOption(getTrendOptions({ ...brandTrendData }));
-
   };
 }

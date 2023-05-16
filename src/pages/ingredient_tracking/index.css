@@ -25,17 +25,19 @@ body{
     position: relative;
 }
 
-.content{
+.content {
     flex: 1;
-    margin: 12px 0 0;
     padding: 0 0 20px;
     border-radius: 4px;
-    background-color: var(--color-primary-white);
+    background-color: var(--color-background);
     overflow-y: auto;
 }
 
-.section-title {
-    margin: 24px;
+.content > section {
+    margin-block: 24px;
+    padding: 16px 24px;
+    border-radius: 4px;
+    background-color: var(--color-primary-white);
 }
 
 .ingredient-select-panel-container{
