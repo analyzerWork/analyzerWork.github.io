@@ -9,6 +9,10 @@ const getTrendOptions = ({x_data, y_data}) => {
     },
     yAxis: {
       type: "value",
+      name: "数量",
+      nameTextStyle: {
+        align: 'right'
+      }
     },
     series: [
       {
