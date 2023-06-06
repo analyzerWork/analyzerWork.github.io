@@ -6,7 +6,7 @@ import pandas as pd
 import json
 
 sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+    os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from py_package.utils import message
 
@@ -29,13 +29,13 @@ class TasteMatching:
         log_message = 'Excel转换JSON数据'
         try:
             df = pd.read_excel(
-                r'./datasource/taste_matching.xlsx').sort_values(by='月份')
+                r'../pages/datasource/taste_matching.xlsx').sort_values(by='月份')
 
             df['月份'] = df['月份'].dt.strftime('%Y-%m')
 
             df['品牌-产品名称-原料构成'] = df['品牌'] + '-' + df['产品名称'] + '-' + df['原料构成']
 
-            df.to_json('./datasource/taste_matching.json',
+            df.to_json('../pages/datasource/taste_matching.json',
                        orient='records',
                        force_ascii=False,
                        indent=4)
@@ -49,7 +49,7 @@ class TasteMatching:
         # 使用 Python JSON 模块载入数据
         log_message = '读取数据'
         try:
-            with open('./datasource/taste_matching.json',
+            with open('../pages/datasource/taste_matching.json',
                       'r',
                       encoding='utf-8') as f:
                 origin_data = json.loads(f.read())

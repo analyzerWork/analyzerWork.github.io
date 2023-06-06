@@ -1,0 +1,51 @@
+.select-panel-container {
+    position: absolute;
+    margin-top: 6px;
+    padding: 14px 20px;
+    background-color: var(--color-primary-white);
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    z-index: 9999;
+
+}
+.select-panel-item {
+    margin-right: 12px
+}
+
+.select-panel-option-container {
+    max-height: 260px;
+    padding-inline: 0 6px;
+    overflow-y: overlay;
+}
+
+.select-panel-option-container::-webkit-scrollbar {
+    display: block;
+}
+
+.select-panel-item-title {
+    margin: 12px 12px 12px 0;
+    padding-inline: 6px;
+    text-align: center;
+}
+
+.select-panel-option {
+    max-width: 120px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 6px;
+    cursor: pointer;
+    text-align: center;
+    margin-inline: 0 6px;
+}
+
+.select-panel-option:not(.option-active):hover{
+    background-color: var(--color-background);
+}
+
+.option-active {
+    border:1px solid var(--ui-blue);
+    border-radius: 2px;
+    color:  var(--ui-blue);
+    cursor: default;
+}

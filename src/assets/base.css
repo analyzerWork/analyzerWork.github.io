@@ -1,6 +1,4 @@
-
-
-#waterMarkContainer{
+#waterMarkContainer {
     min-height: 100vh;
     position: absolute;
     top: 0;
@@ -20,17 +18,20 @@
     z-index: 10001;
     background-repeat: repeat;
 }
+
 header {
     display: flex;
     justify-content: space-between;
     background-color: var(--color-primary-dark);
 }
+
 .header-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 12px 24px;
 }
+
 .logo {
     width: 56px;
     height: 28px;
@@ -38,31 +39,38 @@ header {
     background-size: contain;
     margin-right: 16px;
 }
+
 .analyzer-icon {
     font-family: "RichBlack";
-    font-size:32px;
+    font-size: 32px;
     color: var(--color-primary-white);
 }
-.user-info{
+
+.user-info {
     display: flex;
     align-items: center;
     margin: 0 24px;
 }
 
-#user{
+#user {
     color: var(--color-primary-white);
     margin-left: 14px;
 }
-.content-body{
-    height: calc(100vh - 62px);
+
+.content-body {
     display: flex;
+    max-width: 1680px;
+    height: calc(100vh - 62px);
+    margin: 0 auto;
 }
-nav{
+
+nav {
     width: 170px;
     margin: 12px;
     border-radius: 4px;
     background-color: var(--color-primary-white);
 }
+
 nav ul {
     width: 100%;
     height: 100%;
@@ -74,9 +82,11 @@ nav ul {
     align-items: center;
     padding: 12px;
 }
+
 .menu-item span {
     pointer-events: none;
 }
+
 .default-menu {
     transition: background-color .25s;
     cursor: pointer;
@@ -85,20 +95,28 @@ nav ul {
 .active-menu {
     color: var(--color-primary-blue);
 }
+
 .default-menu:hover {
     background-color: #ddd;
 }
+
 .menu-icon {
     width: 24px;
     height: 24px;
     margin-right: 5px;
-}
-.taste_matching {
-    background-image: url('./icons/taste_matching.svg');
     background-size: cover;
 }
 
-.iframeContainer{
+.taste_matching {
+    background-image: url('./icons/taste_matching.svg');
+}
+
+.ingredient_tracking {
+    background-image: url('./icons/ingredient_tracking.svg');
+}
+
+
+.iframeContainer {
     flex: 1;
     margin: 12px;
 }

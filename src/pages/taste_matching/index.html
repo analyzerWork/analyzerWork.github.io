@@ -23,63 +23,76 @@
         <input id="taste-matching-date-picker" type="month-range" is="ui-datetime" data-position="1-4">
     </div>
 
-    <div class="taste-matching-content">
-        <section class="first-class-section">
-            <div class="font-title section-title">创新成分概览</div>
-            <div class="tool-bar">
-                <div class="search-container">
-                    <span class="search-label">搜索成分:</span>
-                    <span class="ui-input ui-input-search" align="end">
-                        <input id="ingredintSearch" type="search" placeholder="请输入">
-                        <button class="ui-icon-search">搜索</button>
-                    </span>
-                </div>
-                <div class="view-switch-container">
-                    <span>视图模式：</span>
-                    <div id="switchIconButton" class="switch-button-container">
-                        <span id="tableIcon" class="switch-icon table-icon"></span>
-                        <span id="chartIcon" class="switch-icon chart-icon"></span>
+    <div class="content-wrapper">
+        <div class="taste-matching-content">
+            <div class="title section-title">热门成分Top15</div>
+            <div class="hot-ingredient-select-container">
+                <span class="text">选择分类：</span>
+                <select id="hotIngredientSelect" is="ui-select"></select>
+            </div>
+            <div id="hotTopIngredientBar" class="hot-bar-map"></div>
+        </div>
+
+        <div class="taste-matching-content">
+            <section class="first-class-section">
+                <div class="title section-title">创新成分概览</div>
+                <div class="tool-bar">
+                    <div class="search-container">
+                        <span class="search-label">搜索成分:</span>
+                        <span class="ui-input ui-input-search" align="end">
+                            <input id="ingredientSearch" type="search" placeholder="请输入">
+                            <button class="ui-icon-search">搜索</button>
+                        </span>
+                    </div>
+                    <div class="view-switch-container">
+                        <span>视图模式：</span>
+                        <div id="switchIconButton" class="switch-button-container">
+                            <span id="tableIcon" class="switch-icon table-icon" title="列表"></span>
+                            <span id="chartIcon" class="switch-icon chart-icon" title="图表"></span>
+                        </div>
+                    </div>
+                    <div id="firstClassSelectWrapper" class="select-container hide-block">
+                        <span class="text">选择分类：</span>
+                        <select id="firstClassSelect" is="ui-select"></select>
                     </div>
                 </div>
-                <div id="selectWrapper" class="select-container hide-block">
-                    <span class="text">选择分类：</span>
-                    <select id="firstClassSelect" is="ui-select"></select>
+
+
+                <div id="firstClassPanel" class="first-class-panel"></div>
+                <div id="firstClassChart" class="first-class-chart hide-block">
+
+
+                    <div id="firstTreeMap" class="first-tree-map"></div>
                 </div>
-            </div>
+            </section>
+            <section class="second-class-section hide">
+                <div class="title section-title">创新成分搭配热度Top10</div>
+                <div id="secondClassPanel" class="second-class-panel"></div>
+                <div id="secondClassChart" class="second-class-chart hide-block">
+                    <div id="secondTreeMap" class="second-tree-map"></div>
+                </div>
+                <dialog id="productDialog" is="ui-dialog" title="">
+                    <div id="productLoading" class="ui-loading" style="height: 100px;">计算中<ui-dot></ui-dot></div>
 
+                    <table id="productTable" class="ui-table hide">
+                        <thead>
+                            <tr>
+                                <th>品牌</th>
+                                <th>产品名称</th>
+                                <th>原料构成</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTbody">
 
-            <div id="firstClassPanel" class="first-class-panel"></div>
-            <div id="firstClassChart" class="first-class-chart hide-block">
+                        </tbody>
+                    </table>
+                </dialog>
+            </section>
 
-
-                <div id="firstTreeMap" class="first-tree-map"></div>
-            </div>
-        </section>
-        <section class="second-class-section hide">
-            <div class="font-title section-title">创新成分搭配热度Top10</div>
-            <div id="secondClassPanel" class="second-class-panel"></div>
-            <div id="secondClassChart" class="second-class-chart hide-block">
-                <div id="secondTreeMap" class="second-tree-map"></div>
-            </div>
-            <dialog id="productDialog" is="ui-dialog" title="">
-                <div id="productLoading" class="ui-loading" style="height: 100px;">计算中<ui-dot></ui-dot></div>
-
-                <table id="productTable" class="ui-table hide">
-                    <thead>
-                        <tr>
-                            <th>品牌</th>
-                            <th>产品名称</th>
-                            <th>原料构成</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productTbody">
-
-                    </tbody>
-                </table>
-            </dialog>
-        </section>
-
+        </div>
     </div>
+
+
     <template id="emptySection">
         <div class="empty-content">
             <svg t="1678609405780" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -91,17 +104,19 @@
             <div id="emptyText"></div>
         </div>
     </template>
-
+    <script src="../commonComputed.js"></script>
     <script src="./computed.js"></script>
 
-    <script src="../../chartConfig/treemap.js"></script>
+    <script src="../../chartConfig/taste_matching/treemap.js"></script>
+    <script src="../../chartConfig/taste_matching/bar.js"></script>
+
 
 
     <script src="./model.js"></script>
 
     <script>
 
-        const SOURCE_PATH = './src/pages/taste_matching/datasource/';
+        const SOURCE_PATH = './src/pages/datasource/';
         const { ANAlYZER_UTILS } = window.parent;
 
 
