@@ -39,7 +39,31 @@
     margin-inline: 0 6px;
 }
 
+.select-option-container {
+    flex-direction: column;
+    max-height: 240px;
+    overflow: auto;
+    padding-inline: 4px;
+}
+
+
+.select-option-container::-webkit-scrollbar {
+    display: block;
+}
+
+
+.select-option {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 6px;
+    cursor: pointer;
+}
+
 .select-panel-option:not(.option-active):hover{
+    background-color: var(--color-background);
+}
+
+.select-option:not(.option-active):hover {
     background-color: var(--color-background);
 }
 

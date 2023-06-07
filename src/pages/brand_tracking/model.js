@@ -1,51 +1,48 @@
-const SELECT_BUTTON_ID = "ingredient-track-select-button";
+const SELECT_BUTTON_ID = "brand-track-select-button";
 
-const SELECT_BUTTON_TEXT_ID = "ingredient-track-select-button-text";
+const SELECT_BUTTON_TEXT_ID = "brand-track-select-button-text";
 
-const SELECT_PANEL_CONTAINER_ID = "ingredient-track-select-panel-container";
+const SELECT_PANEL_CONTAINER_ID = "brand-track-select-panel-container";
 
-const SELECT_PANEL_ID = "ingredient-track-select-panel";
+const SELECT_PANEL_ID = "brand-track-select-panel";
 
-const SELECT_PANEL_SEARCH_INPUT_ID =
-  "ingredient-track-select-panel-search-input";
+const SELECT_PANEL_SEARCH_INPUT_ID = "brand-track-select-panel-search-input";
 
 const DEFAULT_SELECT_BUTTON_CONFIG = {
-  label: "选择成分：",
+  label: "选择品牌：",
   constainerClass: "text",
   labelClass: "",
   id: SELECT_BUTTON_ID,
   textId: SELECT_BUTTON_TEXT_ID,
-  buttonClass: "ingredient-select",
+  buttonClass: "brand-select",
 };
 
 const DEFAULT_SELECT_PANEl_CONFIG = {
   seachable: true,
-  containerClass: "ingredient-select-panel-container",
+  containerClass: "brand-select-panel-container",
   id: SELECT_PANEL_ID,
   searchInputId: SELECT_PANEL_SEARCH_INPUT_ID,
   containerId: SELECT_PANEL_CONTAINER_ID,
   maxLength: 20,
 };
 
-class IngredientTracking {
+class BrandTracking {
   data = [];
-  classificationIngredientList = [];
   brandTrendInstance = null;
-  ingredientDropInstance = null;
+  brandDropInstance = null;
   computedData = {
     startDateIndex: 0,
     endDateIndex: 0,
-    selectedIngredient: "",
+    selectedBrand: "",
+    brandOptions: [],
     currentRangeData: [],
     keyword: "",
+    brandProducts: [],
   };
 
   element = {
-    $datePicker: document.querySelector("#ingredient-track-date-picker"),
-    $ingredientSelectContainer: document.querySelector(
-      "#ingredientSelectContainer"
-    ),
-    $productTrend: document.querySelector("#productTrend"),
+    $datePicker: document.querySelector("#brand-track-date-picker"),
+    $brandSelectContainer: document.querySelector("#brandSelectContainer"),
     $brandTrend: document.querySelector("#brandTrend"),
   };
   constructor(initData) {
@@ -56,14 +53,6 @@ class IngredientTracking {
 
   init = (initData) => {
     this.data = initData;
-    const { resortFirstClassificationIngredient } =
-      computedRelatedFirstClassificationData(initData);
-    this.classificationIngredientList = resortFirstClassificationIngredient.map(
-      ({ classification, ingredientList }) => ({
-        title: classification,
-        options: ingredientList,
-      })
-    );
     const dateRange = [...new Set(this.data.map((item) => item["月份"]))];
     const lastDate = dateRange[dateRange.length - 1];
     const startDate = dateRange[dateRange.length - 13];
@@ -72,16 +61,20 @@ class IngredientTracking {
     this.element.$datePicker.max = lastDate;
     const startDateIndex = this.data.findIndex((d) => d["月份"] === startDate);
     const endDateIndex = this.data.findLastIndex((d) => d["月份"] === lastDate);
-    const selectedIngredient =  resortFirstClassificationIngredient[0].ingredientList[0];
+    const currentRangeData = this.data.slice(startDateIndex, endDateIndex);
+
+    const selectedBrand = currentRangeData[currentRangeData.length - 1]["品牌"];
+
     this.set({
       startDateIndex,
       endDateIndex,
-      currentRangeData: this.data.slice(startDateIndex, endDateIndex).filter(item => item['加工后成分'] === selectedIngredient),
-      selectedIngredient,
+      brandOptions: [...new Set(currentRangeData.map((item) => item["品牌"]))],
+      currentRangeData: currentRangeData.filter(
+        (item) => item["品牌"] === selectedBrand
+      ),
+      selectedBrand,
     });
-    this.newProductTrendInstance = window.parent.echarts.init(
-      this.element.$productTrend
-    );
+
     this.brandTrendInstance = window.parent.echarts.init(
       this.element.$brandTrend
     );
@@ -90,7 +83,6 @@ class IngredientTracking {
   setup() {
     this.renderSelectButton();
     this.renderSelectPanelComponent();
-    this.renderNewProductTrend();
     this.renderBrandTrend();
   }
 
@@ -118,25 +110,29 @@ class IngredientTracking {
 
     document
       .getElementById(SELECT_BUTTON_ID)
-      .addEventListener("click", this.ingredientButtonSelectHandler);
+      .addEventListener("click", this.brandButtonSelectHandler);
 
     document
       .getElementById(SELECT_PANEL_SEARCH_INPUT_ID)
-      .addEventListener("keyup", this.ingredientSearchHandler);
+      .addEventListener("keyup", this.brandSearchHandler);
 
     document
       .getElementById(SELECT_PANEL_SEARCH_INPUT_ID)
-      .addEventListener("input", this.ingredientSearchInputHandler);
+      .addEventListener("input", this.brandSearchInputHandler);
 
     document
       .getElementById(SELECT_PANEL_ID)
-      .addEventListener("click", this.ingredientSelectHandler);
+      .addEventListener("click", this.brandSelectHandler);
 
     document.addEventListener("click", this.hidePanel);
+
+    this.brandTrendInstance.on("click", this.markPointClickHandler);
+    this.brandTrendInstance.on("mouseout", this.markPointMouseoutHandler);
+
   };
 
   dateChangeHandler(dateRange) {
-    const { selectedIngredient } = this.get("selectedIngredient");
+    const { selectedBrand } = this.get("selectedBrand");
     const [startDate, endDate] = dateRange
       .split("至")
       .map((value) => value.trim());
@@ -147,64 +143,67 @@ class IngredientTracking {
       endDateIndex,
     });
 
-    this.updateCurrentRangeData(selectedIngredient);
+    this.updateCurrentRangeData(selectedBrand);
     // 重新渲染
-    this.renderNewProductTrend();
     this.renderBrandTrend();
   }
 
-  updateCurrentRangeData(ingredient) {
+  updateCurrentRangeData(brand) {
     const { startDateIndex, endDateIndex } = this.get(
       "startDateIndex",
       "endDateIndex"
     );
 
     const currentData = this.data.slice(startDateIndex, endDateIndex);
-      
+    const currentRangeData = currentData.filter(
+      (item) => item["品牌"] === brand
+    );
     this.set({
-      selectedIngredient: ingredient,
-      currentRangeData: currentData.filter(
-        (item) => item["加工后成分"] === ingredient
-      ),
+      selectedBrand: brand,
+      brandOptions: [...new Set(currentRangeData.map((item) => item["品牌"]))],
+      currentRangeData,
     });
   }
 
   renderSelectButton = () => {
-    const { selectedIngredient } = this.get("selectedIngredient");
+    const { selectedBrand } = this.get("selectedBrand");
 
-    this.element.$ingredientSelectContainer.innerHTML = `${getSelectButtonConfig(
-      {
-        ...DEFAULT_SELECT_BUTTON_CONFIG,
-        value: selectedIngredient,
-      }
-    )}`;
+    this.element.$brandSelectContainer.innerHTML = `${getSelectButtonConfig({
+      ...DEFAULT_SELECT_BUTTON_CONFIG,
+      value: selectedBrand,
+    })}`;
   };
 
   renderSelectPanelComponent = () => {
-    const { selectedIngredient } = this.get("selectedIngredient");
+    const { selectedBrand, brandOptions } = this.get(
+      "selectedBrand",
+      "brandOptions"
+    );
 
     const panelWraper = document.createElement("div");
 
     panelWraper.innerHTML += `${getSelectPanelConfig({
       ...DEFAULT_SELECT_PANEl_CONFIG,
-      value: selectedIngredient,
-      data: getPanelDataByKeyword(this.classificationIngredientList),
-      byGroup: true,
+      value: selectedBrand,
+      data: getOptionsDataByKeyword(brandOptions),
     })}`;
     document.body.appendChild(panelWraper);
   };
 
-  ingredientButtonSelectHandler = (e) => {
+  brandButtonSelectHandler = (e) => {
     e.stopPropagation();
     document.getElementById(SELECT_PANEL_CONTAINER_ID).classList.toggle("hide");
   };
 
-  ingredientSearchInputHandler = (e) => {
+  brandSearchInputHandler = (e) => {
     if (e.target.value.length === 0) {
-      const { selectedIngredient } = this.get("selectedIngredient");
-      const data = getPanelDataByKeyword(this.classificationIngredientList);
+      const { selectedBrand, brandOptions } = this.get(
+        "selectedBrand",
+        "brandOptions"
+      );
+      const data = getOptionsDataByKeyword(brandOptions);
       document.getElementById(SELECT_PANEL_ID).innerHTML =
-        computedSelectPanelList(data, selectedIngredient);
+        computedSelectOptions(data, selectedBrand);
       this.set({
         keyword: "",
       });
@@ -224,27 +223,26 @@ class IngredientTracking {
   };
 
   // 搜索成分
-  ingredientSearchHandler = (e) => {
+  brandSearchHandler = (e) => {
     const keyword = e.target.value.trim();
     if (e.key === "Enter" && keyword.length > 0) {
       this.set({
         keyword,
       });
-      const { selectedIngredient } = this.get("selectedIngredient");
-
-      const data = getPanelDataByKeyword(
-        this.classificationIngredientList,
-        keyword
+      const { selectedBrand, brandOptions } = this.get(
+        "selectedBrand",
+        "brandOptions"
       );
+      const data = getOptionsDataByKeyword(brandOptions, keyword);
       document.getElementById(SELECT_PANEL_ID).innerHTML =
-        computedSelectPanelList(data, selectedIngredient);
+        computedSelectOptions(data, selectedBrand);
     }
   };
 
-  // 点击选择成分
-  ingredientSelectHandler = (e) => {
-    if (e.target.classList.contains("select-panel-option")) {
-      const { keyword } = this.get("keyword");
+  // 点击选择品牌
+  brandSelectHandler = (e) => {
+    if (e.target.classList.contains("select-option")) {
+      const { keyword, brandOptions } = this.get("keyword", "brandOptions");
       const value = e.target.dataset.value;
       // select 组件赋值
       document.getElementById(SELECT_BUTTON_TEXT_ID).innerText = value;
@@ -256,37 +254,53 @@ class IngredientTracking {
       this.updateCurrentRangeData(value);
 
       // 重新渲染panelList
-      const data = getPanelDataByKeyword(
-        this.classificationIngredientList,
-        keyword
-      );
+
+      const data = getOptionsDataByKeyword(brandOptions, keyword);
       document.getElementById(SELECT_PANEL_ID).innerHTML =
-        computedSelectPanelList(data, value);
-      // 重新渲染新品、品牌趋势图
-      this.renderNewProductTrend();
+        computedSelectOptions(data, value);
+
       this.renderBrandTrend();
     }
   };
 
-  // 绘制应用新品数量趋势
-  renderNewProductTrend = () => {
-    const { currentRangeData } = this.get("currentRangeData");
+  markPointClickHandler = (params) => {
+    const { componentType, dataIndex, seriesIndex } = params;
+    if (componentType === "markPoint") {
+      this.brandTrendInstance.dispatchAction({
+        type: "showTip",
+        // 系列的 index，在 tooltip 的 trigger 为 axis 的时候可选。
+        seriesIndex,
+        // 数据项的 index，如果不指定也可以通过 name 属性根据名称指定数据项
+        dataIndex,
+      });
+    }
+  };
 
-    const productTrendData = computedTrendData(currentRangeData, "产品名称");
-
-
-
-    this.newProductTrendInstance.setOption(
-      getTrendOptions({ ...productTrendData })
-    );
+  markPointMouseoutHandler = (params) => {
+    const { componentType, dataIndex, seriesIndex } = params;
+    this.brandTrendInstance.dispatchAction({
+        type: 'hideTip'
+    })
   };
 
   // 绘制应用品牌数量趋势
   renderBrandTrend = () => {
     const { currentRangeData } = this.get("currentRangeData");
 
-    const brandTrendData = computedTrendData(currentRangeData, "品牌");
+    const brandTrendData = computedBrandTrendData(currentRangeData);
 
-    this.brandTrendInstance.setOption(getTrendOptions({ ...brandTrendData }));
+    const { x_data, y_data: origin_y_data } = brandTrendData;
+
+    const y_data = origin_y_data.map(({ value }) => value);
+
+    const brandProducts = origin_y_data.map(({ products }) => products);
+
+    this.set({
+      brandProducts,
+    });
+
+    this.brandTrendInstance.setOption(
+      getTrendOptions({ x_data, y_data, brandProducts })
+    );
   };
 }

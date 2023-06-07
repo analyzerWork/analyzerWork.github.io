@@ -115,6 +115,10 @@ nav ul {
     background-image: url('./icons/ingredient_tracking.svg');
 }
 
+.brand_tracking {
+    background-image: url('./icons/brand_tracking.svg');
+}
+
 
 .iframeContainer {
     flex: 1;

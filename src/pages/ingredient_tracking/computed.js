@@ -6,7 +6,7 @@ const computedTrendData = (data, type)=>{
         if(monthMap.has(month)){
             monthMap.set(month, [...monthMap.get(month),item[type]])
         }else{
-            monthMap.set(month, [])
+            monthMap.set(month, [item[type]])
         }
     })
 

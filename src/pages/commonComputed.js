@@ -33,6 +33,29 @@ const computeResortClassificationIngredient = (
   return resortClassificationIngredient;
 };
 
+const computedProductsByBrand = (data) => {
+  const monthMap = new Map();
+
+  data.forEach((item) => {
+    if (monthMap.has(item["月份"])) {
+      const brandProductMap = monthMap.get(item["月份"]);
+      const brand = item["品牌"];
+      if (brandProductMap.has(brand)) {
+        brandProductMap.set(brand, [
+          ...brandProductMap.get(brand),
+          item["产品名称"],
+        ]);
+      } else {
+        brandProductMap.set(brand, [item["产品名称"]]);
+      }
+    } else {
+      monthMap.set(item["月份"], new Map());
+    }
+  });
+
+  return monthMap;
+};
+
 const computedRelatedFirstClassificationData = (data) => {
   const firstIngredientCountMap = new Map();
 
@@ -118,7 +141,7 @@ const getSelectButtonConfig = (config) => {
   </div>`;
 };
 
-// 计算 panel 渲染 dom
+// 计算 panel 渲染 dom（分组）
 const computedSelectPanelList = (data, value) => {
   if (data.length === 0) {
     return "<div>暂无搜索结果</div>";
@@ -132,7 +155,9 @@ const computedSelectPanelList = (data, value) => {
       panelOptionsHTML.push(
         `<div class="select-panel-option ${
           value === option ? "option-active" : ""
-        }" ${option.length >= 10 ? `title=${option}` : ""} data-value=${option}>${option}</div>`
+        }" ${
+          option.length >= 10 ? `title=${option}` : ""
+        } data-value=${option}>${option}</div>`
       );
     });
     panelListHTML.push(`<div class="select-panel-item"> 
@@ -145,7 +170,27 @@ const computedSelectPanelList = (data, value) => {
 
   return panelListHTML.join("");
 };
-// 计算Pannel渲染数据
+
+// 计算 panel 渲染 dom（不分组）
+const computedSelectOptions = (data, value) => {
+  if (data.length === 0) {
+    return "<div>暂无搜索结果</div>";
+  }
+
+  const panelOptionsHTML = [];
+
+  data.forEach((option) => {
+    panelOptionsHTML.push(
+      `<div class="text select-option ${value === option ? "option-active" : ""}" ${
+        option.length >= 10 ? `title=${option}` : ""
+      } data-value=${option}>${option}</div>`
+    );
+  });
+
+  return panelOptionsHTML.join("");
+};
+
+// 计算Pannel渲染数据（分组）
 const getPanelDataByKeyword = (data, keyword) =>
   !keyword
     ? data
@@ -156,7 +201,14 @@ const getPanelDataByKeyword = (data, keyword) =>
         }))
         .filter(({ options }) => options.length > 0);
 
-const geSelectPanelConfig = (config) => {
+// 计算Pannel渲染数据（不分组）
+const getOptionsDataByKeyword = (data, keyword) =>
+  !keyword
+    ? data
+    : data
+        .filter((option) => option.includes(keyword))
+
+const getSelectPanelConfig = (config) => {
   const {
     id,
     containerId,
@@ -166,20 +218,23 @@ const geSelectPanelConfig = (config) => {
     data = [],
     value,
     maxLength = 10,
+    byGroup
   } = config;
 
   return `
-        <div id=${containerId} class="select-panel-container hide ${transClassName(containerClass)}">
+        <div id=${containerId} class="select-panel-container hide ${transClassName(
+    containerClass
+  )}">
           ${
             seachable
               ? `<span class="ui-input ui-input-search">
-                <input type="search" placeholder="搜索成分关键字" id=${searchInputId} maxLength=${maxLength} />
+                <input type="search" placeholder="输入关键字搜索" id=${searchInputId} maxLength=${maxLength} />
                 <span class="ui-icon-search cursor-default">搜索</span>
               </span>`
               : null
           }
-          <div id=${id} style="display:flex;min-width:100px;margin-block: 12px 0;" >
-            ${computedSelectPanelList(data, value)}
+          <div id=${id} style="display:flex;min-width:100px;margin-block: 12px 0;" class=${byGroup?'':'select-option-container'} >
+            ${byGroup ? computedSelectPanelList(data, value) : computedSelectOptions(data, value)}
           </div>
         </div>
       `;

@@ -2,6 +2,7 @@ const CONFIG = {
   routes: [
     { pathname: "taste_matching", name: "口味创意搭配" },
     { pathname: "ingredient_tracking", name: "关键成分追踪" },
+    { pathname: "brand_tracking", name: "品牌推新追踪" },
   ],
 };
 
