@@ -160,7 +160,7 @@ class BrandTracking {
     );
     this.set({
       selectedBrand: brand,
-      brandOptions: [...new Set(currentRangeData.map((item) => item["品牌"]))],
+      brandOptions: [...new Set(currentData.map((item) => item["品牌"]))],
       currentRangeData,
     });
   }
@@ -197,15 +197,19 @@ class BrandTracking {
 
   brandSearchInputHandler = (e) => {
     if (e.target.value.length === 0) {
-      const { selectedBrand, brandOptions } = this.get(
+      const { selectedBrand, startDateIndex, endDateIndex } = this.get(
         "selectedBrand",
-        "brandOptions"
+        "startDateIndex",
+        "endDateIndex"
       );
+      const brandOptions = [...new Set(this.data.slice(startDateIndex, endDateIndex).map(item=> item['品牌']))];
+
       const data = getOptionsDataByKeyword(brandOptions);
       document.getElementById(SELECT_PANEL_ID).innerHTML =
         computedSelectOptions(data, selectedBrand);
       this.set({
         keyword: "",
+        brandOptions,
       });
     }
   };
@@ -242,7 +246,7 @@ class BrandTracking {
   // 点击选择品牌
   brandSelectHandler = (e) => {
     if (e.target.classList.contains("select-option")) {
-      const { keyword, brandOptions } = this.get("keyword", "brandOptions");
+      const { keyword } = this.get("keyword");
       const value = e.target.dataset.value;
       // select 组件赋值
       document.getElementById(SELECT_BUTTON_TEXT_ID).innerText = value;
@@ -252,10 +256,12 @@ class BrandTracking {
         .classList.toggle("hide");
       // 重新计算 data
       this.updateCurrentRangeData(value);
+  
 
       // 重新渲染panelList
+      const { brandOptions } = this.get("brandOptions");
 
-      const data = getOptionsDataByKeyword(brandOptions, keyword);
+      const data = getOptionsDataByKeyword(brandOptions);
       document.getElementById(SELECT_PANEL_ID).innerHTML =
         computedSelectOptions(data, value);
 
