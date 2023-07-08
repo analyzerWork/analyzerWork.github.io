@@ -10,17 +10,28 @@ const BRAND_SELECT_PANEL_ID = "brand-select-panel-id";
 
 const PRODUCT_SELECT_PANEL_ID = "product-select-panel-id";
 
+const BRAND_SELECT_PANEL_WRAPPER_ID = "brand-select-panel-wrapper-id";
+
+const PRODUCT_SELECT_PANEL_WRAPPER_ID = "product-select-panel-wrapper-id";
+
 const BRAND_SELECT_PANEL_CONTAINER_ID = "brand-select-panel-container-id";
 
 const PRODUCT_SELECT_PANEL_CONTAINER_ID = "product-select-panel-container-id";
 
-const SELECT_ALL = '全部';
+const BRAND_CONFRIM_BUTTON_ID = "brand-confrim-button-id";
+
+const PRODUCT_CONFRIM_BUTTON_ID = "product-confrim-button-id";
+
+const BRAND_CANCEL_BUTTON_ID = "brand-cancel-button-id";
+
+const PRODUCT_CANCEL_BUTTON_ID = "product-cancel-button-id";
 
 const DEFAULT_SELECT_BUTTON_CONFIG = {
-  labelClass: '',
+  labelClass: "",
   buttonClass: "header-select-button",
   constainerClass: "text",
-}
+  inputMaxWidth: "170px",
+};
 
 const DEFAULT_BRAND_SELECT_BUTTON_CONFIG = {
   label: "品牌类型：",
@@ -40,27 +51,31 @@ const DEFAULT_BRAND_SELECT_PANEl_CONFIG = {
   containerClass: "base-select-panel-container",
   id: BRAND_SELECT_PANEL_ID,
   containerId: BRAND_SELECT_PANEL_CONTAINER_ID,
+  confirmButtuonId: BRAND_CONFRIM_BUTTON_ID,
+  cancelButtonId: BRAND_CANCEL_BUTTON_ID,
 };
 
 const DEFAULT_PRODUCT_SELECT_PANEl_CONFIG = {
   containerClass: "base-select-panel-container",
   id: PRODUCT_SELECT_PANEL_ID,
   containerId: PRODUCT_SELECT_PANEL_CONTAINER_ID,
+  confirmButtuonId: PRODUCT_CONFRIM_BUTTON_ID,
+  cancelButtonId: PRODUCT_CANCEL_BUTTON_ID,
 };
 
 class TasteMatching {
   data = [];
-  brandSelectOptions=[];
-  productSelectOptions=[];
+  brandSelectOptions = [];
+  productSelectOptions = [];
   firstTreeMapInstance = null;
   secondTreeMapInstance = null;
   hotTopIngredientBarInstance = null;
   computedData = {
-    brandTypeValue:[SELECT_ALL],
-    productTypeValue:[SELECT_ALL],
+    brandTypeValue: [SELECT_ALL],
+    productTypeValue: [SELECT_ALL],
     currentData: [],
     currentDateRangeData: [],
-    resortDateRangeFirstClassificationIngredient:[], 
+    resortDateRangeFirstClassificationIngredient: [],
     firstDateRangeIngredientCountMap: new Map(),
     activeIcon: "table",
     firstClassification: [],
@@ -82,9 +97,14 @@ class TasteMatching {
     $datePicker: document.querySelector("#taste-matching-date-picker"),
     $brandTypeSelect: document.querySelector("#brandTypeSelect"),
     $productTypeSelect: document.querySelector("#productTypeSelect"),
+    $brandPanelWraper: document.getElementById(BRAND_SELECT_PANEL_WRAPPER_ID),
+    $productPanelWraper: document.getElementById(
+      PRODUCT_SELECT_PANEL_WRAPPER_ID
+    ),
     $switchIconButton: document.querySelector("#switchIconButton"),
     $tableIcon: document.querySelector("#tableIcon"),
     $chartIcon: document.querySelector("#chartIcon"),
+    $hotTopIngredientContainer: document.querySelector("#hotTopIngredientContainer"),
     $hotIngredientSelect: document.querySelector("#hotIngredientSelect"),
     $firstClassSelect: document.querySelector("#firstClassSelect"),
     $firstClassPanel: document.querySelector("#firstClassPanel"),
@@ -125,6 +145,8 @@ class TasteMatching {
     this.set({
       currentData: this.data.slice(startIndex, endIndex),
       currentDateRangeData: this.data.slice(startIndex, endIndex),
+      startIndex,
+      endIndex
     });
   };
 
@@ -175,18 +197,33 @@ class TasteMatching {
     });
 
     document
-    .getElementById(BRAND_SELECT_BUTTON_ID)
-    .addEventListener("click", (e)=>{
-      e.stopPropagation();
-      document.getElementById(BRAND_SELECT_PANEL_CONTAINER_ID).classList.toggle("hide");
-    });
+      .getElementById(BRAND_SELECT_BUTTON_ID)
+      .addEventListener("click", (e) => {
+        e.stopPropagation();
+        const panel = document.getElementById(BRAND_SELECT_PANEL_CONTAINER_ID);
+        panel.classList.toggle("hide");
+      });
 
     document
-    .getElementById(PRODUCT_SELECT_BUTTON_ID)
-    .addEventListener("click", (e)=>{
-      e.stopPropagation();
-      document.getElementById(PRODUCT_SELECT_PANEL_CONTAINER_ID).classList.toggle("hide");
-    });
+      .getElementById(PRODUCT_SELECT_BUTTON_ID)
+      .addEventListener("click", (e) => {
+        e.stopPropagation();
+        document
+          .getElementById(PRODUCT_SELECT_PANEL_CONTAINER_ID)
+          .classList.toggle("hide");
+      });
+
+    document
+      .getElementById(BRAND_SELECT_PANEL_WRAPPER_ID)
+      .addEventListener("click", (e) =>
+        this.brandProductSelectedHandler(e, BRAND_SELECT_BUTTON_ID)
+      );
+
+    document
+      .getElementById(PRODUCT_SELECT_PANEL_WRAPPER_ID)
+      .addEventListener("click", (e) =>
+        this.brandProductSelectedHandler(e, PRODUCT_SELECT_BUTTON_ID)
+      );
 
     this.element.$hotIngredientSelect.addEventListener(
       "change",
@@ -250,16 +287,34 @@ class TasteMatching {
   };
 
   dateChangeHandler(dateRange) {
-    const { searchValue } = this.get("searchValue");
+    const { brandTypeValue, productTypeValue } = this.get(
+      "brandTypeValue",
+      "productTypeValue"
+    );
     const [startDate, endDate] = dateRange
       .split("至")
       .map((value) => value.trim());
     const startIndex = this.data.findIndex((d) => d["月份"] === startDate);
     const endIndex = this.data.findLastIndex((d) => d["月份"] === endDate);
+    const computedData = computedCurrentDataAndRange(
+      this.data,
+      startIndex,
+      endIndex,
+      brandTypeValue,
+      productTypeValue
+    );
     this.set({
-      currentData: this.data.slice(startIndex, endIndex),
-      currentDateRangeData: this.data.slice(startIndex, endIndex),
+      currentData: computedData,
+      currentDateRangeData: computedData,
+      startIndex,
+      endIndex,
     });
+    this.reRender();
+  }
+
+  reRender = () => {
+    const { searchValue } = this.get("searchValue");
+
     this.reset();
     // 重新渲染热门top15
     this.renderTopHotIngredient();
@@ -267,83 +322,171 @@ class TasteMatching {
     this.element.$secondPanel.classList.add("hide");
     // 重新渲染一级
     this.handleFirstClassificationRender(searchValue);
-    
-  }
+  };
 
-  renderHeaderSelect(){
-    this.brandSelectOptions = [...new Set(this.data.map((item) => item["品牌类型"]))];
-    this.productSelectOptions = [...new Set(this.data.map((item) => item["产品类型"]))];
-    
-    this.element.$brandTypeSelect.innerHTML = `${getSelectButtonConfig(
-      {
-        ...DEFAULT_BRAND_SELECT_BUTTON_CONFIG,
-        value: [SELECT_ALL],
-      }
-    )}`;
-    this.element.$productTypeSelect.innerHTML = `${getSelectButtonConfig(
-      {
-        ...DEFAULT_PRODUCT_SELECT_BUTTON_CONFIG,
-        value: [SELECT_ALL],
-      }
-    )}`;
+  renderHeaderSelect() {
+    this.brandSelectOptions = [
+      ...new Set(this.data.map((item) => item["品牌类型"])),
+    ];
+    this.productSelectOptions = [
+      ...new Set(this.data.map((item) => item["产品类型"])),
+    ];
+
+    this.element.$brandTypeSelect.innerHTML = `${getSelectButtonConfig({
+      ...DEFAULT_BRAND_SELECT_BUTTON_CONFIG,
+      value: [SELECT_ALL],
+    })}${getWrapperWithId(BRAND_SELECT_PANEL_WRAPPER_ID)}`;
+    this.element.$productTypeSelect.innerHTML = `${getSelectButtonConfig({
+      ...DEFAULT_PRODUCT_SELECT_BUTTON_CONFIG,
+      value: [SELECT_ALL],
+    })}${getWrapperWithId(PRODUCT_SELECT_PANEL_WRAPPER_ID)}`;
   }
 
   renderBrandSelectComponent = () => {
     const { brandTypeValue } = this.get("brandTypeValue");
 
-    const panelWraper = document.createElement("div");
-
-    panelWraper.innerHTML += `${getMultipleSelectConfig({
+    const panelWraper = document.getElementById(BRAND_SELECT_PANEL_WRAPPER_ID);
+    panelWraper.innerHTML = `${getMultipleSelectConfig({
       ...DEFAULT_BRAND_SELECT_PANEl_CONFIG,
       value: brandTypeValue,
-      data: this.brandSelectOptions
+      data: this.brandSelectOptions,
     })}`;
     this.element.$brandTypeSelect.appendChild(panelWraper);
   };
 
   renderProductSelectComponent = () => {
     const { productTypeValue } = this.get("productTypeValue");
+    const panelWraper = document.getElementById(
+      PRODUCT_SELECT_PANEL_WRAPPER_ID
+    );
 
-    const panelWraper = document.createElement("div");
-
-    panelWraper.innerHTML += `${getMultipleSelectConfig({
+    panelWraper.innerHTML = `${getMultipleSelectConfig({
       ...DEFAULT_PRODUCT_SELECT_PANEl_CONFIG,
       value: productTypeValue,
-      data:this.productSelectOptions,
+      data: this.productSelectOptions,
     })}`;
     this.element.$productTypeSelect.appendChild(panelWraper);
   };
 
+  brandProductSelectedHandler = (e, selectButtonId) => {
+    e.stopPropagation();
+    const isBrand = selectButtonId === BRAND_SELECT_BUTTON_ID;
+    const cancelButtonId = isBrand
+      ? BRAND_CANCEL_BUTTON_ID
+      : PRODUCT_CANCEL_BUTTON_ID;
+    const confrimButtonId = isBrand
+      ? BRAND_CONFRIM_BUTTON_ID
+      : PRODUCT_CONFRIM_BUTTON_ID;
+    const selectPanelContainerId = isBrand
+      ? BRAND_SELECT_PANEL_CONTAINER_ID
+      : PRODUCT_SELECT_PANEL_CONTAINER_ID;
+    if (e.target.id === cancelButtonId) {
+      document.getElementById(selectPanelContainerId).classList.add("hide");
+      if (isBrand) {
+        this.renderBrandSelectComponent();
+      } else {
+        this.renderProductSelectComponent();
+      }
+    }
+    if (e.target.id === confrimButtonId) {
+      const panelId = isBrand ? BRAND_SELECT_PANEL_ID : PRODUCT_SELECT_PANEL_ID;
+
+      const buttonTextId = isBrand
+        ? BRAND_SELECT_BUTTON_TEXT_ID
+        : PRODUCT_SELECT_BUTTON_TEXT_ID;
+
+      const { brandTypeValue, productTypeValue,startIndex, endIndex } = this.get(
+        "brandTypeValue",
+        "productTypeValue",
+        "startIndex",
+        "endIndex"
+      );
+
+      const currentValue = isBrand ? brandTypeValue : productTypeValue;
+      const optionNodes = document.querySelectorAll(
+        `#${panelId} .multi-select-checkbox:checked`
+      );
+
+      const selectedValue =
+        optionNodes.length > 0
+          ? Array.from(optionNodes).map((item) => item.dataset.value)
+          : [SELECT_ALL];
+      document.getElementById(selectPanelContainerId).classList.add("hide");
+
+      if (selectedValue.join() !== currentValue.join()) {
+        const currentBrandTypeValue = isBrand ? selectedValue : brandTypeValue;
+        const currentProductTypeValue = isBrand
+          ? productTypeValue
+          : selectedValue;
+        this.set({
+          brandTypeValue: currentBrandTypeValue,
+          productTypeValue: currentProductTypeValue,
+        });
+        // select 组件赋值
+        document.getElementById(buttonTextId).innerText = selectedValue.join();
+        // 重新查询 & 渲染
+        const computedData = computedCurrentDataAndRange(
+          this.data,
+          startIndex,
+          endIndex,
+          currentBrandTypeValue,
+          currentProductTypeValue
+        );
+        this.set({
+          currentData: computedData,
+          currentDateRangeData: computedData,
+        });
+        this.reRender();
+      }
+    }
+  };
 
   renderTopHotIngredient = () => {
     const { currentDateRangeData } = this.get("currentDateRangeData");
 
     const {
-      resortFirstClassificationIngredient, firstIngredientCountMap,
+      resortFirstClassificationIngredient,
+      firstIngredientCountMap,
       firstClassificationMenuList,
     } = computedRelatedFirstClassificationData(currentDateRangeData);
 
     this.set({
-      resortDateRangeFirstClassificationIngredient:resortFirstClassificationIngredient, 
+      resortDateRangeFirstClassificationIngredient:
+        resortFirstClassificationIngredient,
       firstDateRangeIngredientCountMap: firstIngredientCountMap,
     });
-
     const menuFragment = computedMenuOptionsFragment(
       firstClassificationMenuList
     );
-    this.element.$hotIngredientSelect.innerHTML = null;
-    this.element.$hotIngredientSelect.appendChild(menuFragment);
-    this.element.$hotIngredientSelect.value = firstClassificationMenuList[0];
-
-    this.renderHotTopIngredientBarmap(firstClassificationMenuList[0]);
+    if(firstClassificationMenuList.length > 0){
+      this.element.$hotIngredientSelect.innerHTML = null;
+      this.element.$hotIngredientSelect.appendChild(menuFragment);
+      this.element.$hotIngredientSelect.value = firstClassificationMenuList[0] || '';
+    }
+  
+    if(resortFirstClassificationIngredient.length === 0) {
+      this.element.$hotTopIngredientBar.classList.add('hide');
+      this.element.$hotTopIngredientContainer.appendChild(
+        this.element.$emptySection.content.cloneNode(true)
+      );
+    } else {
+      this.element.$hotTopIngredientBar.classList.remove('hide');
+      const emptySection = document.querySelector('#hotTopIngredientContainer .empty-content');
+      if (emptySection) {
+        this.element.$hotTopIngredientContainer.removeChild(emptySection);
+      }
+      this.renderHotTopIngredientBarmap(firstClassificationMenuList[0] || '');
+    }
   };
 
   renderHotTopIngredientBarmap = (firstClassification) => {
-    const { resortDateRangeFirstClassificationIngredient, firstDateRangeIngredientCountMap } =
-      this.get(
-        "resortDateRangeFirstClassificationIngredient",
-        "firstDateRangeIngredientCountMap"
-      );
+    const {
+      resortDateRangeFirstClassificationIngredient,
+      firstDateRangeIngredientCountMap,
+    } = this.get(
+      "resortDateRangeFirstClassificationIngredient",
+      "firstDateRangeIngredientCountMap"
+    );
 
     const data = computedHotTopIngredientData(
       resortDateRangeFirstClassificationIngredient,
@@ -352,6 +495,7 @@ class TasteMatching {
     );
 
     this.hotTopIngredientBarInstance.setOption(getBarOptions({ ...data }));
+   
   };
 
   productDialogHideHandler = () => {
@@ -461,8 +605,6 @@ class TasteMatching {
       this.element.$firstClassPanel.appendChild(
         this.element.$emptySection.content.cloneNode(true)
       );
-      document.querySelector("#emptyText").innerHTML =
-        "暂无搜索结果，请重新输入关键词";
     }
 
     this.set({ searchFlag: true });
@@ -508,7 +650,8 @@ class TasteMatching {
 
     this.getSecondClassificationIngredient();
     this.renderSecondClassificationIngredient();
-    const secondContainer = activeIcon === "table" ? '$secondClassPanel' : '$secondClassChart';
+    const secondContainer =
+      activeIcon === "table" ? "$secondClassPanel" : "$secondClassChart";
     this.element[secondContainer].scrollIntoView({ behavior: "smooth" });
   };
 
@@ -689,8 +832,8 @@ class TasteMatching {
       );
       this.element.$firstClassSelect.innerHTML = null;
       this.element.$firstClassSelect.appendChild(menuFragment);
-      this.element.$firstClassSelect.value = firstClassificationMenuList[0];
-      this.renderIngredientTreemap("first", firstClassificationMenuList[0]);
+      this.element.$firstClassSelect.value = firstClassificationMenuList[0] || '';
+      this.renderIngredientTreemap("first", firstClassificationMenuList[0] || '');
     }
   };
   // 渲染 TreeMap
@@ -872,7 +1015,6 @@ class TasteMatching {
       this.element.$productTbody.appendChild(
         this.element.$emptySection.content.cloneNode(true)
       );
-      document.querySelector("#emptyText").innerHTML = "暂无示例结果";
     } else {
       const tbodyFragment = document.createDocumentFragment();
       productList.forEach((item) => {

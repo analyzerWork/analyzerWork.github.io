@@ -1,3 +1,5 @@
+const SELECT_ALL = '全部';
+
 const classificationPriorityMap = new Map([
   ["果味", 6],
   ["茶底", 5],
@@ -120,6 +122,8 @@ const transClassName = (classname) =>
       : classname
     : "";
 
+const getWrapperWithId = (id) => `<div id=${id}></div>`;
+
 const getSelectButtonConfig = (config) => {
   const {
     label,
@@ -129,6 +133,8 @@ const getSelectButtonConfig = (config) => {
     buttonClass,
     value,
     textId,
+    inputMinWidth = '100px',
+    inputMaxWidth = '200px',
   } = config;
 
   const finalValue = typeof config.value === "string" ? value : value.join(",")
@@ -139,7 +145,9 @@ const getSelectButtonConfig = (config) => {
       id=${id}
       style="position: relative;"
       class="ui-select-button ${transClassName(buttonClass)}"
-    ><span id=${textId} style="display:inline-block;min-width:100px;max-width:200px;overflow:hidden;text-overflow: ellipsis;">${finalValue}</span><i class="ui-select-icon" aria-hidden="true"></i></div>
+    >
+    <span id=${textId} style="display:inline-block;white-space:nowrap; min-width:${inputMinWidth};max-width:${inputMaxWidth};overflow:hidden;text-overflow: ellipsis;">${finalValue}</span>
+    <i class="ui-select-icon" aria-hidden="true"></i></div>
   </div>`;
 };
 
@@ -202,10 +210,10 @@ const computedMultiSelectOptions = (data,values = []) => {
 
   data.forEach((option) => {
     panelOptionsHTML.push(
-      `<div class="text multi-select-option" ${
+      `<div class="text multi-select-option"  ${
         option.length >= 10 ? `title=${option}` : ""
       }>
-      <input class="multi-select-checkbox" type="checkbox" id=${option} data-value=${option} ${values.includes(option) ? "checked" : ""} name="checkbox" is="ui-checkbox">
+      <input class="multi-select-checkbox" type="checkbox" data-value=${option} id=${option}  ${values.includes(option) ? "checked" : ""} name="checkbox" is="ui-checkbox">
       <label class="multi-select-checkbox-label" for=${option}>${option}</label>
       </div>`
     );
@@ -274,6 +282,8 @@ const getMultipleSelectConfig = (config) => {
     seachable,
     maxLength,
     byGroup,
+    confirmButtuonId,
+    cancelButtonId,
   } = config;
 
   return `
@@ -292,8 +302,8 @@ const getMultipleSelectConfig = (config) => {
             ${computedMultiSelectOptions(data, value)}
           </div>
           <div class="multi-select-panel-footer" >
-          <button class="small-btn" type="button" data-type="primary" is="ui-button">确定</button>
-          <button type="normal" class="ui-button small-btn">取消</button>
+          <button id=${confirmButtuonId} class="small-btn" type="button" data-type="primary" is="ui-button">确定</button>
+          <button id=${cancelButtonId} type="normal" class="ui-button small-btn">取消</button>
           </div>
         </div>
       `;

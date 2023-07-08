@@ -1,6 +1,3 @@
-
-
-
 const computedClassificationIngredientListTopN = (
   resortSecondClassificationIngredient,
   secondIngredientCountMap,
@@ -56,8 +53,9 @@ const computedSecondClassificationIngredientTreeData = (
   return secondClassificationWithCount.map(
     ({ classification, ingredientListWithCount }) => {
       const total = ingredientListWithCount.reduce(
-        (prev, next) => prev + next.count
-      ,0);
+        (prev, next) => prev + next.count,
+        0
+      );
       return {
         name: classification,
         value: total,
@@ -70,15 +68,43 @@ const computedSecondClassificationIngredientTreeData = (
   );
 };
 
-const computedHotTopIngredientData = (resortFirstClassificationIngredient,firstIngredientCountMap,firstClassification) => {
-  const currentData = resortFirstClassificationIngredient.find(({ classification }) => firstClassification === classification);
+const computedHotTopIngredientData = (
+  resortFirstClassificationIngredient,
+  firstIngredientCountMap,
+  firstClassification
+) => {
+  const currentData = resortFirstClassificationIngredient.find(
+    ({ classification }) => firstClassification === classification
+  );
   if (currentData) {
-    const topIngredientList = currentData.ingredientList.slice(0,15)
+    const topIngredientList = currentData.ingredientList.slice(0, 15);
     return {
       x_data: topIngredientList.map((ingredient) => ingredient),
-      y_data: topIngredientList.map((ingredient) => firstIngredientCountMap.get(ingredient))
-    }
+      y_data: topIngredientList.map((ingredient) =>
+        firstIngredientCountMap.get(ingredient)
+      ),
+    };
   }
-}
+};
 
-
+const computedCurrentDataAndRange = (
+  data,
+  startIndex,
+  endIndex,
+  brandTypeValue,
+  productTypeValue
+) => {
+  const dataSlice = data.slice(startIndex, endIndex);
+  const dataFilterByBrand =
+    brandTypeValue[0] === SELECT_ALL
+      ? dataSlice
+      : dataSlice.filter((item) => brandTypeValue.includes(item["品牌类型"]));
+  const dataFilterByProduct =
+    productTypeValue[0] === SELECT_ALL
+      ? dataFilterByBrand
+      : dataFilterByBrand.filter((item) =>
+          productTypeValue.includes(item["产品类型"])
+        );
+      
+  return dataFilterByProduct
+};
