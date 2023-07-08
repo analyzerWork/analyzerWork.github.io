@@ -1,9 +1,63 @@
+const BRAND_SELECT_BUTTON_ID = "brand-select-button";
+
+const BRAND_SELECT_BUTTON_TEXT_ID = "brand-select-button-text";
+
+const PRODUCT_SELECT_BUTTON_ID = "product-select-button";
+
+const PRODUCT_SELECT_BUTTON_TEXT_ID = "product-select-button-text";
+
+const BRAND_SELECT_PANEL_ID = "brand-select-panel-id";
+
+const PRODUCT_SELECT_PANEL_ID = "product-select-panel-id";
+
+const BRAND_SELECT_PANEL_CONTAINER_ID = "brand-select-panel-container-id";
+
+const PRODUCT_SELECT_PANEL_CONTAINER_ID = "product-select-panel-container-id";
+
+const SELECT_ALL = '全部';
+
+const DEFAULT_SELECT_BUTTON_CONFIG = {
+  labelClass: '',
+  buttonClass: "header-select-button",
+  constainerClass: "text",
+}
+
+const DEFAULT_BRAND_SELECT_BUTTON_CONFIG = {
+  label: "品牌类型：",
+  id: BRAND_SELECT_BUTTON_ID,
+  textId: BRAND_SELECT_BUTTON_TEXT_ID,
+  ...DEFAULT_SELECT_BUTTON_CONFIG,
+};
+
+const DEFAULT_PRODUCT_SELECT_BUTTON_CONFIG = {
+  label: "产品类型：",
+  id: PRODUCT_SELECT_BUTTON_ID,
+  textId: PRODUCT_SELECT_BUTTON_TEXT_ID,
+  ...DEFAULT_SELECT_BUTTON_CONFIG,
+};
+
+const DEFAULT_BRAND_SELECT_PANEl_CONFIG = {
+  containerClass: "base-select-panel-container",
+  id: BRAND_SELECT_PANEL_ID,
+  containerId: BRAND_SELECT_PANEL_CONTAINER_ID,
+};
+
+const DEFAULT_PRODUCT_SELECT_PANEl_CONFIG = {
+  containerClass: "base-select-panel-container",
+  id: PRODUCT_SELECT_PANEL_ID,
+  containerId: PRODUCT_SELECT_PANEL_CONTAINER_ID,
+};
+
 class TasteMatching {
   data = [];
+  brandSelectOptions=[];
+  productSelectOptions=[];
   firstTreeMapInstance = null;
   secondTreeMapInstance = null;
   hotTopIngredientBarInstance = null;
   computedData = {
+    brandTypeValue:[SELECT_ALL],
+    productTypeValue:[SELECT_ALL],
     currentData: [],
     currentDateRangeData: [],
     resortDateRangeFirstClassificationIngredient:[], 
@@ -26,6 +80,8 @@ class TasteMatching {
 
   element = {
     $datePicker: document.querySelector("#taste-matching-date-picker"),
+    $brandTypeSelect: document.querySelector("#brandTypeSelect"),
+    $productTypeSelect: document.querySelector("#productTypeSelect"),
     $switchIconButton: document.querySelector("#switchIconButton"),
     $tableIcon: document.querySelector("#tableIcon"),
     $chartIcon: document.querySelector("#chartIcon"),
@@ -73,6 +129,9 @@ class TasteMatching {
   };
 
   setup() {
+    this.renderHeaderSelect();
+    this.renderBrandSelectComponent();
+    this.renderProductSelectComponent();
     this.element.$tableIcon.classList.toggle("table-icon-active");
     this.firstTreeMapInstance = window.parent.echarts.init(
       this.element.$firstTreeMap
@@ -113,6 +172,20 @@ class TasteMatching {
     const instance = this;
     this.element.$datePicker.addEventListener("change", function () {
       instance.dateChangeHandler(this.value);
+    });
+
+    document
+    .getElementById(BRAND_SELECT_BUTTON_ID)
+    .addEventListener("click", (e)=>{
+      e.stopPropagation();
+      document.getElementById(BRAND_SELECT_PANEL_CONTAINER_ID).classList.toggle("hide");
+    });
+
+    document
+    .getElementById(PRODUCT_SELECT_BUTTON_ID)
+    .addEventListener("click", (e)=>{
+      e.stopPropagation();
+      document.getElementById(PRODUCT_SELECT_PANEL_CONTAINER_ID).classList.toggle("hide");
     });
 
     this.element.$hotIngredientSelect.addEventListener(
@@ -195,8 +268,52 @@ class TasteMatching {
     // 重新渲染一级
     this.handleFirstClassificationRender(searchValue);
     
-
   }
+
+  renderHeaderSelect(){
+    this.brandSelectOptions = [...new Set(this.data.map((item) => item["品牌类型"]))];
+    this.productSelectOptions = [...new Set(this.data.map((item) => item["产品类型"]))];
+    
+    this.element.$brandTypeSelect.innerHTML = `${getSelectButtonConfig(
+      {
+        ...DEFAULT_BRAND_SELECT_BUTTON_CONFIG,
+        value: [SELECT_ALL],
+      }
+    )}`;
+    this.element.$productTypeSelect.innerHTML = `${getSelectButtonConfig(
+      {
+        ...DEFAULT_PRODUCT_SELECT_BUTTON_CONFIG,
+        value: [SELECT_ALL],
+      }
+    )}`;
+  }
+
+  renderBrandSelectComponent = () => {
+    const { brandTypeValue } = this.get("brandTypeValue");
+
+    const panelWraper = document.createElement("div");
+
+    panelWraper.innerHTML += `${getMultipleSelectConfig({
+      ...DEFAULT_BRAND_SELECT_PANEl_CONFIG,
+      value: brandTypeValue,
+      data: this.brandSelectOptions
+    })}`;
+    this.element.$brandTypeSelect.appendChild(panelWraper);
+  };
+
+  renderProductSelectComponent = () => {
+    const { productTypeValue } = this.get("productTypeValue");
+
+    const panelWraper = document.createElement("div");
+
+    panelWraper.innerHTML += `${getMultipleSelectConfig({
+      ...DEFAULT_PRODUCT_SELECT_PANEl_CONFIG,
+      value: productTypeValue,
+      data:this.productSelectOptions,
+    })}`;
+    this.element.$productTypeSelect.appendChild(panelWraper);
+  };
+
 
   renderTopHotIngredient = () => {
     const { currentDateRangeData } = this.get("currentDateRangeData");

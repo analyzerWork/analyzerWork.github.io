@@ -131,13 +131,15 @@ const getSelectButtonConfig = (config) => {
     textId,
   } = config;
 
+  const finalValue = typeof config.value === "string" ? value : value.join(",")
+
   return `<div style="display:flex;align-items: center;" class=${constainerClass}>
     <span class="text ${transClassName(labelClass)}">${label}</span>
     <div
       id=${id}
       style="position: relative;"
       class="ui-select-button ${transClassName(buttonClass)}"
-    ><span id=${textId} style="display:inline-block;min-width:100px;max-width:200px;overflow:hidden;text-overflow: ellipsis;">${value}</span><i class="ui-select-icon" aria-hidden="true"></i></div>
+    ><span id=${textId} style="display:inline-block;min-width:100px;max-width:200px;overflow:hidden;text-overflow: ellipsis;">${finalValue}</span><i class="ui-select-icon" aria-hidden="true"></i></div>
   </div>`;
 };
 
@@ -190,6 +192,28 @@ const computedSelectOptions = (data, value) => {
   return panelOptionsHTML.join("");
 };
 
+// 计算多选 select 下拉
+const computedMultiSelectOptions = (data,values = []) => {
+  if (data.length === 0) {
+    return "<div>暂无结果</div>";
+  }
+
+  const panelOptionsHTML = [];
+
+  data.forEach((option) => {
+    panelOptionsHTML.push(
+      `<div class="text multi-select-option" ${
+        option.length >= 10 ? `title=${option}` : ""
+      }>
+      <input class="multi-select-checkbox" type="checkbox" id=${option} data-value=${option} ${values.includes(option) ? "checked" : ""} name="checkbox" is="ui-checkbox">
+      <label class="multi-select-checkbox-label" for=${option}>${option}</label>
+      </div>`
+    );
+  });
+
+  return panelOptionsHTML.join("");
+}
+
 // 计算Pannel渲染数据（分组）
 const getPanelDataByKeyword = (data, keyword) =>
   !keyword
@@ -231,7 +255,7 @@ const getSelectPanelConfig = (config) => {
                 <input type="search" placeholder="输入关键字搜索" id=${searchInputId} maxLength=${maxLength} />
                 <span class="ui-icon-search cursor-default">搜索</span>
               </span>`
-              : null
+              : ''
           }
           <div id=${id} style="display:flex;min-width:100px;margin-block: 12px 0;" class=${byGroup?'':'select-option-container'} >
             ${byGroup ? computedSelectPanelList(data, value) : computedSelectOptions(data, value)}
@@ -239,3 +263,38 @@ const getSelectPanelConfig = (config) => {
         </div>
       `;
 };
+
+const getMultipleSelectConfig = (config) => {
+  const {
+    id,
+    containerId,
+    containerClass,
+    data = [],
+    value,
+    seachable,
+    maxLength,
+    byGroup,
+  } = config;
+
+  return `
+        <div id=${containerId} class="select-panel-container hide ${transClassName(
+    containerClass
+  )}">
+          ${
+            seachable
+              ? `<span class="ui-input ui-input-search">
+                <input type="search" placeholder="输入关键字搜索" id=${searchInputId} maxLength=${maxLength} />
+                <span class="ui-icon-search cursor-default">搜索</span>
+              </span>`
+              : ''
+          }
+          <div id=${id} style="display:flex;min-width:100px;" class=${byGroup?'':'select-option-container'} >
+            ${computedMultiSelectOptions(data, value)}
+          </div>
+          <div class="multi-select-panel-footer" >
+          <button class="small-btn" type="button" data-type="primary" is="ui-button">确定</button>
+          <button type="normal" class="ui-button small-btn">取消</button>
+          </div>
+        </div>
+      `;
+}

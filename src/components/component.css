@@ -1,3 +1,9 @@
+.small-btn {
+    font-size: 12px;
+    padding: 4px;
+    min-width: 60px;
+}
+
 .select-panel-container {
     position: absolute;
     margin-top: 6px;
@@ -72,4 +78,34 @@
     border-radius: 2px;
     color:  var(--ui-blue);
     cursor: default;
+}
+
+.multi-select-option{
+    display: flex;
+    margin: 6px 0;
+}
+
+.multi-select-checkbox{
+    margin: 0;
+}
+
+.multi-select-checkbox-label {
+    flex: 1;
+    margin: 0;
+    padding-left: 6px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.multi-select-checkbox-label:hover{
+    color: var(--ui-blue);
+}
+
+.multi-select-panel-footer{
+    display: flex;
+    justify-content: center;
+    margin-block: 12px 8px;    
+}
+.multi-select-panel-footer button:first-child {
+    margin-right: 30px;
 }
