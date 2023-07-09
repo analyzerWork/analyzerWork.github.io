@@ -9,6 +9,14 @@ const SELECT_PANEL_ID = "ingredient-track-select-panel";
 const SELECT_PANEL_SEARCH_INPUT_ID =
   "ingredient-track-select-panel-search-input";
 
+const PRODUCT_SELECT_BUTTON_ID = "ingredient-track-product-select-button";
+
+const PRODUCT_SELECT_BUTTON_TEXT_ID =
+  "ingredient-track-product-select-button-text";
+
+const PRODUCT_SELECT_PANEL_WRAPPER_ID =
+  "ingredient-track-product-select-panel-wrapper-id";
+
 const DEFAULT_SELECT_BUTTON_CONFIG = {
   label: "选择成分：",
   constainerClass: "text",
@@ -27,8 +35,41 @@ const DEFAULT_SELECT_PANEl_CONFIG = {
   maxLength: 20,
 };
 
+const BASE_PRODUCT_SELECT_BUTTON_CONFIG = {
+  labelClass: "",
+  buttonClass: "header-select-button",
+  constainerClass: "text",
+  inputMaxWidth: "170px",
+};
+
+const DEFAULT_PRODUCT_SELECT_BUTTON_CONFIG = {
+  label: "产品类型：",
+  id: PRODUCT_SELECT_BUTTON_ID,
+  textId: PRODUCT_SELECT_BUTTON_TEXT_ID,
+  ...BASE_PRODUCT_SELECT_BUTTON_CONFIG,
+};
+
+const PRODUCT_SELECT_PANEL_ID = "ingredient-track-product-select-panel-id";
+
+const PRODUCT_SELECT_PANEL_CONTAINER_ID =
+  "ingredient-track-product-select-panel-container-id";
+
+const PRODUCT_CONFRIM_BUTTON_ID = "ingredient-track-product-confrim-button-id";
+const PRODUCT_CANCEL_BUTTON_ID = "ingredient-track-product-cancel-button-id";
+
+const DEFAULT_PRODUCT_SELECT_PANEl_CONFIG = {
+  containerClass: "base-multi-select-panel-container",
+  id: PRODUCT_SELECT_PANEL_ID,
+  containerId: PRODUCT_SELECT_PANEL_CONTAINER_ID,
+  confirmButtuonId: PRODUCT_CONFRIM_BUTTON_ID,
+  cancelButtonId: PRODUCT_CANCEL_BUTTON_ID,
+};
+const PRODUCT_NAME = '产品名称';
+const BRAND_NAME = '品牌';
+
 class IngredientTracking {
   data = [];
+  productSelectOptions = [];
   classificationIngredientList = [];
   brandTrendInstance = null;
   ingredientDropInstance = null;
@@ -38,6 +79,7 @@ class IngredientTracking {
     selectedIngredient: "",
     currentRangeData: [],
     keyword: "",
+    productTypeValue: [SELECT_ALL],
   };
 
   element = {
@@ -45,8 +87,15 @@ class IngredientTracking {
     $ingredientSelectContainer: document.querySelector(
       "#ingredientSelectContainer"
     ),
+    $productTypeSelect: document.querySelector("#productTypeSelect"),
+    $productPanelWraper: document.getElementById(
+      PRODUCT_SELECT_PANEL_WRAPPER_ID
+    ),
+    $productSection: document.querySelector("#productSection"),
+    $brandSection: document.querySelector("#brandSection"),
     $productTrend: document.querySelector("#productTrend"),
     $brandTrend: document.querySelector("#brandTrend"),
+    $emptySection: document.querySelector("#emptySection"),
   };
   constructor(initData) {
     this.init(initData);
@@ -72,11 +121,14 @@ class IngredientTracking {
     this.element.$datePicker.max = lastDate;
     const startDateIndex = this.data.findIndex((d) => d["月份"] === startDate);
     const endDateIndex = this.data.findLastIndex((d) => d["月份"] === lastDate);
-    const selectedIngredient =  resortFirstClassificationIngredient[0].ingredientList[0];
+    const selectedIngredient =
+      resortFirstClassificationIngredient[0].ingredientList[0];
     this.set({
       startDateIndex,
       endDateIndex,
-      currentRangeData: this.data.slice(startDateIndex, endDateIndex).filter(item => item['加工后成分'] === selectedIngredient),
+      currentRangeData: this.data
+        .slice(startDateIndex, endDateIndex)
+        .filter((item) => item["加工后成分"] === selectedIngredient),
       selectedIngredient,
     });
     this.newProductTrendInstance = window.parent.echarts.init(
@@ -90,8 +142,9 @@ class IngredientTracking {
   setup() {
     this.renderSelectButton();
     this.renderSelectPanelComponent();
-    this.renderNewProductTrend();
-    this.renderBrandTrend();
+    this.renderProductSelectComponent();
+    this.renderNewProductBrandTrend(PRODUCT_NAME);
+    this.renderNewProductBrandTrend(BRAND_NAME);
   }
 
   get = (...keys) =>
@@ -133,10 +186,31 @@ class IngredientTracking {
       .addEventListener("click", this.ingredientSelectHandler);
 
     document.addEventListener("click", this.hidePanel);
+
+    document
+      .getElementById(PRODUCT_SELECT_BUTTON_ID)
+      .addEventListener("click", (e) => {
+        e.stopPropagation();
+        document
+          .getElementById(PRODUCT_SELECT_PANEL_CONTAINER_ID)
+          .classList.toggle("hide");
+      });
+
+    document
+      .getElementById(PRODUCT_SELECT_PANEL_WRAPPER_ID)
+      .addEventListener("click", (e) =>
+        this.productSelectedHandler(e, PRODUCT_SELECT_BUTTON_ID)
+      );
+  };
+
+  reRender = () => {
+    this.updateCurrentRangeData();
+    // 重新渲染
+    this.renderNewProductBrandTrend(PRODUCT_NAME);
+    this.renderNewProductBrandTrend(BRAND_NAME);
   };
 
   dateChangeHandler(dateRange) {
-    const { selectedIngredient } = this.get("selectedIngredient");
     const [startDate, endDate] = dateRange
       .split("至")
       .map((value) => value.trim());
@@ -147,24 +221,33 @@ class IngredientTracking {
       endDateIndex,
     });
 
-    this.updateCurrentRangeData(selectedIngredient);
-    // 重新渲染
-    this.renderNewProductTrend();
-    this.renderBrandTrend();
+    this.reRender();
   }
 
-  updateCurrentRangeData(ingredient) {
-    const { startDateIndex, endDateIndex } = this.get(
+  updateCurrentRangeData() {
+    const {
+      startDateIndex,
+      endDateIndex,
+      selectedIngredient,
+      productTypeValue,
+    } = this.get(
       "startDateIndex",
-      "endDateIndex"
+      "endDateIndex",
+      "selectedIngredient",
+      "productTypeValue"
     );
 
-    const currentData = this.data.slice(startDateIndex, endDateIndex);
-      
+    const currentData = computedCurrentDataAndRange(
+      this.data,
+      startDateIndex,
+      endDateIndex,
+      null,
+      productTypeValue
+    );
+
     this.set({
-      selectedIngredient: ingredient,
       currentRangeData: currentData.filter(
-        (item) => item["加工后成分"] === ingredient
+        (item) => item["加工后成分"] === selectedIngredient
       ),
     });
   }
@@ -178,6 +261,15 @@ class IngredientTracking {
         value: selectedIngredient,
       }
     )}`;
+
+    this.productSelectOptions = [
+      ...new Set(this.data.map((item) => item["产品类型"])),
+    ];
+
+    this.element.$productTypeSelect.innerHTML = `${getSelectButtonConfig({
+      ...DEFAULT_PRODUCT_SELECT_BUTTON_CONFIG,
+      value: [SELECT_ALL],
+    })}${getWrapperWithId(PRODUCT_SELECT_PANEL_WRAPPER_ID)}`;
   };
 
   renderSelectPanelComponent = () => {
@@ -192,6 +284,20 @@ class IngredientTracking {
       byGroup: true,
     })}`;
     document.body.appendChild(panelWraper);
+  };
+
+  renderProductSelectComponent = () => {
+    const { productTypeValue } = this.get("productTypeValue");
+    const panelWraper = document.getElementById(
+      PRODUCT_SELECT_PANEL_WRAPPER_ID
+    );
+
+    panelWraper.innerHTML = `${getMultipleSelectConfig({
+      ...DEFAULT_PRODUCT_SELECT_PANEl_CONFIG,
+      value: productTypeValue,
+      data: this.productSelectOptions,
+    })}`;
+    this.element.$productTypeSelect.appendChild(panelWraper);
   };
 
   ingredientButtonSelectHandler = (e) => {
@@ -252,8 +358,11 @@ class IngredientTracking {
       document
         .getElementById(SELECT_PANEL_CONTAINER_ID)
         .classList.toggle("hide");
+
       // 重新计算 data
-      this.updateCurrentRangeData(value);
+      this.set({
+        selectedIngredient: value,
+      });
 
       // 重新渲染panelList
       const data = getPanelDataByKeyword(
@@ -262,31 +371,73 @@ class IngredientTracking {
       );
       document.getElementById(SELECT_PANEL_ID).innerHTML =
         computedSelectPanelList(data, value);
-      // 重新渲染新品、品牌趋势图
-      this.renderNewProductTrend();
-      this.renderBrandTrend();
+      this.reRender();
     }
   };
 
-  // 绘制应用新品数量趋势
-  renderNewProductTrend = () => {
-    const { currentRangeData } = this.get("currentRangeData");
+  productSelectedHandler = (e) => {
+    e.stopPropagation();
 
-    const productTrendData = computedTrendData(currentRangeData, "产品名称");
+    if (e.target.id === PRODUCT_CANCEL_BUTTON_ID) {
+      document
+        .getElementById(PRODUCT_SELECT_PANEL_CONTAINER_ID)
+        .classList.add("hide");
+      this.renderProductSelectComponent();
+    }
+    if (e.target.id === PRODUCT_CONFRIM_BUTTON_ID) {
+      const { productTypeValue } = this.get("productTypeValue");
 
+      const optionNodes = document.querySelectorAll(
+        `#${PRODUCT_SELECT_PANEL_ID} .multi-select-checkbox:checked`
+      );
 
+      const selectedValue =
+        optionNodes.length > 0
+          ? Array.from(optionNodes).map((item) => item.dataset.value)
+          : [SELECT_ALL];
+      document
+        .getElementById(PRODUCT_SELECT_PANEL_CONTAINER_ID)
+        .classList.add("hide");
 
-    this.newProductTrendInstance.setOption(
-      getTrendOptions({ ...productTrendData })
-    );
+      if (selectedValue.join() !== productTypeValue.join()) {
+        this.set({
+          productTypeValue: selectedValue,
+        });
+        // select 组件赋值
+        document.getElementById(PRODUCT_SELECT_BUTTON_TEXT_ID).innerText =
+          selectedValue.join();
+
+        this.reRender();
+      }
+    }
   };
 
-  // 绘制应用品牌数量趋势
-  renderBrandTrend = () => {
+  // 绘制数量趋势
+  renderNewProductBrandTrend = (name) => {
+    const isBrand = name === BRAND_NAME;
+    const emptySectionId = isBrand ? 'brandSection' : 'productSection';
+    const sectionEle = isBrand ? this.element.$brandSection : this.element.$productSection; 
+    const chartEle = isBrand ? this.element.$brandTrend : this.element.$productTrend;
+    const chartInstance = isBrand ? this.brandTrendInstance : this.newProductTrendInstance;
     const { currentRangeData } = this.get("currentRangeData");
 
-    const brandTrendData = computedTrendData(currentRangeData, "品牌");
+    const emptySection = document.querySelector(
+      `#${emptySectionId} .empty-content`
+    );
+    if (emptySection) {
+      sectionEle.removeChild(emptySection);
+    }
 
-    this.brandTrendInstance.setOption(getTrendOptions({ ...brandTrendData }));
+    if (currentRangeData.length === 0) {
+      chartEle.classList.add("hide");
+      sectionEle.appendChild(
+        this.element.$emptySection.content.cloneNode(true)
+      );
+    } else {
+      chartEle.classList.remove("hide");
+
+      const trendData = computedTrendData(currentRangeData, name);
+      chartInstance.setOption(getTrendOptions({ ...trendData }));
+    }
   };
 }

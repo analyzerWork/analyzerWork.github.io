@@ -1,18 +1,5 @@
-
-
-.header-select-button {
-    width: 180px;
-}
-
 #brandTypeSelect,#productTypeSelect {
     position: relative;
-}
-
-.base-select-panel-container{
-    width: 208px;
-    left: 70px;
-    top: 40px;
-    padding: 6px;
 }
 
 .base-label {
@@ -281,18 +268,6 @@
 
 #productTbody{
     font-family:MicrosoftYaHei
-}
-
-.empty-content{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-#emptyText{
-    margin: 20px 0 0;
 }
 
 .has-selected-ingredient{

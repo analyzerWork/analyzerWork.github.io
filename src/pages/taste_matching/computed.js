@@ -87,24 +87,3 @@ const computedHotTopIngredientData = (
   }
 };
 
-const computedCurrentDataAndRange = (
-  data,
-  startIndex,
-  endIndex,
-  brandTypeValue,
-  productTypeValue
-) => {
-  const dataSlice = data.slice(startIndex, endIndex);
-  const dataFilterByBrand =
-    brandTypeValue[0] === SELECT_ALL
-      ? dataSlice
-      : dataSlice.filter((item) => brandTypeValue.includes(item["品牌类型"]));
-  const dataFilterByProduct =
-    productTypeValue[0] === SELECT_ALL
-      ? dataFilterByBrand
-      : dataFilterByBrand.filter((item) =>
-          productTypeValue.includes(item["产品类型"])
-        );
-      
-  return dataFilterByProduct
-};

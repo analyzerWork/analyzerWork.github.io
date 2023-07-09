@@ -6,11 +6,17 @@
     position: relative;
 }
 
+.header-select-button {
+    width: 180px;
+}
+
+#productTypeSelect {
+    position: relative;
+}
 
 .content::-webkit-scrollbar {
     display: block;
 }
-
 
 .ingredient-select-panel-container{
     left: 400px;

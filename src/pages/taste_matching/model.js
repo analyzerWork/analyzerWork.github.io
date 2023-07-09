@@ -48,7 +48,7 @@ const DEFAULT_PRODUCT_SELECT_BUTTON_CONFIG = {
 };
 
 const DEFAULT_BRAND_SELECT_PANEl_CONFIG = {
-  containerClass: "base-select-panel-container",
+  containerClass: "base-multi-select-panel-container",
   id: BRAND_SELECT_PANEL_ID,
   containerId: BRAND_SELECT_PANEL_CONTAINER_ID,
   confirmButtuonId: BRAND_CONFRIM_BUTTON_ID,
@@ -56,7 +56,7 @@ const DEFAULT_BRAND_SELECT_PANEl_CONFIG = {
 };
 
 const DEFAULT_PRODUCT_SELECT_PANEl_CONFIG = {
-  containerClass: "base-select-panel-container",
+  containerClass: "base-multi-select-panel-container",
   id: PRODUCT_SELECT_PANEL_ID,
   containerId: PRODUCT_SELECT_PANEL_CONTAINER_ID,
   confirmButtuonId: PRODUCT_CONFRIM_BUTTON_ID,
@@ -104,7 +104,9 @@ class TasteMatching {
     $switchIconButton: document.querySelector("#switchIconButton"),
     $tableIcon: document.querySelector("#tableIcon"),
     $chartIcon: document.querySelector("#chartIcon"),
-    $hotTopIngredientContainer: document.querySelector("#hotTopIngredientContainer"),
+    $hotTopIngredientContainer: document.querySelector(
+      "#hotTopIngredientContainer"
+    ),
     $hotIngredientSelect: document.querySelector("#hotIngredientSelect"),
     $firstClassSelect: document.querySelector("#firstClassSelect"),
     $firstClassPanel: document.querySelector("#firstClassPanel"),
@@ -146,7 +148,7 @@ class TasteMatching {
       currentData: this.data.slice(startIndex, endIndex),
       currentDateRangeData: this.data.slice(startIndex, endIndex),
       startIndex,
-      endIndex
+      endIndex,
     });
   };
 
@@ -287,25 +289,12 @@ class TasteMatching {
   };
 
   dateChangeHandler(dateRange) {
-    const { brandTypeValue, productTypeValue } = this.get(
-      "brandTypeValue",
-      "productTypeValue"
-    );
     const [startDate, endDate] = dateRange
       .split("至")
       .map((value) => value.trim());
     const startIndex = this.data.findIndex((d) => d["月份"] === startDate);
     const endIndex = this.data.findLastIndex((d) => d["月份"] === endDate);
-    const computedData = computedCurrentDataAndRange(
-      this.data,
-      startIndex,
-      endIndex,
-      brandTypeValue,
-      productTypeValue
-    );
     this.set({
-      currentData: computedData,
-      currentDateRangeData: computedData,
       startIndex,
       endIndex,
     });
@@ -313,7 +302,31 @@ class TasteMatching {
   }
 
   reRender = () => {
-    const { searchValue } = this.get("searchValue");
+    const {
+      searchValue,
+      startIndex,
+      endIndex,
+      brandTypeValue,
+      productTypeValue,
+    } = this.get(
+      "searchValue",
+      "startIndex",
+      "endIndex",
+      "brandTypeValue",
+      "productTypeValue"
+    );
+
+    const computedData = computedCurrentDataAndRange(
+      this.data,
+      startIndex,
+      endIndex,
+      brandTypeValue,
+      productTypeValue,
+    );
+    this.set({
+      currentData: computedData,
+      currentDateRangeData: computedData,
+    });
 
     this.reset();
     // 重新渲染热门top15
@@ -395,12 +408,13 @@ class TasteMatching {
         ? BRAND_SELECT_BUTTON_TEXT_ID
         : PRODUCT_SELECT_BUTTON_TEXT_ID;
 
-      const { brandTypeValue, productTypeValue,startIndex, endIndex } = this.get(
-        "brandTypeValue",
-        "productTypeValue",
-        "startIndex",
-        "endIndex"
-      );
+      const { brandTypeValue, productTypeValue, startIndex, endIndex } =
+        this.get(
+          "brandTypeValue",
+          "productTypeValue",
+          "startIndex",
+          "endIndex"
+        );
 
       const currentValue = isBrand ? brandTypeValue : productTypeValue;
       const optionNodes = document.querySelectorAll(
@@ -424,17 +438,9 @@ class TasteMatching {
         });
         // select 组件赋值
         document.getElementById(buttonTextId).innerText = selectedValue.join();
-        // 重新查询 & 渲染
-        const computedData = computedCurrentDataAndRange(
-          this.data,
-          startIndex,
-          endIndex,
-          currentBrandTypeValue,
-          currentProductTypeValue
-        );
         this.set({
-          currentData: computedData,
-          currentDateRangeData: computedData,
+          brandTypeValue: currentBrandTypeValue,
+          productTypeValue: currentProductTypeValue,
         });
         this.reRender();
       }
@@ -458,25 +464,28 @@ class TasteMatching {
     const menuFragment = computedMenuOptionsFragment(
       firstClassificationMenuList
     );
-    if(firstClassificationMenuList.length > 0){
+    if (firstClassificationMenuList.length > 0) {
       this.element.$hotIngredientSelect.innerHTML = null;
       this.element.$hotIngredientSelect.appendChild(menuFragment);
-      this.element.$hotIngredientSelect.value = firstClassificationMenuList[0] || '';
+      this.element.$hotIngredientSelect.value =
+        firstClassificationMenuList[0] || "";
     }
-  
-    const emptySection = document.querySelector('#hotTopIngredientContainer .empty-content');
+
+    const emptySection = document.querySelector(
+      "#hotTopIngredientContainer .empty-content"
+    );
     if (emptySection) {
       this.element.$hotTopIngredientContainer.removeChild(emptySection);
     }
-    if(resortFirstClassificationIngredient.length === 0) {
-      this.element.$hotTopIngredientBar.classList.add('hide');
+    if (resortFirstClassificationIngredient.length === 0) {
+      this.element.$hotTopIngredientBar.classList.add("hide");
       this.element.$hotTopIngredientContainer.appendChild(
         this.element.$emptySection.content.cloneNode(true)
       );
     } else {
-      this.element.$hotTopIngredientBar.classList.remove('hide');
-     
-      this.renderHotTopIngredientBarmap(firstClassificationMenuList[0] || '');
+      this.element.$hotTopIngredientBar.classList.remove("hide");
+
+      this.renderHotTopIngredientBarmap(firstClassificationMenuList[0] || "");
     }
   };
 
@@ -496,7 +505,6 @@ class TasteMatching {
     );
 
     this.hotTopIngredientBarInstance.setOption(getBarOptions({ ...data }));
-   
   };
 
   productDialogHideHandler = () => {
@@ -833,8 +841,12 @@ class TasteMatching {
       );
       this.element.$firstClassSelect.innerHTML = null;
       this.element.$firstClassSelect.appendChild(menuFragment);
-      this.element.$firstClassSelect.value = firstClassificationMenuList[0] || '';
-      this.renderIngredientTreemap("first", firstClassificationMenuList[0] || '');
+      this.element.$firstClassSelect.value =
+        firstClassificationMenuList[0] || "";
+      this.renderIngredientTreemap(
+        "first",
+        firstClassificationMenuList[0] || ""
+      );
     }
   };
   // 渲染 TreeMap

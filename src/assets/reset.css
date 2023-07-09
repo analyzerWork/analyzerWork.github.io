@@ -130,6 +130,15 @@ a{
     cursor: default;
 }
 
+.empty-content{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 .empty-text {
+    margin: 20px 0 0;
     color: var(--color-primary-dark);
 }

@@ -4,6 +4,10 @@
     min-width: 60px;
 }
 
+.header-select-button {
+    width: 180px;
+}
+
 .select-panel-container {
     position: absolute;
     margin-top: 6px;
@@ -78,6 +82,13 @@
     border-radius: 2px;
     color:  var(--ui-blue);
     cursor: default;
+}
+
+.base-multi-select-panel-container{
+    width: 208px;
+    left: 70px;
+    top: 40px;
+    padding: 6px;
 }
 
 .multi-select-option{
