@@ -102,7 +102,7 @@
 .first-class-panel, .second-class-panel{
     display: flex;
     height: 410px;
-    margin: 0 24px;
+    margin: 24px;
     padding: 10px 16px 16px;
     border-radius: 4px;
 }
