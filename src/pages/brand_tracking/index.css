@@ -17,14 +17,6 @@ body {
     font-size: 14px;
 }
 
-
-#brand-track-date-picker {
-    width: 180px;
-    font-family: 'RichBlack';
-    color: var(--color-primary-dark);
-    margin-inline: 0 24px;
-}
-
 #brandSelectContainer {
     position: relative;
 }

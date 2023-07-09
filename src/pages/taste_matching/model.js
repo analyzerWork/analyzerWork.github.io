@@ -464,6 +464,10 @@ class TasteMatching {
       this.element.$hotIngredientSelect.value = firstClassificationMenuList[0] || '';
     }
   
+    const emptySection = document.querySelector('#hotTopIngredientContainer .empty-content');
+    if (emptySection) {
+      this.element.$hotTopIngredientContainer.removeChild(emptySection);
+    }
     if(resortFirstClassificationIngredient.length === 0) {
       this.element.$hotTopIngredientBar.classList.add('hide');
       this.element.$hotTopIngredientContainer.appendChild(
@@ -471,10 +475,7 @@ class TasteMatching {
       );
     } else {
       this.element.$hotTopIngredientBar.classList.remove('hide');
-      const emptySection = document.querySelector('#hotTopIngredientContainer .empty-content');
-      if (emptySection) {
-        this.element.$hotTopIngredientContainer.removeChild(emptySection);
-      }
+     
       this.renderHotTopIngredientBarmap(firstClassificationMenuList[0] || '');
     }
   };

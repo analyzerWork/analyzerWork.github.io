@@ -1,24 +1,4 @@
-body{
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
 
-.taste-matching-header{
-    display: flex;
-    padding: 10px 24px;
-    border-radius: 4px;
-    background-color: var(--color-primary-white);
-}
-
-.header-item{
-    display: flex;
-    align-items: center;
-}
-
-.header-item:not(:last-child){
-    margin-right: 28px;
-}
 
 .header-select-button {
     width: 180px;
@@ -39,29 +19,11 @@ body{
     font-size: 14px;
 }
 
-#taste-matching-date-picker{
-    width: 180px;
-    font-family: 'RichBlack';
-    color: var(--color-primary-dark);
-}
-
-.taste-matching-content{
-    flex: 1;
-    margin: 12px 0 0;
-    padding: 0 0 20px;
-    border-radius: 4px;
-    background-color: var(--color-primary-white);
-    overflow-y: auto;
-}
-
-.section-title {
-    margin: 24px;
-}
 
 .hot-ingredient-select-container{
     display: flex;
     align-items: center;
-    margin: 24px;
+    margin-block: 24px 0;
 }
 
 .tool-bar {
