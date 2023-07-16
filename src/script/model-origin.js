@@ -3,6 +3,7 @@ class AnalyzerModel {
   element = {
     $user: document.querySelector("#user"),
     $waterMarkContainer: document.querySelector("#waterMarkContainer"),
+    $appHeader: document.querySelector("#appHeader"),
   };
 
   init = () => {
@@ -15,6 +16,10 @@ class AnalyzerModel {
     const user = cookieInstance.get('name');
    
     this.element.$user.innerHTML = user;
+    // check if the app embedded in iframe
+    if(self !== top){
+      this.element.$appHeader.style.display = 'none';
+    }
   };
 
   bind = () => {

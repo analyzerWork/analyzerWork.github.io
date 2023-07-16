@@ -5,6 +5,7 @@ class Cookie {
   }
   init() {
     const allCookies = document.cookie;
+    console.log(allCookies);
     if (allCookies.length) {
       const cookieArray = allCookies.split("; ");
 
@@ -21,6 +22,7 @@ class Cookie {
   authCheck = () => {
     const user = this.get("name");
     const currentUser = USER_INFO.find(({ name }) => name === user);
+    console.log(user, currentUser);
     if (!user || !currentUser) {
         if(window.location.pathname !== "/login.html"){
           ANAlYZER_UTILS.locateToPage({path:'login.html'});
@@ -40,7 +42,7 @@ class Cookie {
 
     document.cookie = `${key}=${encodeURIComponent(
       value
-    )}; expires=${date.toGMTString()}`;
+    )}; expires=${date.toGMTString()}; SameSite=None; Secure`;
   }
 
   get(key) {
