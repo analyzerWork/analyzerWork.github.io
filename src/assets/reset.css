@@ -23,7 +23,6 @@ html,body{
 .iframe-body {
     display: flex;
     flex-direction: column;
-    height: 100vh;
 }
 
 ul,li {
@@ -75,7 +74,6 @@ a{
 .content{
     flex: 1;
     margin-block: 20px 0;
-    padding-block: 0 20px;
     border-radius: 4px;
     overflow-y: auto;
 }
@@ -86,6 +84,11 @@ a{
     border-radius: 4px;
     background-color: var(--color-primary-white);
 }
+
+.content > section:last-child{
+    margin-bottom: 0;
+}
+
 .base-date-picker {
     width: 180px;
     font-family: 'RichBlack';
