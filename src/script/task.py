@@ -29,10 +29,10 @@ class TasteMatching:
         log_message = 'Excel转换JSON数据'
         try:
             df = pd.read_excel(
-                r'../pages/datasource/taste_matching.xlsx').sort_values(by='月份')
+                r'../pages/datasource/taste_matching.xlsx')
 
             df['月份'] = df['月份'].dt.strftime('%Y-%m')
-
+            df = df.sort_values(by='月份')
             df['品牌-产品名称-原料构成'] = df['品牌'] + '-' + df['产品名称'] + '-' + df['原料构成']
 
             df.to_json('../pages/datasource/taste_matching.json',
