@@ -14,12 +14,12 @@ print(pd.__version__)
 
 class TasteMatching:
 
-    def __init__(self, opions):
-        self.opions = opions
+    def __init__(self, options):
+        self.options = options
         self.data = pd.DataFrame([])
 
     def exec(self):
-        if self.opions.get('isDataTransfer') == True:
+        if self.options.get('isDataTransfer') == True:
             self.transToJSON()
 
         # self.data = self.get_data()
