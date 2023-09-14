@@ -1,15 +1,20 @@
-
+"""
+大数据表处理
+"""
 import os
 import sys
-import json
 import pandas as pd
-
-from py_package.utils import message
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+
+from py_package.utils import message
+
 print(pd.__version__)
+
+def format_month(month):
+    return '{}-{}'.format(month[:4], month[4:])
 
 class BigDataTask:
 
@@ -25,11 +30,12 @@ class BigDataTask:
 
     # 读取原始数据,转换为json格式
     def transToJSON(self,file_name):
-        log_message = 'Excel转换JSON数据:{}'.format(file_name)
+        log_message = 'Excel{}转换JSON数据'.format(file_name)
         try:
+            print('../pages/datasource/{}.xlsx'.format(file_name))
             df = pd.read_excel(
                 r'../pages/datasource/{}.xlsx'.format(file_name),)
-            df['月份'] = df['月份'].dt.strftime('%Y-%m')
+            df['月份'] = df['月份'].astype(str).apply(format_month)
             df = df.sort_values(by='月份')
             df.to_json('../pages/datasource/{}.json'.format(file_name),
                        orient='records',

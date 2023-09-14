@@ -1,14 +1,18 @@
-
+"""
+线下表处理
+"""
 import os
 import sys
+import json
 
 import pandas as pd
-import json
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+
 from py_package.utils import message
+
 
 print(pd.__version__)
 
