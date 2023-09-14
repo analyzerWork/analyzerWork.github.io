@@ -1,32 +1,36 @@
-
+"""
+线下表处理
+"""
 import os
 import sys
+import json
 
 import pandas as pd
-import json
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+
 from py_package.utils import message
+
 
 print(pd.__version__)
 
 class TasteMatching:
 
-    def __init__(self, opions):
-        self.opions = opions
+    def __init__(self, options):
+        self.options = options
         self.data = pd.DataFrame([])
 
     def exec(self):
-        if self.opions.get('isDataTransfer') == True:
+        if self.options.get('isDataTransfer') == True:
             self.transToJSON()
 
         # self.data = self.get_data()
 
     # 读取原始数据,转换为json格式
     def transToJSON(self):
-        log_message = 'Excel转换JSON数据'
+        log_message = 'taste_matching.xlsx - Excel 转换 JSON 数据'
         try:
             df = pd.read_excel(
                 r'../pages/datasource/taste_matching.xlsx')
