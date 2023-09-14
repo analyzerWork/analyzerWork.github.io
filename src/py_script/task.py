@@ -30,7 +30,7 @@ class TasteMatching:
 
     # 读取原始数据,转换为json格式
     def transToJSON(self):
-        log_message = 'Excel转换JSON数据'
+        log_message = 'taste_matching.xlsx - Excel 转换 JSON 数据'
         try:
             df = pd.read_excel(
                 r'../pages/datasource/taste_matching.xlsx')

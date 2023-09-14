@@ -9,12 +9,10 @@ sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
-from py_package.utils import message
+from py_package.utils import message, format_month
 
 print(pd.__version__)
 
-def format_month(month):
-    return '{}-{}'.format(month[:4], month[4:])
 
 class BigDataTask:
 
@@ -26,11 +24,9 @@ class BigDataTask:
         if self.options.get('isDataTransfer') == True:
             self.transToJSON(file_name)
 
-        # self.data = self.get_data()
-
     # 读取原始数据,转换为json格式
     def transToJSON(self,file_name):
-        log_message = 'Excel{}转换JSON数据'.format(file_name)
+        log_message = '{}.xlsx - Excel 转换 JSON 数据'.format(file_name)
         try:
             print('../pages/datasource/{}.xlsx'.format(file_name))
             df = pd.read_excel(
