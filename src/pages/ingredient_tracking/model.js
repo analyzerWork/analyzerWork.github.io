@@ -61,7 +61,7 @@ const DEFAULT_PRODUCT_SELECT_PANEl_CONFIG = {
   containerClass: "base-multi-select-panel-container",
   id: PRODUCT_SELECT_PANEL_ID,
   containerId: PRODUCT_SELECT_PANEL_CONTAINER_ID,
-  confirmButtuonId: PRODUCT_CONFRIM_BUTTON_ID,
+  confirmButtonId: PRODUCT_CONFRIM_BUTTON_ID,
   cancelButtonId: PRODUCT_CANCEL_BUTTON_ID,
 };
 const PRODUCT_NAME = '产品名称';

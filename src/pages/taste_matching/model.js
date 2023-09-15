@@ -51,7 +51,7 @@ const DEFAULT_BRAND_SELECT_PANEl_CONFIG = {
   containerClass: "base-multi-select-panel-container",
   id: BRAND_SELECT_PANEL_ID,
   containerId: BRAND_SELECT_PANEL_CONTAINER_ID,
-  confirmButtuonId: BRAND_CONFRIM_BUTTON_ID,
+  confirmButtonId: BRAND_CONFRIM_BUTTON_ID,
   cancelButtonId: BRAND_CANCEL_BUTTON_ID,
 };
 
@@ -59,7 +59,7 @@ const DEFAULT_PRODUCT_SELECT_PANEl_CONFIG = {
   containerClass: "base-multi-select-panel-container",
   id: PRODUCT_SELECT_PANEL_ID,
   containerId: PRODUCT_SELECT_PANEL_CONTAINER_ID,
-  confirmButtuonId: PRODUCT_CONFRIM_BUTTON_ID,
+  confirmButtonId: PRODUCT_CONFRIM_BUTTON_ID,
   cancelButtonId: PRODUCT_CANCEL_BUTTON_ID,
 };
 

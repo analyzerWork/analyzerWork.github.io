@@ -282,7 +282,7 @@ const getMultipleSelectConfig = (config) => {
     searchable,
     maxLength,
     byGroup,
-    confirmButtuonId,
+    confirmButtonId,
     cancelButtonId,
   } = config;
 
@@ -302,7 +302,7 @@ const getMultipleSelectConfig = (config) => {
             ${computedMultiSelectOptions(data, value)}
           </div>
           <div class="multi-select-panel-footer" >
-          <button id=${confirmButtuonId} class="small-btn" type="button" data-type="primary" is="ui-button">确定</button>
+          <button id=${confirmButtonId} class="small-btn" type="button" data-type="primary" is="ui-button">确定</button>
           <button id=${cancelButtonId} type="normal" class="ui-button small-btn">取消</button>
           </div>
         </div>
