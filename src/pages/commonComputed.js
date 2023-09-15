@@ -245,7 +245,7 @@ const getSelectPanelConfig = (config) => {
     id,
     containerId,
     searchInputId,
-    seachable,
+    searchable,
     containerClass,
     data = [],
     value,
@@ -258,7 +258,7 @@ const getSelectPanelConfig = (config) => {
     containerClass
   )}">
           ${
-            seachable
+            searchable
               ? `<span class="ui-input ui-input-search">
                 <input type="search" placeholder="输入关键字搜索" id=${searchInputId} maxLength=${maxLength} />
                 <span class="ui-icon-search cursor-default">搜索</span>
@@ -279,7 +279,7 @@ const getMultipleSelectConfig = (config) => {
     containerClass,
     data = [],
     value,
-    seachable,
+    searchable,
     maxLength,
     byGroup,
     confirmButtuonId,
@@ -291,7 +291,7 @@ const getMultipleSelectConfig = (config) => {
     containerClass
   )}">
           ${
-            seachable
+            searchable
               ? `<span class="ui-input ui-input-search">
                 <input type="search" placeholder="输入关键字搜索" id=${searchInputId} maxLength=${maxLength} />
                 <span class="ui-icon-search cursor-default">搜索</span>

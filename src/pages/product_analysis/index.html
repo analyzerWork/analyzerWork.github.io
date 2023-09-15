@@ -54,14 +54,7 @@
     </template>
     <script src="../commonComputed.js"></script>
     <script src="./computed.js"></script>
-
-    <script src="../../chartConfig/taste_matching/treemap.js"></script>
-    <script src="../../chartConfig/taste_matching/bar.js"></script>
-
-
-
     <script src="./model.js"></script>
-
     <script>
 
         const SOURCE_PATH = './src/pages/datasource/';
@@ -69,7 +62,7 @@
 
 
         window.addEventListener('load', function () {
-            ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then((result) => {
+            ANAlYZER_UTILS.requestData(`${SOURCE_PATH}bigdata_pgc.json`).then((result) => {
                 const tasteMatchingInstance = new TasteMatching(result)
             })
         })
