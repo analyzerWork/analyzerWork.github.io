@@ -17,20 +17,6 @@ const computedClassificationIngredientListTopN = (
   );
 };
 
-const computedMenuOptionsFragment = (list) => {
-  const menuFragment = document.createDocumentFragment();
-
-  list.forEach((item) => {
-    const option = document.createElement("option");
-    option.value = item;
-    option.text = item;
-
-    menuFragment.appendChild(option);
-  });
-
-  return menuFragment;
-};
-
 const computedFirstClassificationIngredientTreeData = (
   classificationIngredientList,
   selectClassification,

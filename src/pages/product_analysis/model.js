@@ -24,23 +24,21 @@ const DEFAULT_SELECT_PANEl_CONFIG = {
   maxLength: 20,
 };
 
-class BrandTracking {
+class ProductAnalysis {
   data = [];
   matrixInstance = null;
   computedData = {
-    startDateIndex: 0,
-    endDateIndex: 0,
-    selectedBrand: "",
-    brandOptions: [],
+    selectedIngredients: [],
+    ingredientClassOptions: [],
+    selectedProductType: "",
+    productTypeOptions: [],
     currentRangeData: [],
-    keyword: "",
-    brandProducts: [],
   };
 
   element = {
-    $datePicker: document.querySelector("#brand-track-date-picker"),
-    $brandSelectContainer: document.querySelector("#brandSelectContainer"),
-    $brandTrend: document.querySelector("#brandTrend"),
+    $datePicker: document.querySelector("#product-analysis-date-picker"),
+    $productTypeSelect: document.querySelector("#productTypeSelect"),
+    $ingredientMatrixContainer: document.querySelector("#ingredientMatrixContainer"),
   };
   constructor(initData) {
     this.init(initData);
@@ -52,20 +50,16 @@ class BrandTracking {
     this.data = initData;
     const dateRange = [...new Set(this.data.map((item) => item["月份"]))];
     const lastDate = dateRange[dateRange.length - 1];
-    const startDate = dateRange[dateRange.length - 13];
-    this.element.$datePicker.value = `${startDate} 至 ${lastDate}`;
+    this.element.$datePicker.value = lastDate;
     this.element.$datePicker.min = dateRange[0];
     this.element.$datePicker.max = lastDate;
-    const startDateIndex = this.data.findIndex((d) => d["月份"] === startDate);
-    const endDateIndex = this.data.findLastIndex((d) => d["月份"] === lastDate);
-    const currentRangeData = this.data.slice(startDateIndex, endDateIndex);
 
-    const selectedBrand = currentRangeData[currentRangeData.length - 1]["品牌"];
+    const ingredientClassOptions = [...new Set(initData.map((item) => item["成分分类"]))];
+    const productTypeOptions = [...new Set(initData.map((item) => item["产品类型"]))];
 
     this.set({
-      startDateIndex,
-      endDateIndex,
-      brandOptions: [...new Set(currentRangeData.map((item) => item["品牌"]))],
+      ingredientClassOptions,
+      productTypeOptions,
       currentRangeData: currentRangeData.filter(
         (item) => item["品牌"] === selectedBrand
       ),
@@ -78,9 +72,9 @@ class BrandTracking {
   };
 
   setup() {
-    this.renderSelectButton();
-    this.renderSelectPanelComponent();
-    this.renderBrandTrend();
+    this.renderIngredientSelectButton();
+    this.renderIngredientSelectPanelComponent();
+    this.renderMatrix();
   }
 
   get = (...keys) =>
@@ -131,7 +125,7 @@ class BrandTracking {
 
     this.updateCurrentRangeData(selectedBrand);
     // 重新渲染
-    this.renderBrandTrend();
+    this.renderMatrix();
   }
 
   updateCurrentRangeData(brand) {
@@ -151,7 +145,7 @@ class BrandTracking {
     });
   }
 
-  renderSelectButton = () => {
+  renderIngredientSelectButton = () => {
     const { selectedBrand } = this.get("selectedBrand");
 
     this.element.$brandSelectContainer.innerHTML = `${getSelectButtonConfig({
@@ -160,7 +154,7 @@ class BrandTracking {
     })}`;
   };
 
-  renderSelectPanelComponent = () => {
+  renderIngredientSelectPanelComponent = () => {
     const { selectedBrand, brandOptions } = this.get(
       "selectedBrand",
       "brandOptions"
@@ -239,13 +233,13 @@ class BrandTracking {
       document.getElementById(SELECT_PANEL_ID).innerHTML =
         computedSelectOptions(data, value);
 
-      this.renderBrandTrend();
+      this.renderMatrix();
     }
   };
 
 
-  // 绘制应用品牌数量趋势
-  renderBrandTrend = () => {
+  // 绘制矩阵图
+  renderMatrix = () => {
     const { currentRangeData } = this.get("currentRangeData");
 
     const brandTrendData = computedBrandTrendData(currentRangeData);
