@@ -29,6 +29,7 @@ class ProductAnalysis {
   taste_matching_data = [];
   matrixInstance = null;
   computedData = {
+    month: "",
     selectedIngredients: [],
     ingredientClassOptions: [],
     selectedProductType: "",
@@ -70,18 +71,22 @@ class ProductAnalysis {
       : [ingredientClassOptions[0]];
 
     this.set({
+      month: lastDate,
       ingredientClassOptions,
       productTypeOptions,
       currentRangeData: big_data.filter(
-        (item) => item["月份"] === lastDate && initSelectedIngredients.includes(item["成分分类"]) && initSelectedProductType === item["产品类型"]
+        (item) =>
+          item["月份"] === lastDate &&
+          initSelectedIngredients.includes(item["成分分类"]) &&
+          initSelectedProductType === item["产品类型"]
       ),
       selectedProductType: initSelectedProductType,
       selectedIngredients: initSelectedIngredients,
     });
 
-    this.brandTrendInstance = window.parent.echarts.init(
-      this.element.$brandTrend
-    );
+    // this.brandTrendInstance = window.parent.echarts.init(
+    //   this.element.$brandTrend
+    // );
   };
 
   setup() {
@@ -114,102 +119,68 @@ class ProductAnalysis {
 
     document
       .getElementById(INGREDIENT_SELECT_BUTTON_ID)
-      .addEventListener("click", this.brandButtonSelectHandler);
+      .addEventListener("click", this.ingredientButtonSelectHandler);
 
     document
       .getElementById(INGREDIENT_SELECT_PANEL_ID)
-      .addEventListener("click", this.brandSelectHandler);
+      .addEventListener("click", this.ingredientSelectHandler);
 
     document.addEventListener("click", this.hidePanel);
   };
 
-  dateChangeHandler(dateRange) {
-    const { selectedBrand } = this.get("selectedBrand");
-    const [startDate, endDate] = dateRange
-      .split("至")
-      .map((value) => value.trim());
-    const startDateIndex = this.data.findIndex((d) => d["月份"] === startDate);
-    const endDateIndex = this.data.findLastIndex((d) => d["月份"] === endDate);
+  dateChangeHandler(month) {
     this.set({
-      startDateIndex,
-      endDateIndex,
+      month,
     });
 
-    this.updateCurrentRangeData(selectedBrand);
+    this.updateCurrentRangeData();
     // 重新渲染
-    this.renderMatrix();
+    // this.renderMatrix();
   }
 
-  updateCurrentRangeData(brand) {
-    const { startDateIndex, endDateIndex } = this.get(
-      "startDateIndex",
-      "endDateIndex"
-    );
+  updateCurrentRangeData() {
+    const { month, big_data, selectedProductType, selectedIngredients } =
+      this.get("month", "big_data");
 
-    const currentData = this.data.slice(startDateIndex, endDateIndex);
-    const currentRangeData = currentData.filter(
-      (item) => item["品牌"] === brand
+    const currentRangeData = big_data.filter(
+      (item) =>
+        item["月份"] === month &&
+        selectedIngredients.includes(item["成分分类"]) &&
+        selectedProductType === item["产品类型"]
     );
     this.set({
-      selectedBrand: brand,
-      brandOptions: [...new Set(currentData.map((item) => item["品牌"]))],
       currentRangeData,
     });
   }
 
   renderIngredientSelectButton = () => {
-    const { selectedBrand } = this.get("selectedBrand");
+    const { selectedIngredients } = this.get("selectedIngredients");
 
     this.element.$brandSelectContainer.innerHTML = `${getSelectButtonConfig({
       ...DEFAULT_SELECT_BUTTON_CONFIG,
-      value: selectedBrand,
+      value: selectedIngredients,
     })}`;
   };
 
   renderIngredientSelectPanelComponent = () => {
-    const { selectedBrand, brandOptions } = this.get(
-      "selectedBrand",
-      "brandOptions"
+    const { selectedIngredients, ingredientClassOptions } = this.get(
+      "selectedIngredients",
+      "ingredientClassOptions"
     );
 
     const panelWraper = document.createElement("div");
 
     panelWraper.innerHTML += `${getSelectPanelConfig({
       ...DEFAULT_SELECT_PANEl_CONFIG,
-      value: selectedBrand,
-      data: getOptionsDataByKeyword(brandOptions),
+      value: selectedIngredients,
+      data: getOptionsDataByKeyword(ingredientClassOptions),
     })}`;
     document.body.appendChild(panelWraper);
   };
 
-  brandButtonSelectHandler = (e) => {
+  ingredientButtonSelectHandler = (e) => {
     e.stopPropagation();
     document.getElementById(SELECT_PANEL_CONTAINER_ID).classList.toggle("hide");
-  };
-
-  brandSearchInputHandler = (e) => {
-    if (e.target.value.length === 0) {
-      const { selectedBrand, startDateIndex, endDateIndex } = this.get(
-        "selectedBrand",
-        "startDateIndex",
-        "endDateIndex"
-      );
-      const brandOptions = [
-        ...new Set(
-          this.data
-            .slice(startDateIndex, endDateIndex)
-            .map((item) => item["品牌"])
-        ),
-      ];
-
-      const data = getOptionsDataByKeyword(brandOptions);
-      document.getElementById(SELECT_PANEL_ID).innerHTML =
-        computedSelectOptions(data, selectedBrand);
-      this.set({
-        keyword: "",
-        brandOptions,
-      });
-    }
   };
 
   hidePanel = (event) => {
@@ -224,10 +195,9 @@ class ProductAnalysis {
     }
   };
 
-  // 点击选择品牌
-  brandSelectHandler = (e) => {
+  // 选择成分分类
+  ingredientSelectHandler = (e) => {
     if (e.target.classList.contains("select-option")) {
-      const { keyword } = this.get("keyword");
       const value = e.target.dataset.value;
       // select 组件赋值
       document.getElementById(SELECT_BUTTON_TEXT_ID).innerText = value;
@@ -239,13 +209,12 @@ class ProductAnalysis {
       this.updateCurrentRangeData(value);
 
       // 重新渲染panelList
-      const { brandOptions } = this.get("brandOptions");
+      const { ingredientClassOptions } = this.get("ingredientClassOptions");
 
-      const data = getOptionsDataByKeyword(brandOptions);
       document.getElementById(SELECT_PANEL_ID).innerHTML =
-        computedSelectOptions(data, value);
+        computedSelectOptions(ingredientClassOptions, value);
 
-      this.renderMatrix();
+      // this.renderMatrix();
     }
   };
 
