@@ -107,6 +107,10 @@ a{
     display: none;
 }
 
+.base-label {
+    font-size: 14px;
+}
+
 .text-title {
     font-size: 14px;
     font-weight: bold;

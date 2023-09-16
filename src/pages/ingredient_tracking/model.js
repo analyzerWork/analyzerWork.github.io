@@ -27,7 +27,7 @@ const DEFAULT_SELECT_BUTTON_CONFIG = {
 };
 
 const DEFAULT_SELECT_PANEl_CONFIG = {
-  seachable: true,
+  searchable: true,
   containerClass: "ingredient-select-panel-container",
   id: SELECT_PANEL_ID,
   searchInputId: SELECT_PANEL_SEARCH_INPUT_ID,
@@ -61,7 +61,7 @@ const DEFAULT_PRODUCT_SELECT_PANEl_CONFIG = {
   containerClass: "base-multi-select-panel-container",
   id: PRODUCT_SELECT_PANEL_ID,
   containerId: PRODUCT_SELECT_PANEL_CONTAINER_ID,
-  confirmButtuonId: PRODUCT_CONFRIM_BUTTON_ID,
+  confirmButtonId: PRODUCT_CONFRIM_BUTTON_ID,
   cancelButtonId: PRODUCT_CANCEL_BUTTON_ID,
 };
 const PRODUCT_NAME = '产品名称';
