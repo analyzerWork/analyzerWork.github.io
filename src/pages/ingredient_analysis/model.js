@@ -13,7 +13,7 @@ const DEFAULT_INGREDIENT_CLASS_BUTTON_CONFIG = {
   labelClass: "",
   id: INGREDIENT_SELECT_BUTTON_ID,
   textId: INGREDIENT_SELECT_BUTTON_TEXT_ID,
-  buttonClass: "brand-select",
+  buttonClass: "ingredient-select",
 };
 
 const DEFAULT_SELECT_PANEl_CONFIG = {
@@ -38,7 +38,7 @@ class ProductAnalysis {
   };
 
   element = {
-    $datePicker: document.querySelector("#product-analysis-date-picker"),
+    $datePicker: document.querySelector("#ingredient-analysis-date-picker"),
     $productTypeSelect: document.querySelector("#productTypeSelect"),
     $ingredientMatrixContainer: document.querySelector(
       "#ingredientMatrixContainer"
