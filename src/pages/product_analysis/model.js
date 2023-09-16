@@ -26,6 +26,7 @@ const DEFAULT_SELECT_PANEl_CONFIG = {
 
 class ProductAnalysis {
   data = [];
+  taste_matching_data = [];
   matrixInstance = null;
   computedData = {
     selectedIngredients: [],
@@ -38,7 +39,9 @@ class ProductAnalysis {
   element = {
     $datePicker: document.querySelector("#product-analysis-date-picker"),
     $productTypeSelect: document.querySelector("#productTypeSelect"),
-    $ingredientMatrixContainer: document.querySelector("#ingredientMatrixContainer"),
+    $ingredientMatrixContainer: document.querySelector(
+      "#ingredientMatrixContainer"
+    ),
   };
   constructor(initData) {
     this.init(initData);
@@ -46,24 +49,34 @@ class ProductAnalysis {
     this.bind();
   }
 
-  init = (initData) => {
-    this.data = initData;
-    const dateRange = [...new Set(this.data.map((item) => item["月份"]))];
+  init = ({ taste_matching_data, big_data }) => {
+    this.data = big_data;
+    this.taste_matching_data = taste_matching_data;
+    const dateRange = [...new Set(big_data.map((item) => item["月份"]))];
     const lastDate = dateRange[dateRange.length - 1];
     this.element.$datePicker.value = lastDate;
     this.element.$datePicker.min = dateRange[0];
     this.element.$datePicker.max = lastDate;
 
-    const ingredientClassOptions = [...new Set(initData.map((item) => item["成分分类"]))];
-    const productTypeOptions = [...new Set(initData.map((item) => item["产品类型"]))];
+    const ingredientClassOptions = [
+      ...new Set(initData.map((item) => item["成分分类"])),
+    ];
+    const productTypeOptions = [
+      ...new Set(initData.map((item) => item["产品类型"])),
+    ];
+    const initSelectedProductType = productTypeOptions[0];
+    const initSelectedIngredients = ingredientClassOptions.includes("果味")
+      ? ["果味"]
+      : [ingredientClassOptions[0]];
 
     this.set({
       ingredientClassOptions,
       productTypeOptions,
-      currentRangeData: currentRangeData.filter(
-        (item) => item["品牌"] === selectedBrand
+      currentRangeData: big_data.filter(
+        (item) => item["月份"] === lastDate && initSelectedIngredients.includes(item["成分分类"]) && initSelectedProductType === item["产品类型"]
       ),
-      selectedBrand,
+      selectedProductType: initSelectedProductType,
+      selectedIngredients: initSelectedIngredients,
     });
 
     this.brandTrendInstance = window.parent.echarts.init(
@@ -108,7 +121,6 @@ class ProductAnalysis {
       .addEventListener("click", this.brandSelectHandler);
 
     document.addEventListener("click", this.hidePanel);
-
   };
 
   dateChangeHandler(dateRange) {
@@ -236,7 +248,6 @@ class ProductAnalysis {
       this.renderMatrix();
     }
   };
-
 
   // 绘制矩阵图
   renderMatrix = () => {
