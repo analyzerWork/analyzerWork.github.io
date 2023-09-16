@@ -2,11 +2,6 @@
     position: relative;
 }
 
-.base-label {
-    font-size: 14px;
-}
-
-
 .hot-ingredient-select-container{
     display: flex;
     align-items: center;

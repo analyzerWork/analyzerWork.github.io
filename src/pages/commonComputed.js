@@ -245,7 +245,7 @@ const getSelectPanelConfig = (config) => {
     id,
     containerId,
     searchInputId,
-    seachable,
+    searchable,
     containerClass,
     data = [],
     value,
@@ -258,7 +258,7 @@ const getSelectPanelConfig = (config) => {
     containerClass
   )}">
           ${
-            seachable
+            searchable
               ? `<span class="ui-input ui-input-search">
                 <input type="search" placeholder="输入关键字搜索" id=${searchInputId} maxLength=${maxLength} />
                 <span class="ui-icon-search cursor-default">搜索</span>
@@ -279,10 +279,10 @@ const getMultipleSelectConfig = (config) => {
     containerClass,
     data = [],
     value,
-    seachable,
+    searchable,
     maxLength,
     byGroup,
-    confirmButtuonId,
+    confirmButtonId,
     cancelButtonId,
   } = config;
 
@@ -291,7 +291,7 @@ const getMultipleSelectConfig = (config) => {
     containerClass
   )}">
           ${
-            seachable
+            searchable
               ? `<span class="ui-input ui-input-search">
                 <input type="search" placeholder="输入关键字搜索" id=${searchInputId} maxLength=${maxLength} />
                 <span class="ui-icon-search cursor-default">搜索</span>
@@ -302,7 +302,7 @@ const getMultipleSelectConfig = (config) => {
             ${computedMultiSelectOptions(data, value)}
           </div>
           <div class="multi-select-panel-footer" >
-          <button id=${confirmButtuonId} class="small-btn" type="button" data-type="primary" is="ui-button">确定</button>
+          <button id=${confirmButtonId} class="small-btn" type="button" data-type="primary" is="ui-button">确定</button>
           <button id=${cancelButtonId} type="normal" class="ui-button small-btn">取消</button>
           </div>
         </div>
@@ -329,4 +329,19 @@ const computedCurrentDataAndRange = (
         );
 
   return dataFilterByProduct;
+};
+
+
+const computedMenuOptionsFragment = (list) => {
+  const menuFragment = document.createDocumentFragment();
+
+  list.forEach((item) => {
+    const option = document.createElement("option");
+    option.value = item;
+    option.text = item;
+
+    menuFragment.appendChild(option);
+  });
+
+  return menuFragment;
 };

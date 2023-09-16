@@ -13,9 +13,6 @@ body {
     background-color: var(--color-primary-white);
 }
 
-.base-label {
-    font-size: 14px;
-}
 
 #brandSelectContainer {
     position: relative;

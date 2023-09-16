@@ -18,7 +18,7 @@ const DEFAULT_SELECT_BUTTON_CONFIG = {
 };
 
 const DEFAULT_SELECT_PANEl_CONFIG = {
-  seachable: true,
+  searchable: true,
   containerClass: "brand-select-panel-container",
   id: SELECT_PANEL_ID,
   searchInputId: SELECT_PANEL_SEARCH_INPUT_ID,
