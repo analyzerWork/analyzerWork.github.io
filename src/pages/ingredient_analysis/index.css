@@ -1,0 +1,13 @@
+#ingredientClassSelect,#productTypeSelect {
+    position: relative;
+}
+
+.ingredient-select-panel-container {
+    left: 72px;
+    top: 35px;
+}
+
+
+.ingredient-select {
+    width: 152px;
+}

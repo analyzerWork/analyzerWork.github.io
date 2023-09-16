@@ -408,12 +408,10 @@ class TasteMatching {
         ? BRAND_SELECT_BUTTON_TEXT_ID
         : PRODUCT_SELECT_BUTTON_TEXT_ID;
 
-      const { brandTypeValue, productTypeValue, startIndex, endIndex } =
+      const { brandTypeValue, productTypeValue, } =
         this.get(
           "brandTypeValue",
           "productTypeValue",
-          "startIndex",
-          "endIndex"
         );
 
       const currentValue = isBrand ? brandTypeValue : productTypeValue;
@@ -438,10 +436,6 @@ class TasteMatching {
         });
         // select 组件赋值
         document.getElementById(buttonTextId).innerText = selectedValue.join();
-        this.set({
-          brandTypeValue: currentBrandTypeValue,
-          productTypeValue: currentProductTypeValue,
-        });
         this.reRender();
       }
     }
