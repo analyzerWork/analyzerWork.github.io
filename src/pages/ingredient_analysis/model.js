@@ -22,7 +22,7 @@ const DEFAULT_INGREDIENT_CLASS_BUTTON_CONFIG = {
   id: INGREDIENT_SELECT_BUTTON_ID,
   textId: INGREDIENT_SELECT_BUTTON_TEXT_ID,
   buttonClass: "ingredient-select",
-  inputMaxWidth: '130px',
+  inputMaxWidth: "130px",
 };
 
 const DEFAULT_SELECT_PANEl_CONFIG = {
@@ -38,12 +38,12 @@ const DEFAULT_SELECT_PANEl_CONFIG = {
 class ProductAnalysis {
   data = [];
   taste_matching_data = [];
-  matrixInstance = null;
+  ingredientMatrixInstance = null;
   computedData = {
-    month: "",
+    currentYearMonth: "",
     selectedIngredients: [],
-    ingredientClassOptions: [],
     selectedProductType: "",
+    ingredientClassOptions: [],
     productTypeOptions: [],
     currentRangeData: [],
   };
@@ -83,7 +83,7 @@ class ProductAnalysis {
       : [ingredientClassOptions[0]];
 
     this.set({
-      month: lastDate,
+      currentYearMonth: lastDate,
       ingredientClassOptions,
       productTypeOptions,
       currentRangeData: big_data.filter(
@@ -96,9 +96,9 @@ class ProductAnalysis {
       selectedIngredients: initSelectedIngredients,
     });
 
-    // this.brandTrendInstance = window.parent.echarts.init(
-    //   this.element.$brandTrend
-    // );
+    this.ingredientMatrixInstance = window.parent.echarts.init(
+      this.element.$ingredientMatrixContainer
+    );
   };
 
   setup() {
@@ -142,27 +142,31 @@ class ProductAnalysis {
     document
       .getElementById(INGREDIENT_SELECT_PANEL_WRAPPER_ID)
       .addEventListener("click", this.ingredientSelectHandler);
-    
+
     document.addEventListener("click", this.hidePanel);
   };
 
-  dateChangeHandler(month) {
+  dateChangeHandler(currentYearMonth) {
     this.set({
-      month,
+      currentYearMonth,
     });
 
     this.updateCurrentRangeData();
     // 重新渲染
-    // this.renderMatrix();
+    this.renderMatrix();
   }
 
   updateCurrentRangeData() {
-    const { month, big_data, selectedProductType, selectedIngredients } =
-      this.get("month", "big_data");
+    const { currentYearMonth, selectedProductType, selectedIngredients } =
+      this.get(
+        "currentYearMonth",
+        "selectedProductType",
+        "selectedIngredients"
+      );
 
-    const currentRangeData = big_data.filter(
+    const currentRangeData = this.data.filter(
       (item) =>
-        item["月份"] === month &&
+        item["月份"] === currentYearMonth &&
         selectedIngredients.includes(item["成分分类"]) &&
         selectedProductType === item["产品类型"]
     );
@@ -211,10 +215,13 @@ class ProductAnalysis {
     this.element.$ingredientClassSelect.appendChild(panelWraper);
   };
 
+  // 产品类型选择
   productTypeSelectChangeHandler = (e) => {
     this.set({
       selectedProductType: e.target.value,
     });
+    // 重新渲染
+    this.renderMatrix();
   };
 
   ingredientButtonSelectHandler = (e) => {
@@ -245,7 +252,7 @@ class ProductAnalysis {
       document
         .getElementById(INGREDIENT_SELECT_PANEL_CONTAINER_ID)
         .classList.add("hide");
-      this.renderIngredientSelectPanelComponent()
+      this.renderIngredientSelectPanelComponent();
     }
     if (e.target.id === INGREDIENT_SELECT_CONFRIM_BUTTON_ID) {
       const { selectedIngredients: currentValue } = this.get(
@@ -272,11 +279,35 @@ class ProductAnalysis {
         document.getElementById(INGREDIENT_SELECT_BUTTON_TEXT_ID).innerText =
           selectedValue.join();
 
-        // TODO:this.reRender();
+        // 重新渲染
+        this.renderMatrix();
       }
     }
   };
 
   // 绘制矩阵图
-  renderMatrix = () => {};
+  renderMatrix = () => {
+    const {
+      currentYearMonth,
+      selectedIngredients,
+      selectedProductType,
+      currentRangeData,
+    } = this.get(
+      "currentYearMonth",
+      "selectedIngredients",
+      "selectedProductType",
+      "currentRangeData"
+    );
+    const data = computedIngredientOptions({
+      currentYearMonth,
+      taste_matching_data: this.taste_matching_data,
+      selectedIngredients,
+      selectedProductType,
+      currentRangeData,
+    });    
+
+    const options = getScatterOptions({ data });
+
+    this.ingredientMatrixInstance.setOption(options);
+  };
 }
