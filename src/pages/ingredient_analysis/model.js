@@ -157,14 +157,14 @@ class ProductAnalysis {
   }
 
   updateCurrentRangeData() {
-    const {
-      currentYearMonth,
-      big_data,
-      selectedProductType,
-      selectedIngredients,
-    } = this.get("currentYearMonth", "big_data");
+    const { currentYearMonth, selectedProductType, selectedIngredients } =
+      this.get(
+        "currentYearMonth",
+        "selectedProductType",
+        "selectedIngredients"
+      );
 
-    const currentRangeData = big_data.filter(
+    const currentRangeData = this.data.filter(
       (item) =>
         item["月份"] === currentYearMonth &&
         selectedIngredients.includes(item["成分分类"]) &&
@@ -215,10 +215,13 @@ class ProductAnalysis {
     this.element.$ingredientClassSelect.appendChild(panelWraper);
   };
 
+  // 产品类型选择
   productTypeSelectChangeHandler = (e) => {
     this.set({
       selectedProductType: e.target.value,
     });
+    // 重新渲染
+    this.renderMatrix();
   };
 
   ingredientButtonSelectHandler = (e) => {
@@ -276,7 +279,8 @@ class ProductAnalysis {
         document.getElementById(INGREDIENT_SELECT_BUTTON_TEXT_ID).innerText =
           selectedValue.join();
 
-        // TODO:this.reRender();
+        // 重新渲染
+        this.renderMatrix();
       }
     }
   };
@@ -296,14 +300,14 @@ class ProductAnalysis {
     );
     const data = computedIngredientOptions({
       currentYearMonth,
-      taste_matching_data:this.taste_matching_data,
+      taste_matching_data: this.taste_matching_data,
       selectedIngredients,
       selectedProductType,
       currentRangeData,
-    });
+    });    
 
-    const options = getScatterOptions({data});
+    const options = getScatterOptions({ data });
 
-    this.ingredientMatrixInstance.setOption(options)
+    this.ingredientMatrixInstance.setOption(options);
   };
 }
