@@ -278,6 +278,8 @@ class TasteMatching {
     this.secondTreeMapInstance.on("click", (params) =>
       this.treeMapClickHandler(params, "second")
     );
+
+    document.addEventListener("click", this.hidePanel);
   };
 
   reset = () => {
@@ -1038,6 +1040,23 @@ class TasteMatching {
     }
 
     this.element.$productDialog.show();
+  };
+
+  hidePanel = (event) => {
+    let eleClicked = event && event.target;
+    [BRAND_SELECT_PANEL_CONTAINER_ID ,PRODUCT_SELECT_PANEL_CONTAINER_ID,].forEach(id=>{
+      const selectElePanel = document.getElementById(
+        id
+      );
+      if (!eleClicked || selectElePanel.classList.contains("hide")) {
+        return;
+      }
+  
+      if (!selectElePanel.contains(eleClicked)) {
+        selectElePanel.classList.add("hide");
+      }
+    })
+    
   };
 }
 

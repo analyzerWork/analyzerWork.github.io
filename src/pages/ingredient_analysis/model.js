@@ -142,7 +142,8 @@ class ProductAnalysis {
     document
       .getElementById(INGREDIENT_SELECT_PANEL_WRAPPER_ID)
       .addEventListener("click", this.ingredientSelectHandler);
-
+    
+    document.addEventListener("click", this.hidePanel);
   };
 
   dateChangeHandler(month) {

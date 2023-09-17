@@ -319,14 +319,18 @@ class IngredientTracking {
 
   hidePanel = (event) => {
     let eleClicked = event && event.target;
-    const elePanel = document.getElementById(SELECT_PANEL_CONTAINER_ID);
-    if (!eleClicked || elePanel.classList.contains("hide")) {
-      return;
-    }
-
-    if (!elePanel.contains(eleClicked)) {
-      elePanel.classList.add("hide");
-    }
+    [SELECT_PANEL_CONTAINER_ID,PRODUCT_SELECT_PANEL_CONTAINER_ID].forEach(id => {
+      const elePanel = document.getElementById(id);
+      if (!eleClicked || elePanel.classList.contains("hide")) {
+        return;
+      }
+  
+      if (!elePanel.contains(eleClicked)) {
+        elePanel.classList.add("hide");
+      }
+      
+    })
+    
   };
 
   // 搜索成分
