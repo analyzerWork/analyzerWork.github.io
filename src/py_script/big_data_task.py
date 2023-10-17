@@ -35,7 +35,7 @@ class BigDataTask:
             # 只保留成分分类是果味和乳基底的数据
             df = df[df['成分分类'].isin(['果味','乳基底'])]
             
-            df['chain_growth_rate'] = df.groupby('趋势名称',group_keys=False)['当月声量'].apply(lambda x: x / x.shift(1) - 1)
+            df['当月声量环比增长'] = df.groupby('趋势名称',group_keys=False)['当月声量'].apply(lambda x: x / x.shift(1) - 1)
             
             # 创建一个新列 'month' 来存储年份和月份
             df['month'] = pd.to_datetime(df['月份']).dt.to_period('M')
@@ -44,11 +44,11 @@ class BigDataTask:
             first_month = df['month'].min()
             df = df[df['month'] != first_month]
 
-            # 计算每个月的 chain_growth_rate 的最大值
-            max_rate = df.groupby(df['month'])['chain_growth_rate'].transform(max)
+            # 计算每个月的 当月声量环比增长 的最大值
+            max_rate = df.groupby(df['month'])['当月声量环比增长'].transform(max)
 
             # 将 NaN 值替换为每个月的最大值
-            df['chain_growth_rate'] = df['chain_growth_rate'].fillna(max_rate)
+            df['当月声量环比增长'] = df['当月声量环比增长'].fillna(max_rate)
 
             # 删除 'month' 列
             df = df.drop(columns=['month'])
