@@ -20,20 +20,36 @@ class BigDataTask:
         self.options = options
         self.data = pd.DataFrame([])
 
-    def exec(self, file_name):
+    def exec(self):
         if self.options.get('isDataTransfer') == True:
-            self.transToJSON(file_name)
+            self.transToJSON()
 
     # 读取原始数据,转换为json格式
-    def transToJSON(self,file_name):
-        log_message = '{}.xlsx - Excel 转换 JSON 数据'.format(file_name)
+    def transToJSON(self):
+        log_message = 'bigdata.xlsx - Excel 转换 JSON 数据'
         try:
-            print('../pages/datasource/{}.xlsx'.format(file_name))
             df = pd.read_excel(
-                r'../pages/datasource/{}.xlsx'.format(file_name),)
+                r'../pages/datasource/bigdata.xlsx',)
             df['月份'] = df['月份'].astype(str).apply(format_month)
             df = df.sort_values(by='月份')
-            df.to_json('../pages/datasource/{}.json'.format(file_name),
+            df['chain_growth_rate'] = df.groupby('趋势名称',group_keys=False)['当月声量'].apply(lambda x: x / x.shift(1) - 1)
+            
+            # 创建一个新列 'month' 来存储年份和月份
+            df['month'] = pd.to_datetime(df['月份']).dt.to_period('M')
+
+            # 找到第一个月并删除其所有数据
+            first_month = df['month'].min()
+            df = df[df['month'] != first_month]
+
+            # 计算每个月的 chain_growth_rate 的最大值
+            max_rate = df.groupby(df['month'])['chain_growth_rate'].transform(max)
+
+            # 将 NaN 值替换为每个月的最大值
+            df['chain_growth_rate'] = df['chain_growth_rate'].fillna(max_rate)
+
+            # 删除 'month' 列
+            df = df.drop(columns=['month'])
+            df.to_json('../pages/datasource/bigdata.json',
                        orient='records',
                        force_ascii=False,
                        indent=4)
@@ -49,16 +65,4 @@ bigDataTaskInstance = BigDataTask({
 
 
 
-bigDataTaskInstance.exec('bigdata_pgc')
-bigDataTaskInstance.exec('bigdata_ugc')
-
-
-# test case
-# first_classification, first_classification_ingredient_dict = tasteMatching.get_first_classification_ingredient(
-#         )
-
-# second_ingredient_count_dict, second_classification_ingredient_list_dict = tasteMatching.get_second_classification_ingredient(
-#             '桃子')
-
-# product_list = tasteMatching.get_product_list('桃子', '草莓')
-
+bigDataTaskInstance.exec()
