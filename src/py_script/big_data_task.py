@@ -32,6 +32,9 @@ class BigDataTask:
                 r'../pages/datasource/bigdata.xlsx',)
             df['月份'] = df['月份'].astype(str).apply(format_month)
             df = df.sort_values(by='月份')
+            # 只保留成分分类是果味和乳基底的数据
+            df = df[df['成分分类'].isin(['果味','乳基底'])]
+            
             df['chain_growth_rate'] = df.groupby('趋势名称',group_keys=False)['当月声量'].apply(lambda x: x / x.shift(1) - 1)
             
             # 创建一个新列 'month' 来存储年份和月份
