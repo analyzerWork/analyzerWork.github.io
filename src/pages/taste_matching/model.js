@@ -63,7 +63,7 @@ const DEFAULT_PRODUCT_SELECT_PANEl_CONFIG = {
   cancelButtonId: PRODUCT_CANCEL_BUTTON_ID,
 };
 
-class TasteMatching {
+class TasteMatching extends CustomResizeObserver {
   data = [];
   brandSelectOptions = [];
   productSelectOptions = [];
@@ -101,6 +101,7 @@ class TasteMatching {
     $productPanelWraper: document.getElementById(
       PRODUCT_SELECT_PANEL_WRAPPER_ID
     ),
+    $contentWrapper: document.querySelector("#contentWrapper"),
     $switchIconButton: document.querySelector("#switchIconButton"),
     $tableIcon: document.querySelector("#tableIcon"),
     $chartIcon: document.querySelector("#chartIcon"),
@@ -130,6 +131,7 @@ class TasteMatching {
   };
   timer = {};
   constructor(initData) {
+    super();
     this.init(initData);
     this.setup();
     this.bind();
@@ -280,6 +282,15 @@ class TasteMatching {
     );
 
     document.addEventListener("click", this.hidePanel);
+
+    super.observe(this.element.$contentWrapper, () => {
+      const { activeIcon } = this.get("activeIcon");
+      console.log(activeIcon);
+      this.hotTopIngredientBarInstance.resize();
+      if (activeIcon === "chart") {
+        this.firstTreeMapInstance.resize();
+      }
+    });
   };
 
   reset = () => {
@@ -323,7 +334,7 @@ class TasteMatching {
       startIndex,
       endIndex,
       brandTypeValue,
-      productTypeValue,
+      productTypeValue
     );
     this.set({
       currentData: computedData,
@@ -410,11 +421,10 @@ class TasteMatching {
         ? BRAND_SELECT_BUTTON_TEXT_ID
         : PRODUCT_SELECT_BUTTON_TEXT_ID;
 
-      const { brandTypeValue, productTypeValue, } =
-        this.get(
-          "brandTypeValue",
-          "productTypeValue",
-        );
+      const { brandTypeValue, productTypeValue } = this.get(
+        "brandTypeValue",
+        "productTypeValue"
+      );
 
       const currentValue = isBrand ? brandTypeValue : productTypeValue;
       const optionNodes = document.querySelectorAll(
@@ -1044,19 +1054,19 @@ class TasteMatching {
 
   hidePanel = (event) => {
     let eleClicked = event && event.target;
-    [BRAND_SELECT_PANEL_CONTAINER_ID ,PRODUCT_SELECT_PANEL_CONTAINER_ID,].forEach(id=>{
-      const selectElePanel = document.getElementById(
-        id
-      );
+    [
+      BRAND_SELECT_PANEL_CONTAINER_ID,
+      PRODUCT_SELECT_PANEL_CONTAINER_ID,
+    ].forEach((id) => {
+      const selectElePanel = document.getElementById(id);
       if (!eleClicked || selectElePanel.classList.contains("hide")) {
         return;
       }
-  
+
       if (!selectElePanel.contains(eleClicked)) {
         selectElePanel.classList.add("hide");
       }
-    })
-    
+    });
   };
 }
 
