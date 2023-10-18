@@ -23,6 +23,10 @@ const getScatterOptions = (options) => {
       splitLine: {
         show: false,
       },
+      axisLine:{
+        onZero: false,
+      },
+      offset: Number(yMin) ,
       type: 'log',
       min: Math.pow(10,Math.log10(xMin)),
       max: Math.pow(10,Math.log10(xMax))
@@ -32,12 +36,41 @@ const getScatterOptions = (options) => {
       splitLine: {
         show: false,
       },
-      max: yMax,
-      min: yMin,
+      max: Number(yMax),
+      min: Number(yMin),
       axisLabel: {
         formatter:(value)=> `${value * 100} %`
       }
     },
+    dataZoom: [
+      {
+        type: 'slider',
+        show: true,
+        xAxisIndex: 0,
+        start: 0,
+        end: 100,
+        height: 15,
+        showDetail: false,
+        showDataShadow: false,
+        backgroundColor: 'rgba(42,128,235,0.06)',
+        handleSize: 30,
+      },
+      {
+        type: 'slider',
+        show: true,
+        yAxisIndex: 0,
+        width: 15,
+        height: 440,
+        bottom: 100,
+        right: '7%',
+        end: 100,
+        showDetail: false,
+        showDataShadow: false,
+        backgroundColor: 'rgba(42,128,235,0.06)',
+        handleSize: 30
+      },
+      
+    ],
     tooltip: {
       show: true,
       trigger: "item",
