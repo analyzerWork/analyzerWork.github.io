@@ -1,19 +1,42 @@
 
-const X_Y_MAX = 100;
-const MIDDLE_MAX = X_Y_MAX / 2;
+
 const getScatterOptions = (options) => {
+  const { data } = options;
+  const xValues = data.map(function(item) {
+    return item[0];
+  });
+
+  const yValues = data.map(function(item) {
+      return item[1];
+  });
+
+  const yMax =  Math.max(...yValues).toFixed(2);
+  const yMin =  Math.min(...yValues).toFixed(2);
+  const xMin = Math.min(...xValues);
+  const xMax = Math.max(...xValues);
+  const middle_x_max = Math.pow(10,(Math.log10(xMin) + Math.log10(xMax)) / 2);;
+  const middle_y_max = (Number(yMax) + Number(yMin)) / 2;
+
   return {
     xAxis: {
-      name: "规模指数",
+      name: "当月加权声量",
       splitLine: {
         show: false,
       },
+      type: 'log',
+      min: Math.pow(10,Math.log10(xMin)),
+      max: Math.pow(10,Math.log10(xMax))
     },
     yAxis: {
-      name: "增长指数",
+      name: "当月声量环比增长",
       splitLine: {
         show: false,
       },
+      max: yMax,
+      min: yMin,
+      axisLabel: {
+        formatter:(value)=> `${value * 100} %`
+      }
     },
     tooltip: {
       show: true,
@@ -21,11 +44,10 @@ const getScatterOptions = (options) => {
       
       formatter: (params) => {
         const { data, dimensionNames } = params;
-        const reversedData = data.reverse();
-        const dimensionNodes = dimensionNames.reverse()
+        const dimensionNodes = dimensionNames
           .map(
             (dimension, index) =>
-              `<div style="margin-bottom:8px">${dimension}：${reversedData[index]} </div>`
+              `<div style="margin-bottom:8px">${dimension}：${index ===1 ? `${(data[index]*100).toFixed(2)}%`  : data[index]} </div>`
           );
         return `<div>
                   ${dimensionNodes.join("")}
@@ -34,7 +56,7 @@ const getScatterOptions = (options) => {
     },
     series: [
       {
-        dimensions: ["规模指数", "增长指数", "成分数量", "成分名称"],
+        dimensions: ["当月加权声量", "当月声量环比增长", "成分数量", "成分名称"],
         data: options.data,
         type: "scatter",
         label: {
@@ -48,16 +70,16 @@ const getScatterOptions = (options) => {
             if(ingredientNum === 0){
                 return '#999';
             }
-            if (xValue < MIDDLE_MAX && yValue < MIDDLE_MAX) {
+            if (xValue < middle_x_max && yValue < middle_y_max) {
               return '#5470c6';
             }
-            if (xValue < MIDDLE_MAX && yValue >= MIDDLE_MAX) {
+            if (xValue < middle_x_max && yValue >= middle_y_max) {
               return  '#91cc75';
             }
-            if (xValue >= MIDDLE_MAX && yValue < MIDDLE_MAX) {
+            if (xValue >= middle_x_max && yValue < middle_y_max) {
               return '#fac858';
             }
-            if (xValue >= MIDDLE_MAX && yValue >= MIDDLE_MAX) {
+            if (xValue >= middle_x_max && yValue >= middle_y_max) {
               return '#ee6666';
             }
           },
@@ -83,44 +105,44 @@ const getScatterOptions = (options) => {
             // 右边框
             [
               {
-                coord: [X_Y_MAX, 0],
+                coord: [xMax, yMin],
                 symbol: "none",
               },
               {
-                coord: [X_Y_MAX, X_Y_MAX],
+                coord: [xMax, yMax],
                 symbol: "none",
               },
             ],
             // 上边框
             [
               {
-                coord: [0, X_Y_MAX],
+                coord: [xMin, yMax],
                 symbol: "none",
               },
               {
-                coord: [X_Y_MAX, X_Y_MAX],
+                coord: [xMax, yMax],
                 symbol: "none",
               },
             ],
             // 垂直中线
             [
               {
-                coord: [MIDDLE_MAX, X_Y_MAX],
+                coord: [middle_x_max, yMax],
                 symbol: "none",
               },
               {
-                coord: [MIDDLE_MAX, 0],
+                coord: [middle_x_max, yMin],
                 symbol: "none",
               },
             ],
             // 水平中线
             [
               {
-                coord: [0, MIDDLE_MAX],
+                coord: [xMin, middle_y_max],
                 symbol: "none",
               },
               {
-                coord: [X_Y_MAX, MIDDLE_MAX],
+                coord: [xMax, middle_y_max],
                 symbol: "none",
               },
             ],
