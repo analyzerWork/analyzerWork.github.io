@@ -285,7 +285,6 @@ class TasteMatching extends CustomResizeObserver {
 
     super.observe(this.element.$contentWrapper, () => {
       const { activeIcon } = this.get("activeIcon");
-      console.log(activeIcon);
       this.hotTopIngredientBarInstance.resize();
       if (activeIcon === "chart") {
         this.firstTreeMapInstance.resize();
