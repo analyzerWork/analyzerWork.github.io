@@ -24,7 +24,7 @@ const computedIngredientOptions = ({
     return currentRangeData.map((bigDataItem) => {
         const currentIngredient = bigDataItem['加工后成分'];
         const filterIngredientData = filterByProductType.filter(item=> item['加工后成分'] === currentIngredient)
-        return [bigDataItem['规模指数'],bigDataItem['增长指数'],filterIngredientData.length,currentIngredient]
+        return [bigDataItem['当月加权声量'],bigDataItem['当月声量环比增长'],filterIngredientData.length,currentIngredient]
     });
 
 

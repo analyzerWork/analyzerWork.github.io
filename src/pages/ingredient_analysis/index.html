@@ -58,7 +58,7 @@
     const { ANAlYZER_UTILS } = window.parent;
 
     window.addEventListener("load", function () {
-      Promise.all(['taste_matching', 'bigdata_pgc',].map(name => ANAlYZER_UTILS.requestData(`${SOURCE_PATH}${name}.json`))).then(([taste_matching_data, big_data]) => {
+      Promise.all(['taste_matching', 'bigdata',].map(name => ANAlYZER_UTILS.requestData(`${SOURCE_PATH}${name}.json`))).then(([taste_matching_data, big_data]) => {
         const tasteMatchingInstance = new ProductAnalysis({
           taste_matching_data,
           big_data
