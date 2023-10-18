@@ -49,6 +49,7 @@
     </div>
   </template>
   <script src="../../chartConfig/ingredient_analysis/scatter.js"></script>
+  <script src="../../model/resizeObserver.js"></script>
   <script src="../commonComputed.js"></script>
   <script src="./computed.js"></script>
   <script src="./model.js"></script>
@@ -59,7 +60,7 @@
 
     window.addEventListener("load", function () {
       Promise.all(['taste_matching', 'bigdata',].map(name => ANAlYZER_UTILS.requestData(`${SOURCE_PATH}${name}.json`))).then(([taste_matching_data, big_data]) => {
-        const tasteMatchingInstance = new ProductAnalysis({
+        const tasteMatchingInstance = new IngredientAnalysis({
           taste_matching_data,
           big_data
         });
