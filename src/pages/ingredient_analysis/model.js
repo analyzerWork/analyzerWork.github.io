@@ -306,12 +306,7 @@ class ProductAnalysis {
       currentRangeData,
     });    
 
-    const xAxisData = currentRangeData.map(item=> item['当月加权声量']);
-    const yAxisData = currentRangeData.map(item=> item['当月声量环比增长'])
-    const xMax = Math.max(...xAxisData);
-    const yMax = Math.max(...yAxisData);
-
-    const options = getScatterOptions({ data, xMax, yMax });
+    const options = getScatterOptions({ data });
 
     this.ingredientMatrixInstance.setOption(options);
   };
