@@ -3,10 +3,10 @@ class CustomResizeObserver {
   instance = null;
   callbacks = [];
   constructor() {
-    this.initObserver();
+    this.initCustomResizeObserver();
   }
 
-  initObserver() {
+  initCustomResizeObserver() {
     console.log("init CustomResizeObserver");
     this.instance = new ResizeObserver(() => {
       if (!this.canResize) {
