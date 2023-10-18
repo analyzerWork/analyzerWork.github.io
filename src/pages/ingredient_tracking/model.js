@@ -67,7 +67,7 @@ const DEFAULT_PRODUCT_SELECT_PANEl_CONFIG = {
 const PRODUCT_NAME = '产品名称';
 const BRAND_NAME = '品牌';
 
-class IngredientTracking {
+class IngredientTracking extends CustomResizeObserver{
   data = [];
   productSelectOptions = [];
   classificationIngredientList = [];
@@ -91,6 +91,7 @@ class IngredientTracking {
     $productPanelWraper: document.getElementById(
       PRODUCT_SELECT_PANEL_WRAPPER_ID
     ),
+    $contentWrapper: document.querySelector("#contentWrapper"),
     $productSection: document.querySelector("#productSection"),
     $brandSection: document.querySelector("#brandSection"),
     $productTrend: document.querySelector("#productTrend"),
@@ -98,6 +99,7 @@ class IngredientTracking {
     $emptySection: document.querySelector("#emptySection"),
   };
   constructor(initData) {
+    super();
     this.init(initData);
     this.setup();
     this.bind();
@@ -201,6 +203,11 @@ class IngredientTracking {
       .addEventListener("click", (e) =>
         this.productSelectedHandler(e, PRODUCT_SELECT_BUTTON_ID)
       );
+
+    super.observe(this.element.$contentWrapper, () => {
+      this.newProductTrendInstance.resize();
+      this.brandTrendInstance.resize();
+    });
   };
 
   reRender = () => {
