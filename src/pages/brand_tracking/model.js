@@ -26,7 +26,7 @@ const DEFAULT_SELECT_PANEl_CONFIG = {
   maxLength: 20,
 };
 
-class BrandTracking {
+class BrandTracking extends CustomResizeObserver{
   data = [];
   brandTrendInstance = null;
   brandDropInstance = null;
@@ -46,6 +46,7 @@ class BrandTracking {
     $brandTrend: document.querySelector("#brandTrend"),
   };
   constructor(initData) {
+    super();
     this.init(initData);
     this.setup();
     this.bind();
@@ -128,6 +129,11 @@ class BrandTracking {
 
     this.brandTrendInstance.on("click", this.markPointClickHandler);
     this.brandTrendInstance.on("mouseout", this.markPointMouseoutHandler);
+
+
+    super.observe(this.element.$brandTrend, () =>
+      this.brandTrendInstance.resize()
+    );
 
   };
 
