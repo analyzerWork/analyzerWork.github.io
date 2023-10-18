@@ -7,7 +7,6 @@ class CustomResizeObserver {
   }
 
   initCustomResizeObserver() {
-    console.log("init CustomResizeObserver");
     this.instance = new ResizeObserver(() => {
       if (!this.canResize) {
         return;
@@ -28,7 +27,6 @@ class CustomResizeObserver {
 
   trigger() {
     window.setTimeout(() => {
-      console.log("CustomResizeObserver trigger");
 
       this.callbacks.forEach((callback) => {
         callback();

@@ -312,7 +312,6 @@ class IngredientAnalysis extends CustomResizeObserver {
     });    
 
     const options = getScatterOptions({ data });
-    console.log(JSON.stringify(options));
 
     this.ingredientMatrixInstance.setOption(options);
   };
