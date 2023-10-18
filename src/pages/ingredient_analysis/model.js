@@ -35,7 +35,7 @@ const DEFAULT_SELECT_PANEl_CONFIG = {
   cancelButtonId: INGREDIENT_SELECT_CANCEL_BUTTON_ID,
 };
 
-class ProductAnalysis {
+class IngredientAnalysis extends CustomResizeObserver {
   data = [];
   taste_matching_data = [];
   ingredientMatrixInstance = null;
@@ -57,6 +57,7 @@ class ProductAnalysis {
     ),
   };
   constructor(initData) {
+    super();
     this.init(initData);
     this.setup();
     this.bind();
@@ -144,6 +145,10 @@ class ProductAnalysis {
       .addEventListener("click", this.ingredientSelectHandler);
 
     document.addEventListener("click", this.hidePanel);
+
+
+    super.observe(this.element.$ingredientMatrixContainer, ()=>this.ingredientMatrixInstance.resize()); 
+
   };
 
   dateChangeHandler(currentYearMonth) {
@@ -307,6 +312,7 @@ class ProductAnalysis {
     });    
 
     const options = getScatterOptions({ data });
+    console.log(JSON.stringify(options));
 
     this.ingredientMatrixInstance.setOption(options);
   };
