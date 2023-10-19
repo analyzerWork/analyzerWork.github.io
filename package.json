@@ -1,0 +1,21 @@
+{
+  "name": "analyzerwork.github.io",
+  "version": "1.0.0",
+  "description": "I'm Analyzer, I'll enrich data analysis process with code",
+  "main": "index.js",
+  "scripts": {
+    "debug" : "vercel dev --debug",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/mongodb": "^4.0.7",
+    "@vercel/node": "^3.0.7"
+  },
+  "dependencies": {
+    "mongodb": "^6.1.0",
+    "typescript": "^5.2.2"
+  }
+}
