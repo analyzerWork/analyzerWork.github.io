@@ -1,0 +1,56 @@
+.toolbox-content{
+    position: relative;
+}
+.search-container{
+    display: flex;
+    align-items: center;
+}
+
+.search-label{
+    margin: 0 10px 0 0;
+}
+
+.chart-toolbar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.refresh-product{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 4px;
+    cursor: pointer; 
+}
+.refresh-product:hover{
+    color: var(--color-primary-blue);
+    background-color: var(--color-background);
+}
+.refresh-product:hover .refresh-icon{
+    transform: rotate(360deg);
+}
+.refresh-icon {
+    width: 24px;
+    height: 24px;
+    background-size: cover;
+    background-image: url('../../../assets/icons/refresh.svg');
+    transition: transform 0.3s ease-in-out;
+}
+
+.searching-text {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+
+.ingredient-word-cloud {
+    width: 100%;
+    height: 500px;
+}
+
