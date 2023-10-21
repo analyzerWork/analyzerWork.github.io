@@ -122,6 +122,15 @@ a{
     color: var(--color-primary-dark);
 }
 
+.text-large {
+    font-size: 16px;
+    color: var(--color-primary-dark);
+}
+
+.font-12{
+    font-size: 12px;
+}
+
 .select-icon {
     position: absolute;
     width: 20px;
