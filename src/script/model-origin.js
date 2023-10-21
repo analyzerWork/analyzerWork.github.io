@@ -1,9 +1,12 @@
 class AnalyzerModel {
-  backgroundImage = "";
   element = {
     $user: document.querySelector("#user"),
     $waterMarkContainer: document.querySelector("#waterMarkContainer"),
     $appHeader: document.querySelector("#appHeader"),
+    $toolboxDropdown: document.querySelector("#toolboxDropdown"),
+    $toolboxMenu: document.querySelector("#toolboxMenu"),
+    $navEle: document.querySelector("#nav"),
+    $pageLoading: document.querySelector("#pageLoading"),
   };
 
   init = () => {
@@ -13,12 +16,12 @@ class AnalyzerModel {
 
   setup = () => {
     const cookieInstance = new Cookie();
-    const user = cookieInstance.get('name');
-   
+    const user = cookieInstance.get("name");
+
     this.element.$user.innerHTML = user;
     // check if the app embedded in iframe
-    if(self !== top){
-      this.element.$appHeader.style.display = 'none';
+    if (self !== top) {
+      this.element.$appHeader.style.display = "none";
     }
   };
 
@@ -26,14 +29,42 @@ class AnalyzerModel {
     window.addEventListener("load", () => {
       this.initRenderPage();
       this.makeWaterMark();
+      this.renderComponent();
     });
 
-    const navEle = document.querySelector("#nav");
+    this.element.$navEle.addEventListener("click", this.switchMenuHandler);
 
-    navEle.addEventListener("click", (e) => this.switchMenuHandler(e, navEle));
+    document.addEventListener("visibilitychange", this.visibilityChangeHandler);
+  };
 
-    document.addEventListener('visibilitychange', this.visibilityChangeHandler);
+  renderComponent = () => {
+    const modelInstance = this;
+    const { activeClass, defaultClass } = VALUES.nav;
+    this.element.$toolboxDropdown.list(
+      [
+        {
+          id: "product-search",
+          value: "产品查询",
+        },
+      ],
+      {
+        onSelect: function (obj) {
+          modelInstance.element.$toolboxMenu.classList.add("active-menu");
+          Array.from(modelInstance.element.$navEle.children).forEach(
+            (menuEle) => {
+              if (menuEle.classList.contains(activeClass)) {
+                menuEle.classList.remove(activeClass);
+                menuEle.classList.add(defaultClass);
 
+              }
+            }
+          );
+          document.querySelector(
+            "iframe"
+          ).src = `../src/pages/toolbox/${obj.id}/index.html`;
+        },
+      }
+    );
   };
 
   injectGlobalVariables = () => {
@@ -53,11 +84,12 @@ class AnalyzerModel {
     document.querySelector(
       "iframe"
     ).src = `../src/pages/${currentPathName}/index.html`;
+    this.element.$pageLoading.classList.add("hide");
   };
 
   makeWaterMark = () => {
     const cookieInstance = new Cookie();
-    const user = cookieInstance.get('name');
+    const user = cookieInstance.get("name");
 
     const waterMarkInstance = new WaterMark({ text: user });
     const { backgroundDataURL, dataList } = waterMarkInstance;
@@ -65,20 +97,22 @@ class AnalyzerModel {
     dataList.forEach((item, index) => {
       const div = document.createElement("div");
       div.className = "watermark";
-      div.style.backgroundImage = `url(${backgroundDataURL})`;
+      div.style.backgroundImage = 'url('+backgroundDataURL+')';
       div.style.backgroundPosition = `0px ${item * index}px`;
       waterMarkFragment.appendChild(div);
     });
     this.element.$waterMarkContainer.appendChild(waterMarkFragment);
   };
-  switchMenuHandler = (e, navEle) => {
+  switchMenuHandler = (e) => {
     const activeEle = e.target;
     if (
       activeEle.tagName.toLowerCase() === "li" &&
       !activeEle.classList.contains("active-menu")
     ) {
       const { defaultClass, activeClass } = VALUES.nav;
-      Array.from(navEle.children).forEach((menuEle) => {
+
+      this.element.$toolboxMenu.classList.toggle("active-menu");
+      Array.from(this.element.$navEle.children).forEach((menuEle) => {
         if (menuEle.dataset.menu === activeEle.dataset.menu) {
           menuEle.classList.replace(defaultClass, activeClass);
           document.querySelector(
@@ -92,13 +126,11 @@ class AnalyzerModel {
   };
 
   visibilityChangeHandler = () => {
-
-     if(document.visibilityState === 'visible'){
-        const cookieInstance = new Cookie();
-        cookieInstance.authCheck();
-     }
-
-  }
+    if (document.visibilityState === "visible") {
+      const cookieInstance = new Cookie();
+      cookieInstance.authCheck();
+    }
+  };
 }
 
 function getWordsLength(str) {
@@ -175,4 +207,3 @@ class WaterMark {
     this.backgroundDataURL = base64URL;
   };
 }
-

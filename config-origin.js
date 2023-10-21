@@ -4,7 +4,6 @@ const CONFIG = {
     { pathname: "ingredient_tracking", name: "关键成分追踪" },
     { pathname: "brand_tracking", name: "品牌推新追踪" },
     { pathname: "ingredient_analysis", name: "成分热度分析" },
-
   ],
 };
 
