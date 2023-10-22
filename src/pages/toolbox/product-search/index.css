@@ -47,7 +47,14 @@
     transform: translateX(-50%);
 }
 
+.product-word-cloud-title{
+    display: flex;
+    align-items: center;
+}
 
+.remind-text {
+    margin-left: 8px;
+}
 
 .ingredient-word-cloud {
     width: 100%;
