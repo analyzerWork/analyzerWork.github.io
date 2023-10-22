@@ -114,7 +114,7 @@ class ToolBox extends CustomResizeObserver {
   };
 
   ingredientOnSearchHandler = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && e.target.value.trim() !== "") {
       this.renderProductWordCloud();
     }
   };
