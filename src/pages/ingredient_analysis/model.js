@@ -49,6 +49,7 @@ class IngredientAnalysis extends CustomResizeObserver {
   };
 
   element = {
+    $pageLoading: document.querySelector("#pageLoading"),
     $datePicker: document.querySelector("#ingredient-analysis-date-picker"),
     $productTypeSelect: document.querySelector("#productTypeSelect"),
     $ingredientClassSelect: document.querySelector("#ingredientClassSelect"),
@@ -100,6 +101,7 @@ class IngredientAnalysis extends CustomResizeObserver {
     this.ingredientMatrixInstance = window.parent.echarts.init(
       this.element.$ingredientMatrixContainer
     );
+    this.element.$pageLoading.classList.add("hide");
   };
 
   setup() {
