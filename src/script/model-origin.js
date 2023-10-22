@@ -6,7 +6,6 @@ class AnalyzerModel {
     $toolboxDropdown: document.querySelector("#toolboxDropdown"),
     $toolboxMenu: document.querySelector("#toolboxMenu"),
     $navEle: document.querySelector("#nav"),
-    $pageLoading: document.querySelector("#pageLoading"),
   };
 
   init = () => {
@@ -84,7 +83,6 @@ class AnalyzerModel {
     document.querySelector(
       "iframe"
     ).src = `../src/pages/${currentPathName}/index.html`;
-    this.element.$pageLoading.classList.add("hide");
   };
 
   makeWaterMark = () => {

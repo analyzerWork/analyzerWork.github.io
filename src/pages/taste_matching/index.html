@@ -1,119 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>口味搭配分析</title>
-    <link rel="stylesheet" href="https://qidian.gtimg.com/lulu/edge/css/common/ui.css">
-    <link rel="stylesheet" href="https://qidian.gtimg.com/lulu/edge/css/common/color.css">
+    <link
+      rel="stylesheet"
+      href="https://qidian.gtimg.com/lulu/edge/css/common/ui.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://qidian.gtimg.com/lulu/edge/css/common/color.css"
+    />
     <link rel="stylesheet" href="../../assets/reset.css" />
+    <link rel="stylesheet" href="../../assets/base.css" />
     <link rel="stylesheet" href="../../components/component.css" />
     <link rel="stylesheet" href="index.css" />
-    <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/DateTime.js"></script>
-    <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Select.js"></script>
-    <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Dialog.js"></script>
+    <script
+      type="module"
+      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/DateTime.js"
+    ></script>
+    <script
+      type="module"
+      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Select.js"
+    ></script>
+    <script
+      type="module"
+      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Dialog.js"
+    ></script>
+  </head>
 
-
-</head>
-
-<body class="iframe-body">
+  <body class="iframe-body">
     <div class="body-header">
-        <div class="header-item">
-            <span class="base-label mgr-12">选择日期区间:</span>
-            <input id="taste-matching-date-picker" type="month-range" is="ui-datetime" data-position="1-4">
-        </div>
-        <div class="header-item">
-            <div id="brandTypeSelect"></div>
-        </div>
-        <div class="header-item">
-            <div id="productTypeSelect"></div>
-        </div>
+      <div class="header-item">
+        <span class="base-label mgr-12">选择日期区间:</span>
+        <input
+          id="taste-matching-date-picker"
+          type="month-range"
+          is="ui-datetime"
+          data-position="1-4"
+        />
+      </div>
+      <div class="header-item">
+        <div id="brandTypeSelect"></div>
+      </div>
+      <div class="header-item">
+        <div id="productTypeSelect"></div>
+      </div>
     </div>
-
 
     <div class="content" id="contentWrapper">
-        <section>
-            <div class="title">热门成分Top15</div>
-            <div id="hotTopIngredientContainer">
-                <div class="hot-ingredient-select-container">
-                    <span class="text">选择分类：</span>
-                    <select id="hotIngredientSelect" is="ui-select"></select>
-                </div>
-                <div id="hotTopIngredientBar" class="hot-bar-map"></div>
+      <section>
+        <div class="title">热门成分Top15</div>
+        <div id="hotTopIngredientContainer">
+          <div class="hot-ingredient-select-container">
+            <span class="text">选择分类：</span>
+            <select id="hotIngredientSelect" is="ui-select"></select>
+          </div>
+          <div id="hotTopIngredientBar" class="hot-bar-map"></div>
+        </div>
+      </section>
+      <section>
+        <section class="first-class-section">
+          <div class="title">创新成分概览</div>
+          <div class="tool-bar">
+            <div class="search-container">
+              <span class="search-label">搜索成分:</span>
+              <span class="ui-input ui-input-search" align="end">
+                <input
+                  id="ingredientSearch"
+                  type="search"
+                  placeholder="请输入"
+                />
+                <button class="ui-icon-search">搜索</button>
+              </span>
             </div>
+            <div class="view-switch-container">
+              <span>视图模式：</span>
+              <div id="switchIconButton" class="switch-button-container">
+                <span
+                  id="tableIcon"
+                  class="switch-icon table-icon"
+                  title="列表"
+                ></span>
+                <span
+                  id="chartIcon"
+                  class="switch-icon chart-icon"
+                  title="图表"
+                ></span>
+              </div>
+            </div>
+            <div
+              id="firstClassSelectWrapper"
+              class="select-container hide-block"
+            >
+              <span class="text">选择分类：</span>
+              <select id="firstClassSelect" is="ui-select"></select>
+            </div>
+          </div>
+
+          <div id="firstClassPanel" class="first-class-panel"></div>
+          <div id="firstClassChart" class="first-class-chart hide-block">
+            <div id="firstTreeMap" class="first-tree-map"></div>
+          </div>
         </section>
-        <section>
-            <section class="first-class-section">
-                <div class="title">创新成分概览</div>
-                <div class="tool-bar">
-                    <div class="search-container">
-                        <span class="search-label">搜索成分:</span>
-                        <span class="ui-input ui-input-search" align="end">
-                            <input id="ingredientSearch" type="search" placeholder="请输入">
-                            <button class="ui-icon-search">搜索</button>
-                        </span>
-                    </div>
-                    <div class="view-switch-container">
-                        <span>视图模式：</span>
-                        <div id="switchIconButton" class="switch-button-container">
-                            <span id="tableIcon" class="switch-icon table-icon" title="列表"></span>
-                            <span id="chartIcon" class="switch-icon chart-icon" title="图表"></span>
-                        </div>
-                    </div>
-                    <div id="firstClassSelectWrapper" class="select-container hide-block">
-                        <span class="text">选择分类：</span>
-                        <select id="firstClassSelect" is="ui-select"></select>
-                    </div>
-                </div>
+        <section class="second-class-section hide">
+          <div class="title">创新成分搭配热度Top10</div>
+          <div id="secondClassPanel" class="second-class-panel"></div>
+          <div id="secondClassChart" class="second-class-chart hide-block">
+            <div id="secondTreeMap" class="second-tree-map"></div>
+          </div>
+          <dialog id="productDialog" is="ui-dialog" title="">
+            <div id="productLoading" class="ui-loading" style="height: 100px">
+              计算中<ui-dot></ui-dot>
+            </div>
 
-
-                <div id="firstClassPanel" class="first-class-panel"></div>
-                <div id="firstClassChart" class="first-class-chart hide-block">
-
-
-                    <div id="firstTreeMap" class="first-tree-map"></div>
-                </div>
-            </section>
-            <section class="second-class-section hide">
-                <div class="title">创新成分搭配热度Top10</div>
-                <div id="secondClassPanel" class="second-class-panel"></div>
-                <div id="secondClassChart" class="second-class-chart hide-block">
-                    <div id="secondTreeMap" class="second-tree-map"></div>
-                </div>
-                <dialog id="productDialog" is="ui-dialog" title="">
-                    <div id="productLoading" class="ui-loading" style="height: 100px;">计算中<ui-dot></ui-dot></div>
-
-                    <table id="productTable" class="ui-table hide">
-                        <thead>
-                            <tr>
-                                <th>品牌</th>
-                                <th>产品名称</th>
-                                <th>原料构成</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productTbody">
-
-                        </tbody>
-                    </table>
-                </dialog>
-            </section>
-
+            <table id="productTable" class="ui-table hide">
+              <thead>
+                <tr>
+                  <th>品牌</th>
+                  <th>产品名称</th>
+                  <th>原料构成</th>
+                </tr>
+              </thead>
+              <tbody id="productTbody"></tbody>
+            </table>
+          </dialog>
         </section>
+      </section>
+      <div class="analyzer-loading mask text-large" id="pageLoading">
+        加载中<ui-dot></ui-dot>
+      </div>
     </div>
 
-
     <template id="emptySection">
-        <div class="empty-content">
-            <svg t="1678609405780" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                p-id="4894" width="100" height="100">
-                <path
-                    d="M958.66 288.643h0.025L511.996 65.304 66.12 288.236h-0.83V735.35l446.707 223.345L958.711 735.35V288.643h-0.05z m-446.664-169.23l335.907 168.38-127.914 64.487-337.52-167.877 129.527-64.99z m-188.06 96.672l341.852 164.713L511.972 455.3 176.095 288.643l147.84-72.558zM121.125 345.14h17.754l-17.754-0.653V316.57l362.96 181.485v390.872l-362.96-181.482V345.14z m781.74 27.275v335.031L539.906 888.928V498.056l362.962-181.485v55.844z"
-                    p-id="4895" fill="#efefef"></path>
-            </svg>
-            <div class="empty-text">暂无数据</div>
-        </div>
+      <div class="empty-content">
+        <svg
+          t="1678609405780"
+          class="icon"
+          viewBox="0 0 1024 1024"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          p-id="4894"
+          width="100"
+          height="100"
+        >
+          <path
+            d="M958.66 288.643h0.025L511.996 65.304 66.12 288.236h-0.83V735.35l446.707 223.345L958.711 735.35V288.643h-0.05z m-446.664-169.23l335.907 168.38-127.914 64.487-337.52-167.877 129.527-64.99z m-188.06 96.672l341.852 164.713L511.972 455.3 176.095 288.643l147.84-72.558zM121.125 345.14h17.754l-17.754-0.653V316.57l362.96 181.485v390.872l-362.96-181.482V345.14z m781.74 27.275v335.031L539.906 888.928V498.056l362.962-181.485v55.844z"
+            p-id="4895"
+            fill="#efefef"
+          ></path>
+        </svg>
+        <div class="empty-text">暂无数据</div>
+      </div>
     </template>
     <script src="../../model/resizeObserver.js"></script>
     <script src="../commonComputed.js"></script>
@@ -122,24 +162,19 @@
     <script src="../../chartConfig/taste_matching/treemap.js"></script>
     <script src="../../chartConfig/taste_matching/bar.js"></script>
 
-
-
     <script src="./model.js"></script>
 
     <script>
+      const SOURCE_PATH = "./src/pages/datasource/";
+      const { ANAlYZER_UTILS } = window.parent;
 
-        const SOURCE_PATH = './src/pages/datasource/';
-        const { ANAlYZER_UTILS } = window.parent;
-
-
-        window.addEventListener('load', function () {
-            ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then((result) => {
-                const tasteMatchingInstance = new TasteMatching(result)
-            })
-        })
-
-
+      window.addEventListener("load", function () {
+        ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then(
+          (result) => {
+            const tasteMatchingInstance = new TasteMatching(result);
+          }
+        );
+      });
     </script>
-</body>
-
+  </body>
 </html>

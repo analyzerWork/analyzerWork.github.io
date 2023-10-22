@@ -94,6 +94,7 @@ class TasteMatching extends CustomResizeObserver {
   };
 
   element = {
+    $pageLoading: document.querySelector("#pageLoading"),
     $datePicker: document.querySelector("#taste-matching-date-picker"),
     $brandTypeSelect: document.querySelector("#brandTypeSelect"),
     $productTypeSelect: document.querySelector("#productTypeSelect"),
@@ -152,6 +153,7 @@ class TasteMatching extends CustomResizeObserver {
       startIndex,
       endIndex,
     });
+    this.element.$pageLoading.classList.add("hide");
   };
 
   setup() {
