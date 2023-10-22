@@ -97,6 +97,7 @@ class IngredientTracking extends CustomResizeObserver{
     $productTrend: document.querySelector("#productTrend"),
     $brandTrend: document.querySelector("#brandTrend"),
     $emptySection: document.querySelector("#emptySection"),
+    $pageLoading: document.querySelector("#pageLoading"),
   };
   constructor(initData) {
     super();
@@ -139,6 +140,8 @@ class IngredientTracking extends CustomResizeObserver{
     this.brandTrendInstance = window.parent.echarts.init(
       this.element.$brandTrend
     );
+    this.element.$pageLoading.classList.add("hide");
+
   };
 
   setup() {

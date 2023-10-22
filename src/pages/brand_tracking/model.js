@@ -44,6 +44,7 @@ class BrandTracking extends CustomResizeObserver{
     $datePicker: document.querySelector("#brand-track-date-picker"),
     $brandSelectContainer: document.querySelector("#brandSelectContainer"),
     $brandTrend: document.querySelector("#brandTrend"),
+    $pageLoading: document.querySelector("#pageLoading"),
   };
   constructor(initData) {
     super();
@@ -79,6 +80,8 @@ class BrandTracking extends CustomResizeObserver{
     this.brandTrendInstance = window.parent.echarts.init(
       this.element.$brandTrend
     );
+    this.element.$pageLoading.classList.add("hide");
+
   };
 
   setup() {
