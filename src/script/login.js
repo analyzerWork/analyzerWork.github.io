@@ -19,6 +19,9 @@ class LoginModel extends Cookie {
   }
 
   loginHandler = async () => {
+    if(this.loginChecking === true){
+      return
+    }
     const accountValue = this.element.$account.value.trim();
     const password = this.element.$password.value.trim();
 
@@ -26,9 +29,13 @@ class LoginModel extends Cookie {
         new LightTip('请输入用户名', 2000, 'error');
         return
     }
-    const userList = await this.loadUsers();
+    this.loginChecking = true;
+    
+    const userList =  MODE === 'FE' ? USER_INFO :  await this.loadUsers();
 
     const currentUser = userList.find(({name}) => name === accountValue);
+
+    this.loginChecking = false
 
     if(!currentUser){
         new LightTip('用户名不存在', 2000, 'error');
