@@ -1,6 +1,8 @@
-class Cookie {
+class Cookie extends IndexedDBUtil {
   cookieMap = new Map();
+  allUsers = [];
   constructor() {
+    super();
     this.init();
   }
   init() {
@@ -15,22 +17,87 @@ class Cookie {
     }
 
     this.authCheck();
+  }
+  getUserDataFromDB = () => {
+    return this.getIndexedDBData({ ...this.db_config, query: 1 }).catch(
+      () => {}
+    );
+  };
+  isUsersDataExpired = (updateTime) => {
+    const dbUpdateTime = updateTime ?? this.dbUpdateTime;
+    return (
+      !dbUpdateTime || new Date().getTime() - dbUpdateTime > this.db_expiration
+    );
+  };
+  loadUsers = (ignoreCache) => {
+    const cachedUsersPromise = (async () => {
+      // const cachedUsers = new Map();
+      // 从本地存储加载用户信息
+      let queriedUsers;
+      const { value, usersLastUpdate } = !ignoreCache ? await this.getUserDataFromDB() : {};
+      let dbUpdateTime = usersLastUpdate;
+      try {
+        queriedUsers = value ? JSON.parse(value) : undefined;
+      } catch (e) {
+        // 解析数据出错时，可忽略，后面会从接口查询
+        console.warn("Parse cached user data failed.", e);
+      }
 
-    
-  }
-  authCheck = () => {
-    const user = this.get("name");
-    const currentUser = USER_INFO.find(({ name }) => name === user);
-    if (!user || !currentUser) {
-        if(window.location.pathname !== "/login.html"){
-          ANAlYZER_UTILS.locateToPage({path:'login.html'});
-        }      
-    } else {
-        if(window.location.pathname === "/login.html"){
-            ANAlYZER_UTILS.locateToPage({type:'replace'});
+      // 本地存储无数据 / 缓存过期时，从接口查询
+      if (!queriedUsers?.length || this.isUsersDataExpired(dbUpdateTime)) {
+        const userList = await ANAlYZER_UTILS.requestData(apiConifg["auth"]);
+
+        if (!userList) {
+          // 为了支持查询出错后，再次查询
+          return [];
         }
+        queriedUsers = userList;
+        dbUpdateTime = new Date().getTime();
+
+        try {
+          // 写入本地存储
+          await this.setIndexedDBData(this.db_config, {
+            id: 1,
+            value: JSON.stringify(queriedUsers),
+            usersLastUpdate: dbUpdateTime,
+          });
+        } catch (e) {
+          // 写入失败时，无影响，可忽略
+          console.error("Write cached user data failed.", e);
+        }
+      }
+      // 写入内存缓存
+      // queriedUsers.forEach((cachedUser) => {
+      //   cachedUsers.set(cachedUser.id, cachedUser);
+      // });
+      // this.dbUpdateTime = dbUpdateTime;
+
+      return queriedUsers;
+    })();
+
+    return cachedUsersPromise;
+  };
+  authCheck = async () => {
+    const user = this.getCookie("name");
+    if (!user) {
+      if (window.location.pathname !== "/login.html") {
+        ANAlYZER_UTILS.locateToPage({ path: "login.html" });
+      }
+      return;
     }
-  }
+    const userList = await this.loadUsers();
+    console.log(userList);
+    const currentUser = userList.find(({ name }) => name === user);
+    if (!currentUser) {
+      if (window.location.pathname !== "/login.html") {
+        ANAlYZER_UTILS.locateToPage({ path: "login.html" });
+      }
+    } else {
+      if (window.location.pathname === "/login.html") {
+        ANAlYZER_UTILS.locateToPage({ type: "replace" });
+      }
+    }
+  };
   set(key, value) {
     this.cookieMap.set(key, value);
 
@@ -43,7 +110,7 @@ class Cookie {
     )}; expires=${date.toGMTString()}; SameSite=None; Secure`;
   }
 
-  get(key) {
+  getCookie(key) {
     if (this.cookieMap.has(key)) {
       return decodeURIComponent(this.cookieMap.get(key));
     }
