@@ -16,5 +16,5 @@ module.exports = async (req: VercelRequest, res: VercelResponse) => {
   const data = {
     result,
   };
-  res.status(200).json(data);
+  res.setHeader('access-control-allow-origin', '*').status(200).json(data);
 };
