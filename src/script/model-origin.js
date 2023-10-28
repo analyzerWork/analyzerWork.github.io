@@ -15,7 +15,7 @@ class AnalyzerModel {
 
   setup = () => {
     const cookieInstance = new Cookie();
-    const user = cookieInstance.get("name");
+    const user = cookieInstance.getCookie("name");
 
     this.element.$user.innerHTML = user;
     // check if the app embedded in iframe
@@ -87,7 +87,7 @@ class AnalyzerModel {
 
   makeWaterMark = () => {
     const cookieInstance = new Cookie();
-    const user = cookieInstance.get("name");
+    const user = cookieInstance.getCookie("name");
 
     const waterMarkInstance = new WaterMark({ text: user });
     const { backgroundDataURL, dataList } = waterMarkInstance;

@@ -30,11 +30,14 @@ class Cookie extends IndexedDBUtil {
     );
   };
   loadUsers = (ignoreCache) => {
+    const authInstance = this;
     const cachedUsersPromise = (async () => {
       // const cachedUsers = new Map();
       // 从本地存储加载用户信息
       let queriedUsers;
-      const { value, usersLastUpdate } = !ignoreCache ? await this.getUserDataFromDB() : {};
+      const userData = await authInstance.getUserDataFromDB();
+      
+      const { value, usersLastUpdate } = !ignoreCache ?  userData ?? {} : {};
       let dbUpdateTime = usersLastUpdate;
       try {
         queriedUsers = value ? JSON.parse(value) : undefined;
@@ -44,19 +47,19 @@ class Cookie extends IndexedDBUtil {
       }
 
       // 本地存储无数据 / 缓存过期时，从接口查询
-      if (!queriedUsers?.length || this.isUsersDataExpired(dbUpdateTime)) {
-        const userList = await ANAlYZER_UTILS.requestData(apiConifg["auth"]);
+      if (!queriedUsers?.length || authInstance.isUsersDataExpired(dbUpdateTime)) {
+        const userList = await ANAlYZER_UTILS.requestData(apiConfig["auth"]);
 
         if (!userList) {
           // 为了支持查询出错后，再次查询
           return [];
         }
-        queriedUsers = userList;
+        queriedUsers = userList.data;
         dbUpdateTime = new Date().getTime();
 
         try {
           // 写入本地存储
-          await this.setIndexedDBData(this.db_config, {
+          await authInstance.setIndexedDBData(this.db_config, {
             id: 1,
             value: JSON.stringify(queriedUsers),
             usersLastUpdate: dbUpdateTime,
@@ -85,8 +88,7 @@ class Cookie extends IndexedDBUtil {
       }
       return;
     }
-    const userList = await this.loadUsers();
-    console.log(userList);
+    const userList = MODE === 'FE' ? USER_INFO : await this.loadUsers();
     const currentUser = userList.find(({ name }) => name === user);
     if (!currentUser) {
       if (window.location.pathname !== "/login.html") {

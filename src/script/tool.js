@@ -3,7 +3,7 @@ window.ANAlYZER_UTILS = {
     data[key] = val;
   },
   requestData(url) {
-    return fetch(url, { cache: "no-cache" })
+    return fetch(url, { cache: "no-cache", mode: 'cors', })
       .then((response) => response.json())
       .then((data) => data);
   },
@@ -111,7 +111,8 @@ class IndexedDBUtil {
         .catch(reject);
     });
 }
-
+const URL = 'http://www.analyzer.work/api/';
+const MODE = 'FE' // DB
 window.apiConfig = {
-  auth: "api/auth",
+  auth: `${URL}auth`,
 };
