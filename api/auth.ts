@@ -9,12 +9,12 @@ module.exports = async (req: VercelRequest, res: VercelResponse) => {
   console.log("Connected successfully to server");
 
   const db = await client.db("user");
-  var result = await db
+  const dbData = await db
     .collection("meta")
     .find()
     .toArray();
   const data = {
-    result,
+    data: dbData,
   };
-  res.setHeader('access-control-allow-origin', '*').status(200).json(data);
+  res.appendHeader('access-control-allow-origin', '*').status(200).json(data);
 };
