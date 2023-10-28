@@ -56,7 +56,7 @@ const RD_GROUP = [
   "李凤英",
 ];
 
-const DIRECTOR_GROUP = ["刘云俊", "李伟", "徐海军"];
+const DIRECTOR_GROUP = ["刘云俊", "徐海军"];
 
 const SALES_GROUP = [
   "徐玉朋",
