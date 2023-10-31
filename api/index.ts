@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import { MongoClient } from "mongodb";
-const CONNECTION_URL = `mongodb+srv://${process.env.DB_KEY}.feljs0l.mongodb.net/?retryWrites=true&w=majority`;
+import { CONNECTION_URL } from './constants';
 const client = new MongoClient(CONNECTION_URL);
 
 module.exports = async (req: VercelRequest, res: VercelResponse) => {
