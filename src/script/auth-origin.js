@@ -88,7 +88,7 @@ class Cookie extends IndexedDBUtil {
       }
       return;
     }
-    const userList = MODE === 'FE' ? USER_INFO : await this.loadUsers();
+    const userList = window.analyzer_env.MODE === 'FE' ? USER_INFO : await this.loadUsers();
     const currentUser = userList.find(({ name }) => name === user);
     if (!currentUser) {
       if (window.location.pathname !== "/login.html") {
