@@ -1,4 +1,4 @@
-if( 'function' === typeof importScripts) {
+if (typeof importScripts === "function") {
   importScripts("../computed.js");
 }
 
