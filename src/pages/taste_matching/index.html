@@ -165,14 +165,22 @@
 
     <script>
       const SOURCE_PATH = "./src/pages/datasource/";
-      const { ANAlYZER_UTILS } = window.parent;
+      const { ANAlYZER_UTILS, apiConfig } = window.parent;
 
       window.addEventListener("load", function () {
-        ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then(
-          (result) => {
+        if (MODE === "FE") {
+          ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then(
+            (result) => {
+              const tasteMatchingInstance = new TasteMatching(result);
+            }
+          );
+        } else {
+          ANAlYZER_UTILS.requestData(apiConfig["taste_matching"], {
+            name: "init",
+          }).then((result) => {
             const tasteMatchingInstance = new TasteMatching(result);
-          }
-        );
+          });
+        }
       });
     </script>
   </body>
