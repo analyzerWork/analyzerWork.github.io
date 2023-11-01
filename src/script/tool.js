@@ -2,8 +2,13 @@ window.ANAlYZER_UTILS = {
   mutableSetState(data, key, val) {
     data[key] = val;
   },
-  requestData(url) {
-    return fetch(url, { cache: "no-cache", mode: 'cors', })
+  requestData(url, params = {}) {
+    const queryStr = Object.keys(params).reduce((prev,next,index)=> {
+      const prefix = index === 0 ? '?' : '&';
+      return prev += `${prefix}${next}=${params[next]}`
+    } , '')
+
+    return fetch(`${url}${queryStr}`, { cache: "no-cache", mode: 'no-cors', })
       .then((response) => response.json())
       .then((data) => data);
   },
@@ -111,8 +116,11 @@ class IndexedDBUtil {
         .catch(reject);
     });
 }
-const URL = 'http://www.analyzer.work/api/';
 const MODE = 'FE' // DB
+const ENV = 'Dev' // Prod
+const URL = ENV === 'DEV' ? '/api/' : 'http://www.analyzer.work/api/';
+
 window.apiConfig = {
   auth: `${URL}auth`,
+  taste_matching: `${URL}taste_matching`,
 };
