@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import { MongoClient, WithId } from "mongodb";
-import { CONNECTION_URL } from "./constants";
+import { CONNECTION_URL, SELECT_ALL } from "./constants";
 import { Dictionary } from "./type";
 const client = new MongoClient(CONNECTION_URL);
 
@@ -29,7 +29,8 @@ module.exports = async (req: VercelRequest, res: VercelResponse) => {
   const db = await client.db("private");
   let targetData: PrivateDataItem[] = [];
   let otherData: Dictionary = {};
-
+  console.log('req.query',req.query);
+  
   switch (req.query.name) {
     case QueryTypeEnum.Init:
       const allData = await db.collection<PrivateDataItem>("data").find();
@@ -51,15 +52,43 @@ module.exports = async (req: VercelRequest, res: VercelResponse) => {
         productSelectOptions,
       };
 
+      break;
+
     case QueryTypeEnum.FetchData:
-      targetData = [];
+      const {
+        startDate,
+        endDate,
+        brandTypeValue,
+        productTypeValue,
+      } = req.query as {
+        [key: string]: string;
+      };
+
+      const dataSlice = await db
+        .collection<PrivateDataItem>("data")
+        .find({ 月份: { $gte: startDate, $lte: endDate } }).toArray();
+
+        const dataFilterByBrand =
+        !brandTypeValue || brandTypeValue[0] === SELECT_ALL
+          ? dataSlice
+          : dataSlice.filter((item) => brandTypeValue.includes(item["品牌类型"]));
+      const dataFilterByProduct =
+        productTypeValue[0] === SELECT_ALL
+          ? dataFilterByBrand
+          : dataFilterByBrand.filter((item) =>
+              productTypeValue.includes(item["产品类型"])
+            );
+
+      targetData = dataFilterByProduct;
+      break;
     default:
       targetData = [];
+      break;
   }
   const data = {
     result: {
       targetData,
-      otherData
+      otherData,
     },
   };
   res.setHeader("access-control-allow-origin", "*").status(200).json(data);
