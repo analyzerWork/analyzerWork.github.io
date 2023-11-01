@@ -48,7 +48,7 @@
     </div>
     <div class="analyzer-loading mask text-large" id="pageLoading">
         加载中<ui-dot></ui-dot>
-      </div>
+    </div>
     <template id="emptySection">
         <div class="empty-content">
             <svg t="1678609405780" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -71,12 +71,21 @@
     <script>
 
         const SOURCE_PATH = './src/pages/datasource/';
-        const { ANAlYZER_UTILS } = window.parent;
+        const { ANAlYZER_UTILS, apiConfig,
+            analyzer_env: { MODE }, } = window.parent;
 
         window.addEventListener('load', function () {
-            ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then((result) => {
-                const ingredientTrackingInstance = new IngredientTracking(result)
-            })
+            if (MODE === "FE") {
+                ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then((result) => {
+                    const ingredientTrackingInstance = new IngredientTracking(result)
+                })
+            } else {
+                ANAlYZER_UTILS.requestData(apiConfig["ingredient_tracking"], {
+                    name: "init",
+                }).then((result) => {
+                    const tasteMatchingInstance = new IngredientTracking(result);
+                });
+            }
         })
 
 
