@@ -116,9 +116,13 @@ class IndexedDBUtil {
         .catch(reject);
     });
 }
-const MODE = 'FE' // DB
-const ENV = 'Dev' // Prod
-const URL = ENV === 'DEV' ? '/api/' : 'http://www.analyzer.work/api/';
+
+window.analyzer_env = {
+  MODE: 'FE', //DB
+  TARGET: 'Dev' // Prod
+}
+
+const URL = window.analyzer_env === 'Dev' ? '/api/' : 'http://www.analyzer.work/api/';
 
 window.apiConfig = {
   auth: `${URL}auth`,
