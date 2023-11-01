@@ -1,26 +1,9 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
-import { MongoClient, WithId } from "mongodb";
+import { MongoClient } from "mongodb";
 import { CONNECTION_URL, SELECT_ALL } from "./constants";
-import { Dictionary } from "./type";
+import { Dictionary, QueryTypeEnum, PrivateDataItem } from "./type";
 const client = new MongoClient(CONNECTION_URL);
 
-enum QueryTypeEnum {
-  Init = "init",
-  FetchData = "fetchData",
-}
-
-type PrivateDataItem = WithId<{
-  月份: string;
-  品牌: string;
-  产品名称: string;
-  原料构成: string;
-  基础成分: string;
-  成分分类: string;
-  加工后成分: string;
-  品牌类型: string;
-  产品类型: string;
-  "品牌-产品名称-原料构成": string;
-}>;
 
 module.exports = async (req: VercelRequest, res: VercelResponse) => {
   await client.connect();
@@ -29,7 +12,6 @@ module.exports = async (req: VercelRequest, res: VercelResponse) => {
   const db = await client.db("private");
   let targetData: PrivateDataItem[] = [];
   let otherData: Dictionary = {};
-  console.log('req.query',req.query);
   
   switch (req.query.name) {
     case QueryTypeEnum.Init:
