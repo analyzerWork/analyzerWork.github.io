@@ -1,4 +1,4 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { MongoClient } from "mongodb";
 import { CONNECTION_URL, SELECT_ALL } from "./_constants";
 import { Dictionary, QueryTypeEnum, PrivateDataItem } from "./type";
