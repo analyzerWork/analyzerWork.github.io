@@ -122,9 +122,10 @@ window.analyzer_env = {
   TARGET: 'Dev' // Prod
 }
 
-const URL = window.analyzer_env === 'Dev' ? '/api/' : 'http://www.analyzer.work/api/';
+const URL = window.analyzer_env.TARGET === 'Dev' ? '/api/' : 'http://www.analyzer.work/api/';
 
 window.apiConfig = {
   auth: `${URL}auth`,
   taste_matching: `${URL}taste_matching`,
+  ingredient_tracking: `${URL}ingredient_tracking`,
 };
