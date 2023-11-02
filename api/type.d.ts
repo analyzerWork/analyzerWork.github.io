@@ -1,4 +1,4 @@
-import { WithId } from "mongodb";
+import type { WithId } from "mongodb";
 
 export type Dictionary = {
   [key: string]: any;
