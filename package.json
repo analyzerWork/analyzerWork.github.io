@@ -4,7 +4,7 @@
   "description": "I'm Analyzer, I'll enrich data analysis process with code",
   "main": "index.js",
   "scripts": {
-    "debug" : "vercel dev --debug",
+    "debug": "vercel dev --debug",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,10 +12,10 @@
   "license": "ISC",
   "devDependencies": {
     "@types/mongodb": "^4.0.7",
-    "@vercel/node": "^3.0.7"
+    "@vercel/node": "^3.0.7",
+    "typescript": "^5.2.2"
   },
   "dependencies": {
-    "mongodb": "^6.1.0",
-    "typescript": "^5.2.2"
+    "mongodb": "^6.1.0"
   }
 }
