@@ -88,9 +88,6 @@ class IngredientTracking extends CustomResizeObserver{
       "#ingredientSelectContainer"
     ),
     $productTypeSelect: document.querySelector("#productTypeSelect"),
-    $productPanelWraper: document.getElementById(
-      PRODUCT_SELECT_PANEL_WRAPPER_ID
-    ),
     $contentWrapper: document.querySelector("#contentWrapper"),
     $productSection: document.querySelector("#productSection"),
     $brandSection: document.querySelector("#brandSection"),
@@ -298,16 +295,16 @@ class IngredientTracking extends CustomResizeObserver{
 
   renderProductSelectComponent = () => {
     const { productTypeValue } = this.get("productTypeValue");
-    const panelWraper = document.getElementById(
+    const panelWrapper = document.getElementById(
       PRODUCT_SELECT_PANEL_WRAPPER_ID
     );
 
-    panelWraper.innerHTML = `${getMultipleSelectConfig({
+    panelWrapper.innerHTML = `${getMultipleSelectConfig({
       ...DEFAULT_PRODUCT_SELECT_PANEl_CONFIG,
       value: productTypeValue,
       data: this.productSelectOptions,
     })}`;
-    this.element.$productTypeSelect.appendChild(panelWraper);
+    this.element.$productTypeSelect.appendChild(panelWrapper);
   };
 
   ingredientButtonSelectHandler = (e) => {
