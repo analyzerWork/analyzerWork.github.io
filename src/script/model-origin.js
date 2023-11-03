@@ -109,7 +109,6 @@ class AnalyzerModel {
     ) {
       const { defaultClass, activeClass } = VALUES.nav;
 
-      this.element.$toolboxMenu.classList.toggle("active-menu");
       Array.from(this.element.$navEle.children).forEach((menuEle) => {
         if (menuEle.dataset.menu === activeEle.dataset.menu) {
           menuEle.classList.replace(defaultClass, activeClass);
@@ -120,6 +119,10 @@ class AnalyzerModel {
           menuEle.classList.replace(activeClass, defaultClass);
         }
       });
+      // 工具箱取消
+      if(this.element.$toolboxMenu.classList.contains("active-menu")){
+        this.element.$toolboxMenu.classList.remove("active-menu")
+      }
     }
   };
 

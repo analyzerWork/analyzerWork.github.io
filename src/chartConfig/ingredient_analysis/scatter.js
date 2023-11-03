@@ -39,7 +39,7 @@ const getScatterOptions = (options) => {
       max: Number(yMax),
       min: Number(yMin),
       axisLabel: {
-        formatter:(value)=> `${value * 100} %`
+        formatter:(value)=> `${(value * 100).toFixed(0)} %`
       }
     },
     dataZoom: [
