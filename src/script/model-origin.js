@@ -54,7 +54,6 @@ class AnalyzerModel {
               if (menuEle.classList.contains(activeClass)) {
                 menuEle.classList.remove(activeClass);
                 menuEle.classList.add(defaultClass);
-
               }
             }
           );
@@ -73,8 +72,10 @@ class AnalyzerModel {
   initRenderPage = () => {
     const { defaultClass, activeClass } = VALUES.nav;
     const pathname = window.location.pathname.slice(1);
-    const currentPathName =
-      pathname === "" ? CONFIG.routes[0].pathname : pathname;
+    const validPathnames = CONFIG.routes.map(({ pathname }) => pathname);
+    const currentPathName = validPathnames.includes(pathname)
+      ? pathname
+      : CONFIG.routes[0].pathname;
     renderNav(CONFIG.routes);
     const defaultMenu = document.querySelector(
       `[data-menu=${currentPathName}]`
@@ -95,7 +96,7 @@ class AnalyzerModel {
     dataList.forEach((item, index) => {
       const div = document.createElement("div");
       div.className = "watermark";
-      div.style.backgroundImage = 'url('+backgroundDataURL+')';
+      div.style.backgroundImage = "url(" + backgroundDataURL + ")";
       div.style.backgroundPosition = `0px ${item * index}px`;
       waterMarkFragment.appendChild(div);
     });
@@ -120,8 +121,8 @@ class AnalyzerModel {
         }
       });
       // 工具箱取消
-      if(this.element.$toolboxMenu.classList.contains("active-menu")){
-        this.element.$toolboxMenu.classList.remove("active-menu")
+      if (this.element.$toolboxMenu.classList.contains("active-menu")) {
+        this.element.$toolboxMenu.classList.remove("active-menu");
       }
     }
   };
