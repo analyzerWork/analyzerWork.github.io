@@ -111,7 +111,7 @@ class ToolBox extends CustomResizeObserver {
       offset: 0,
     });
     this.element.$chartLoading.classList.remove("hide");
-
+    // TODO: fetch data
     this.workerInstance.postMessage({
       data: this.data,
       keyword,
