@@ -1,78 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>产品分析</title>
+    <link
+      rel="stylesheet"
+      href="https://qidian.gtimg.com/lulu/edge/css/common/ui.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://qidian.gtimg.com/lulu/edge/css/common/color.css"
+    />
+    <link rel="stylesheet" href="../../assets/reset.css" />
+    <link rel="stylesheet" href="../../components/component.css" />
+    <link rel="stylesheet" href="index.css" />
+    <script
+      type="module"
+      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/DateTime.js"
+    ></script>
+    <script
+      type="module"
+      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Select.js"
+    ></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>产品分析</title>
-  <link rel="stylesheet" href="https://qidian.gtimg.com/lulu/edge/css/common/ui.css" />
-  <link rel="stylesheet" href="https://qidian.gtimg.com/lulu/edge/css/common/color.css" />
-  <link rel="stylesheet" href="../../assets/reset.css" />
-  <link rel="stylesheet" href="../../components/component.css" />
-  <link rel="stylesheet" href="index.css" />
-  <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/DateTime.js"></script>
-  <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Select.js"></script>
-</head>
-
-<body class="iframe-body">
-  <div class="body-header">
-    <div class="header-item">
-      <span class="base-label mgr-12">选择日期:</span>
-      <input id="ingredient-analysis-date-picker" type="month" is="ui-datetime" data-position="1-4" />
+  <body class="iframe-body">
+    <div class="body-header">
+      <div class="header-item">
+        <span class="base-label mgr-12">选择日期:</span>
+        <input
+          id="ingredient-analysis-date-picker"
+          type="month"
+          is="ui-datetime"
+          data-position="1-4"
+        />
+      </div>
+      <div class="header-item">
+        <span class="text">产品类型：</span>
+        <select id="productTypeSelect" is="ui-select"></select>
+      </div>
+      <div class="header-item">
+        <div id="ingredientClassSelect"></div>
+      </div>
     </div>
-    <div class="header-item">
-      <span class="text">产品类型：</span>
-      <select id="productTypeSelect" is="ui-select"></select>
+
+    <div class="content">
+      <section>
+        <div class="title">热门成分矩阵分析</div>
+        <div id="ingredientMatrixContainer" class="ingredient-matrix"></div>
+      </section>
     </div>
-    <div class="header-item">
-      <div id="ingredientClassSelect"></div>
+    <div class="analyzer-loading mask text-large" id="pageLoading">
+      加载中<ui-dot></ui-dot>
     </div>
-  </div>
 
-  <div class="content">
-    <section>
-      <div class="title">热门成分矩阵分析</div>
-      <div id="ingredientMatrixContainer" class="ingredient-matrix"></div>
-    </section>
-  </div>
-  <div class="analyzer-loading mask text-large" id="pageLoading">
-    加载中<ui-dot></ui-dot>
-  </div>
+    <template id="emptySection">
+      <div class="empty-content">
+        <svg
+          t="1678609405780"
+          class="icon"
+          viewBox="0 0 1024 1024"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          p-id="4894"
+          width="100"
+          height="100"
+        >
+          <path
+            d="M958.66 288.643h0.025L511.996 65.304 66.12 288.236h-0.83V735.35l446.707 223.345L958.711 735.35V288.643h-0.05z m-446.664-169.23l335.907 168.38-127.914 64.487-337.52-167.877 129.527-64.99z m-188.06 96.672l341.852 164.713L511.972 455.3 176.095 288.643l147.84-72.558zM121.125 345.14h17.754l-17.754-0.653V316.57l362.96 181.485v390.872l-362.96-181.482V345.14z m781.74 27.275v335.031L539.906 888.928V498.056l362.962-181.485v55.844z"
+            p-id="4895"
+            fill="#efefef"
+          ></path>
+        </svg>
+        <div class="empty-text">暂无数据</div>
+      </div>
+    </template>
+    <script src="../../chartConfig/ingredient_analysis/scatter.js"></script>
+    <script src="../../model/resizeObserver.js"></script>
+    <script src="../commonComputed.js"></script>
+    <script src="./computed.js"></script>
+    <script src="./model.js"></script>
 
-  <template id="emptySection">
-    <div class="empty-content">
-      <svg t="1678609405780" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-        p-id="4894" width="100" height="100">
-        <path
-          d="M958.66 288.643h0.025L511.996 65.304 66.12 288.236h-0.83V735.35l446.707 223.345L958.711 735.35V288.643h-0.05z m-446.664-169.23l335.907 168.38-127.914 64.487-337.52-167.877 129.527-64.99z m-188.06 96.672l341.852 164.713L511.972 455.3 176.095 288.643l147.84-72.558zM121.125 345.14h17.754l-17.754-0.653V316.57l362.96 181.485v390.872l-362.96-181.482V345.14z m781.74 27.275v335.031L539.906 888.928V498.056l362.962-181.485v55.844z"
-          p-id="4895" fill="#efefef"></path>
-      </svg>
-      <div class="empty-text">暂无数据</div>
-    </div>
-  </template>
-  <script src="../../chartConfig/ingredient_analysis/scatter.js"></script>
-  <script src="../../model/resizeObserver.js"></script>
-  <script src="../commonComputed.js"></script>
-  <script src="./computed.js"></script>
-  <script src="./model.js"></script>
+    <script>
+      const SOURCE_PATH = "./src/pages/datasource/";
+      const {
+        ANAlYZER_UTILS,
+        apiConfig,
+        analyzer_env: { MODE },
+      } = window.parent;
 
-  <script>
-    const SOURCE_PATH = "./src/pages/datasource/";
-    const { ANAlYZER_UTILS } = window.parent;
-
-    window.addEventListener("load", function () {
-      Promise.all(['taste_matching', 'bigdata',].map(name => ANAlYZER_UTILS.requestData(`${SOURCE_PATH}${name}.json`))).then(([taste_matching_data, big_data]) => {
-        const tasteMatchingInstance = new IngredientAnalysis({
-          taste_matching_data,
-          big_data
-        });
-      })
-
-
-
-    });
-  </script>
-</body>
-
+      window.addEventListener("load", function () {
+        if (MODE === "FE") {
+          Promise.all(
+            ["taste_matching", "bigdata"].map((name) =>
+              ANAlYZER_UTILS.requestData(`${SOURCE_PATH}${name}.json`)
+            )
+          ).then(([taste_matching_data, big_data]) => {
+            const tasteMatchingInstance = new IngredientAnalysis({
+              taste_matching_data,
+              big_data,
+            });
+          });
+        } else {
+          ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then(
+            (taste_matching_data) => {
+              ANAlYZER_UTILS.requestData(apiConfig["ingredient_analysis"], {
+                name: "init",
+              }).then((big_data) => {
+                // TODO:
+                const ingredientTrackingInstance = new IngredientAnalysis({
+                  taste_matching_data,
+                  big_data
+                });
+              });
+            }
+          );
+        }
+      });
+    </script>
+  </body>
 </html>

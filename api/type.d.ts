@@ -22,3 +22,17 @@ export type PrivateDataItem = WithId<{
   "品牌-产品名称-原料构成": string;
 }>;
 
+export type PublicBigDataItem = WithId<{
+  月份: string;
+  趋势名称: string;
+  成分分类: string;
+  加工后成分: string;
+  PGC: string;
+  UGC: string;
+  当月加权声量: string;
+  当月声量: string;
+  当月声量环比增长: string;
+  产品类型: string;
+}>;
+
+
