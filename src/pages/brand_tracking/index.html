@@ -65,14 +65,26 @@
 
     <script>
       const SOURCE_PATH = "./src/pages/datasource/";
-      const { ANAlYZER_UTILS } = window.parent;
+      const {
+        ANAlYZER_UTILS,
+        apiConfig,
+        analyzer_env: { MODE },
+      } = window.parent;
 
       window.addEventListener("load", function () {
-        ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then(
-          (result) => {
+        if (MODE === "FE") {
+          ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then(
+            (result) => {
+              const brandTrackingInstance = new BrandTracking(result);
+            }
+          );
+        } else {
+          ANAlYZER_UTILS.requestData(apiConfig["brand_tracking"], {
+            name: "init",
+          }).then((result) => {
             const brandTrackingInstance = new BrandTracking(result);
-          }
-        );
+          });
+        }
       });
     </script>
   </body>

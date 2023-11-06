@@ -3,12 +3,12 @@ window.ANAlYZER_UTILS = {
     data[key] = val;
   },
   requestData(url, params = {}) {
-    const queryStr = Object.keys(params).reduce((prev,next,index)=> {
-      const prefix = index === 0 ? '?' : '&';
-      return prev += `${prefix}${next}=${params[next]}`
-    } , '')
+    const queryStr = Object.keys(params).reduce((prev, next, index) => {
+      const prefix = index === 0 ? "?" : "&";
+      return (prev += `${prefix}${next}=${params[next]}`);
+    }, "");
 
-    return fetch(`${url}${queryStr}`, { cache: "no-cache", mode: 'no-cors', })
+    return fetch(`${url}${queryStr}`, { cache: "no-cache", mode: "no-cors" })
       .then((response) => response.json())
       .then((data) => data);
   },
@@ -27,14 +27,14 @@ window.echartsUtil = {
 };
 
 class IndexedDBUtil {
-   db_config = {
-    dbName: 'userDB',
+  db_config = {
+    dbName: "userDB",
     // 用于版本控制，在升级 DB 结构时，将此数字 + 1
     dbVersion: 3,
-    storeName: 'userStore',
-    keyPath: 'id',
+    storeName: "userStore",
+    keyPath: "id",
   };
-  db_expiration = 24*60*60*1000;
+  db_expiration = 24 * 60 * 60 * 1000;
   dbUpdateTime = 0;
   deleteIndexedDB = (dbName) =>
     new Promise((resolve, reject) => {
@@ -118,14 +118,24 @@ class IndexedDBUtil {
 }
 
 window.analyzer_env = {
-  MODE: 'FE', //DB
-  TARGET: 'Dev' // Prod
-}
-
-const URL = window.analyzer_env.TARGET === 'Dev' ? '/api/' : 'http://www.analyzer.work/api/';
-
-window.apiConfig = {
-  auth: `${URL}auth`,
-  taste_matching: `${URL}taste_matching`,
-  ingredient_tracking: `${URL}ingredient_tracking`,
+  MODE: "FE", //DB
+  TARGET: "Dev", // Prod
 };
+
+const URL =
+  window.analyzer_env.TARGET === "Dev"
+    ? "/api/"
+    : "http://www.analyzer.work/api/";
+
+window.apiConfig = [
+  "auth",
+  "taste_matching",
+  "ingredient_tracking",
+  "brand_tracking",
+].reduce(
+  (prev, next) => ({
+    ...prev,
+    [next]: `${URL}${next}`,
+  }),
+  {}
+);

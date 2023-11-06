@@ -152,6 +152,8 @@ class BrandTracking extends CustomResizeObserver{
       endDateIndex,
     });
 
+    // TODO: fetch data from db   
+
     this.updateCurrentRangeData(selectedBrand);
     // 重新渲染
     this.renderBrandTrend();
