@@ -5,11 +5,8 @@ if (typeof importScripts === "function") {
 self.addEventListener(
   "message",
   function (e) {
-    const { offset, pageSize, data, keyword } = e.data;
-    const wordCloudData = computeProductWordCloudData(data, keyword).slice(
-      offset * pageSize,
-      (offset + 1) * pageSize
-    );
+    const { data, keyword } = e.data;
+    const wordCloudData = computeProductWordCloudData(data, keyword);
     self.postMessage({ payload: wordCloudData });
   },
   false

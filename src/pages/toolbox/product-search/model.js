@@ -1,12 +1,13 @@
 class ToolBox extends CustomResizeObserver {
   data = [];
   pageSize = 50;
-  totalPage = 0;
   productWordCloudInstance = null;
   workerInstance = null;
   computedData = {
     keyword: "",
     offset: 0,
+    totalPage: 0,
+    dataSource: [],
   };
 
   element = {
@@ -30,7 +31,10 @@ class ToolBox extends CustomResizeObserver {
   init = (initData) => {
     this.data = initData;
 
-    this.totalPage = Math.ceil(initData.length / this.pageSize);
+    this.set({
+      dataSource: initData,
+      totalPage: Math.ceil(initData.length / this.pageSize),
+    });
 
     this.productWordCloudInstance = window.parent.echarts.init(
       this.element.$ingredientWordCloud
@@ -39,28 +43,8 @@ class ToolBox extends CustomResizeObserver {
     this.workerInstance = new Worker("worker.js");
   };
 
-  initWebWorker = () => {
-    if (window.Worker) {
-      const myWorker = new Worker("worker.js");
-
-      [first, second].forEach((input) => {
-        input.onchange = function () {
-          myWorker.postMessage([first.value, second.value]);
-          console.log("Message posted to worker");
-        };
-      });
-
-      myWorker.onmessage = function (e) {
-        result.textContent = e.data;
-        console.log("Message received from worker");
-      };
-    } else {
-      console.log("Your browser doesn't support web workers.");
-    }
-  };
-
   setup() {
-    this.renderProductWordCloud();
+    this.emitPostMessage();
   }
 
   get = (...keys) =>
@@ -94,7 +78,7 @@ class ToolBox extends CustomResizeObserver {
 
     this.workerInstance.addEventListener(
       "message",
-      this.workMessageHandler,
+      this.workerMessageHandler,
       false
     );
 
@@ -109,14 +93,29 @@ class ToolBox extends CustomResizeObserver {
     });
 
     if (e.target.value === "") {
-      this.renderProductWordCloud();
+      this.emitPostMessage();
     }
   };
 
   ingredientOnSearchHandler = (e) => {
     if (e.key === "Enter" && e.target.value.trim() !== "") {
-      this.renderProductWordCloud();
+      this.emitPostMessage();
     }
+  };
+
+  emitPostMessage = () => {
+    console.log("[product-search] post message to worker");
+
+    const { keyword } = this.get("keyword");
+    this.set({
+      offset: 0,
+    });
+    this.element.$chartLoading.classList.remove("hide");
+
+    this.workerInstance.postMessage({
+      data: this.data,
+      keyword,
+    });
   };
 
   refreshHandler = (e) => {
@@ -130,43 +129,41 @@ class ToolBox extends CustomResizeObserver {
     this.renderProductWordCloud();
   };
 
-  workMessageHandler = (e) => {
-    console.log("Message received from worker");
+  // worker 过滤 & 排序后的数据
+  workerMessageHandler = (e) => {
+    console.log("[product-search] message received from worker");
     const data = e.data.payload;
+
+    this.set({
+      dataSource: data,
+    });
+
+    this.renderProductWordCloud();
+  };
+
+  renderProductWordCloud() {
+    const { dataSource, offset } = this.get("dataSource", "offset");
+
+    const currentData = dataSource.slice(
+      offset * this.pageSize,
+      (offset + 1) * this.pageSize
+    );
 
     const emptySection = document.querySelector(".empty-content");
     if (emptySection) {
       this.element.$ingredientWordCloudSection.removeChild(emptySection);
     }
 
-    if (data.length === 0) {
+    if (currentData.length === 0) {
       this.element.$ingredientWordCloud.classList.add("hide");
       this.element.$ingredientWordCloudSection.appendChild(
         this.element.$emptySection.content.cloneNode(true)
       );
     } else {
       this.element.$ingredientWordCloud.classList.remove("hide");
-      const wordCloudOption = getWordCloudOption({ data });
+      const wordCloudOption = getWordCloudOption({ data: currentData });
       this.productWordCloudInstance.setOption(wordCloudOption);
     }
     this.element.$chartLoading.classList.add("hide");
-  };
-
-  renderProductWordCloud() {
-    const { data } = this;
-    let { offset, keyword } = this.get("keyword", "offset");
-
-    if (offset + 1 >= this.totalPage) {
-      offset = 0;
-    }
-    console.log("Message posted to worker");
-    this.element.$chartLoading.classList.remove("hide");
-
-    this.workerInstance.postMessage({
-      offset,
-      pageSize: this.pageSize,
-      data,
-      keyword,
-    });
   }
 }
