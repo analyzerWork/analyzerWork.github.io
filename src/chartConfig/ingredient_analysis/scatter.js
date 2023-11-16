@@ -10,7 +10,7 @@ const getScatterOptions = (options) => {
       return item[1];
   });
 
-  const yMax =  Math.max(...yValues).toFixed(2);
+  const yMax =  Math.ceil(Math.max(...yValues));
   const yMin =  Math.min(...yValues).toFixed(2);
   const xMin = Math.min(...xValues);
   const xMax = Math.max(...xValues);
@@ -39,7 +39,7 @@ const getScatterOptions = (options) => {
       max: Number(yMax),
       min: Number(yMin),
       axisLabel: {
-        formatter:(value)=> `${(value * 100).toFixed(0)} %`
+        formatter:(value)=> `${(value * 100).toFixed(0)} %` 
       }
     },
     dataZoom: [
