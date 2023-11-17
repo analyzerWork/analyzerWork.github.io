@@ -11,12 +11,12 @@ const getScatterOptions = (options) => {
   });
 
   const yMax =  Math.ceil(Math.max(...yValues));
-  const yMin =  Math.min(...yValues).toFixed(2);
-  const xMin = Math.min(...xValues);
-  const xMax = Math.max(...xValues);
+  const yMin =  Math.floor(Math.min(...yValues));
+  const xMin = Math.floor(Math.min(...xValues));
+  const xMax = Math.ceil(Math.max(...xValues));
   const middle_x_max = Math.pow(10,(Math.log10(xMin) + Math.log10(xMax)) / 2);;
   const middle_y_max = (Number(yMax) + Number(yMin)) / 2;
-
+  console.log(yMax, xMin, xMax, Math.pow(10,Math.log10(xMax)));
   return {
     xAxis: {
       name: "当月加权声量",
@@ -28,8 +28,8 @@ const getScatterOptions = (options) => {
       },
       offset: Number(yMin) ,
       type: 'log',
-      min: Math.pow(10,Math.log10(xMin)),
-      max: Math.pow(10,Math.log10(xMax))
+      min: Math.floor(Math.pow(10,Math.log10(xMin))),
+      max: Math.ceil(Math.pow(10,Math.log10(xMax)))
     },
     yAxis: {
       name: "当月声量环比增长",
