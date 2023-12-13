@@ -67,6 +67,8 @@ const DEFAULT_PRODUCT_SELECT_PANEl_CONFIG = {
 const PRODUCT_NAME = '产品名称';
 const BRAND_NAME = '品牌';
 
+const { setOptionConfig } = window.parent.echartsVariables;
+
 class IngredientTracking extends CustomResizeObserver{
   data = [];
   productSelectOptions = [];
@@ -448,7 +450,7 @@ class IngredientTracking extends CustomResizeObserver{
       chartEle.classList.remove("hide");
 
       const trendData = computedTrendData(currentRangeData, name);
-      chartInstance.setOption(getTrendOptions({ ...trendData }));
+      chartInstance.setOption(getTrendOptions({ ...trendData }),setOptionConfig);
     }
   };
 }
