@@ -35,6 +35,9 @@ const DEFAULT_SELECT_PANEl_CONFIG = {
   cancelButtonId: INGREDIENT_SELECT_CANCEL_BUTTON_ID,
 };
 
+const { setOptionConfig } = window.parent.echartsVariables;
+
+
 class IngredientAnalysis extends CustomResizeObserver {
   data = [];
   taste_matching_data = [];
@@ -316,6 +319,6 @@ class IngredientAnalysis extends CustomResizeObserver {
 
     const options = getScatterOptions({ data });
 
-    this.ingredientMatrixInstance.setOption(options);
+    this.ingredientMatrixInstance.setOption(options, setOptionConfig);
   };
 }

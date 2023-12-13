@@ -1,3 +1,5 @@
+const { setOptionConfig } = window.parent.echartsVariables;
+
 class ToolBox extends CustomResizeObserver {
   data = [];
   pageSize = 50;
@@ -162,7 +164,7 @@ class ToolBox extends CustomResizeObserver {
     } else {
       this.element.$ingredientWordCloud.classList.remove("hide");
       const wordCloudOption = getWordCloudOption({ data: currentData });
-      this.productWordCloudInstance.setOption(wordCloudOption);
+      this.productWordCloudInstance.setOption(wordCloudOption,setOptionConfig);
     }
     this.element.$chartLoading.classList.add("hide");
   }

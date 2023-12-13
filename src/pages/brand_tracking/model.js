@@ -26,6 +26,9 @@ const DEFAULT_SELECT_PANEl_CONFIG = {
   maxLength: 20,
 };
 
+const { setOptionConfig } = window.parent.echartsVariables;
+
+
 class BrandTracking extends CustomResizeObserver{
   data = [];
   brandTrendInstance = null;
@@ -317,7 +320,8 @@ class BrandTracking extends CustomResizeObserver{
     });
 
     this.brandTrendInstance.setOption(
-      getTrendOptions({ x_data, y_data, brandProducts })
+      getTrendOptions({ x_data, y_data, brandProducts }),
+      setOptionConfig
     );
   };
 }
