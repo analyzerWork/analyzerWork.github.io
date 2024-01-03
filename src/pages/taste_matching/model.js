@@ -63,6 +63,9 @@ const DEFAULT_PRODUCT_SELECT_PANEl_CONFIG = {
   cancelButtonId: PRODUCT_CANCEL_BUTTON_ID,
 };
 
+const { setOptionConfig } = window.parent.echartsVariables;
+
+
 class TasteMatching extends CustomResizeObserver {
   data = [];
   brandSelectOptions = [];
@@ -511,7 +514,7 @@ class TasteMatching extends CustomResizeObserver {
       firstClassification
     );
 
-    this.hotTopIngredientBarInstance.setOption(getBarOptions({ ...data }));
+    this.hotTopIngredientBarInstance.setOption(getBarOptions({ ...data }),setOptionConfig);
   };
 
   productDialogHideHandler = () => {
@@ -880,7 +883,7 @@ class TasteMatching extends CustomResizeObserver {
       );
 
       this.firstTreeMapInstance.setOption(
-        getTreemapOption("first", data, selectedFirstIngredient)
+        getTreemapOption("first", data, selectedFirstIngredient),setOptionConfig
       );
     }
     if (type === "second") {
@@ -889,7 +892,7 @@ class TasteMatching extends CustomResizeObserver {
       );
 
       this.secondTreeMapInstance.setOption(
-        getTreemapOption("second", data, selectedSecondIngredient)
+        getTreemapOption("second", data, selectedSecondIngredient),setOptionConfig
       );
     }
   };

@@ -26,6 +26,12 @@ window.echartsUtil = {
   format: echarts.format,
 };
 
+window.echartsVariables = {
+  setOptionConfig: {
+    notMerge: true,
+  },
+};
+
 class IndexedDBUtil {
   db_config = {
     dbName: "userDB",
