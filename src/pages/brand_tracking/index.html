@@ -73,7 +73,7 @@
 
       window.addEventListener("load", function () {
         if (MODE === "FE") {
-          ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then(
+          ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching_v2.json`).then(
             (result) => {
               const brandTrackingInstance = new BrandTracking(result);
             }

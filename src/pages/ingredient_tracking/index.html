@@ -76,7 +76,7 @@
 
         window.addEventListener('load', function () {
             if (MODE === "FE") {
-                ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then((result) => {
+                ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching_v2.json`).then((result) => {
                     const ingredientTrackingInstance = new IngredientTracking(result)
                 })
             } else {
