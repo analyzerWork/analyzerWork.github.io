@@ -73,3 +73,7 @@ const computedHotTopIngredientData = (
   }
 };
 
+const getComputedBrandAndProductData = () => {
+  
+}
+

@@ -41,7 +41,7 @@ const DEFAULT_BRAND_SELECT_BUTTON_CONFIG = {
 };
 
 const DEFAULT_PRODUCT_SELECT_BUTTON_CONFIG = {
-  label: "产品类型：",
+  label: "细分产品类型：",
   id: PRODUCT_SELECT_BUTTON_ID,
   textId: PRODUCT_SELECT_BUTTON_TEXT_ID,
   ...DEFAULT_SELECT_BUTTON_CONFIG,
@@ -56,7 +56,8 @@ const DEFAULT_BRAND_SELECT_PANEl_CONFIG = {
 };
 
 const DEFAULT_PRODUCT_SELECT_PANEl_CONFIG = {
-  containerClass: "base-multi-select-panel-container",
+  containerClass:
+    "base-multi-select-panel-container product-type-multi-select-panel-container",
   id: PRODUCT_SELECT_PANEL_ID,
   containerId: PRODUCT_SELECT_PANEL_CONTAINER_ID,
   confirmButtonId: PRODUCT_CONFRIM_BUTTON_ID,
@@ -65,15 +66,17 @@ const DEFAULT_PRODUCT_SELECT_PANEl_CONFIG = {
 
 const { setOptionConfig } = window.parent.echartsVariables;
 
-
 class TasteMatching extends CustomResizeObserver {
   data = [];
-  brandSelectOptions = [];
-  productSelectOptions = [];
+
+  bigProductTypeOptions = ["茶饮", "咖啡"];
   firstTreeMapInstance = null;
   secondTreeMapInstance = null;
   hotTopIngredientBarInstance = null;
   computedData = {
+    bigProductTypeValue: "茶饮",
+    brandSelectOptions: [],
+    productSelectOptions: [],
     brandTypeValue: [SELECT_ALL],
     productTypeValue: [SELECT_ALL],
     currentData: [],
@@ -99,8 +102,9 @@ class TasteMatching extends CustomResizeObserver {
   element = {
     $pageLoading: document.querySelector("#pageLoading"),
     $datePicker: document.querySelector("#taste-matching-date-picker"),
-    $brandTypeSelect: document.querySelector("#brandTypeSelect"),
-    $productTypeSelect: document.querySelector("#productTypeSelect"),
+    $bigProductTypeSelect: document.querySelector("#bigProductTypeSelect"),
+    $brandTypeSelect: document.getElementById("brandTypeSelect"),
+    $productTypeSelect: document.getElementById("productTypeSelect"),
     $brandPanelWraper: document.getElementById(BRAND_SELECT_PANEL_WRAPPER_ID),
     $productPanelWraper: document.getElementById(
       PRODUCT_SELECT_PANEL_WRAPPER_ID
@@ -206,15 +210,18 @@ class TasteMatching extends CustomResizeObserver {
     });
 
     document
-      .getElementById(BRAND_SELECT_BUTTON_ID)
+      .getElementById('brandTypeSelect')
       .addEventListener("click", (e) => {
         e.stopPropagation();
-        const panel = document.getElementById(BRAND_SELECT_PANEL_CONTAINER_ID);
-        panel.classList.toggle("hide");
+        if(e.target.id === BRAND_SELECT_BUTTON_ID || e.target.id === BRAND_SELECT_BUTTON_TEXT_ID || e.target.classList.contains('ui-select-icon')){
+          const panel = document.getElementById(BRAND_SELECT_PANEL_CONTAINER_ID);
+          panel.classList.toggle("hide");
+        }
+       
       });
 
     document
-      .getElementById(PRODUCT_SELECT_BUTTON_ID)
+      .getElementById('productTypeSelect')
       .addEventListener("click", (e) => {
         e.stopPropagation();
         document
@@ -223,16 +230,21 @@ class TasteMatching extends CustomResizeObserver {
       });
 
     document
-      .getElementById(BRAND_SELECT_PANEL_WRAPPER_ID)
+      .getElementById("brandTypeSelect")
       .addEventListener("click", (e) =>
         this.brandProductSelectedHandler(e, BRAND_SELECT_BUTTON_ID)
       );
 
     document
-      .getElementById(PRODUCT_SELECT_PANEL_WRAPPER_ID)
+      .getElementById("productTypeSelect")
       .addEventListener("click", (e) =>
         this.brandProductSelectedHandler(e, PRODUCT_SELECT_BUTTON_ID)
       );
+
+    this.element.$bigProductTypeSelect.addEventListener(
+      "change",
+      this.bigProductTypeSelectChangeHandler
+    );
 
     this.element.$hotIngredientSelect.addEventListener(
       "change",
@@ -323,23 +335,25 @@ class TasteMatching extends CustomResizeObserver {
       searchValue,
       startIndex,
       endIndex,
+      bigProductTypeValue,
       brandTypeValue,
       productTypeValue,
     } = this.get(
       "searchValue",
       "startIndex",
       "endIndex",
+      "bigProductTypeValue",
       "brandTypeValue",
       "productTypeValue"
     );
-
-    const computedData = computedCurrentDataAndRange(
-      this.data,
+    const computedData = computedCurrentDataAndRange({
+      data: this.data,
       startIndex,
       endIndex,
+      bigProductTypeValue,
       brandTypeValue,
-      productTypeValue
-    );
+      productTypeValue,
+    });
     this.set({
       currentData: computedData,
       currentDateRangeData: computedData,
@@ -355,12 +369,36 @@ class TasteMatching extends CustomResizeObserver {
   };
 
   renderHeaderSelect() {
-    this.brandSelectOptions = [
-      ...new Set(this.data.map((item) => item["品牌类型"])),
-    ];
-    this.productSelectOptions = [
-      ...new Set(this.data.map((item) => item["产品类型"])),
-    ];
+    const { bigProductTypeValue, startIndex, endIndex } = this.get(
+      "bigProductTypeValue",
+      "startIndex",
+      "endIndex"
+    );
+    if (this.bigProductTypeOptions.length > 0) {
+      const menuFragment = computedMenuOptionsFragment(
+        this.bigProductTypeOptions
+      );
+      this.element.$bigProductTypeSelect.innerHTML = null;
+      this.element.$bigProductTypeSelect.appendChild(menuFragment);
+      this.element.$bigProductTypeSelect.value = bigProductTypeValue;
+    }
+
+    const currentBigProductTypeData = computedCurrentDataAndRange({
+      data: this.data,
+      startIndex,
+      endIndex,
+      bigProductTypeValue,
+    });
+
+    this.set({
+      brandSelectOptions: [
+        ...new Set(currentBigProductTypeData.map((item) => item["品牌类型"])),
+      ],
+      productSelectOptions: [
+        ...new Set(currentBigProductTypeData.map((item) => item["产品类型"])),
+      ],
+    });
+
 
     this.element.$brandTypeSelect.innerHTML = `${getSelectButtonConfig({
       ...DEFAULT_BRAND_SELECT_BUTTON_CONFIG,
@@ -373,19 +411,25 @@ class TasteMatching extends CustomResizeObserver {
   }
 
   renderBrandSelectComponent = () => {
-    const { brandTypeValue } = this.get("brandTypeValue");
+    const { brandTypeValue, brandSelectOptions } = this.get(
+      "brandTypeValue",
+      "brandSelectOptions"
+    );
 
     const panelWraper = document.getElementById(BRAND_SELECT_PANEL_WRAPPER_ID);
     panelWraper.innerHTML = `${getMultipleSelectConfig({
       ...DEFAULT_BRAND_SELECT_PANEl_CONFIG,
       value: brandTypeValue,
-      data: this.brandSelectOptions,
+      data: brandSelectOptions,
     })}`;
     this.element.$brandTypeSelect.appendChild(panelWraper);
   };
 
   renderProductSelectComponent = () => {
-    const { productTypeValue } = this.get("productTypeValue");
+    const { productTypeValue, productSelectOptions } = this.get(
+      "productTypeValue",
+      "productSelectOptions"
+    );
     const panelWraper = document.getElementById(
       PRODUCT_SELECT_PANEL_WRAPPER_ID
     );
@@ -393,9 +437,27 @@ class TasteMatching extends CustomResizeObserver {
     panelWraper.innerHTML = `${getMultipleSelectConfig({
       ...DEFAULT_PRODUCT_SELECT_PANEl_CONFIG,
       value: productTypeValue,
-      data: this.productSelectOptions,
+      data: productSelectOptions,
     })}`;
     this.element.$productTypeSelect.appendChild(panelWraper);
+  };
+
+  // 产品大类选择
+  bigProductTypeSelectChangeHandler = (e) => {
+    this.set({
+      bigProductTypeValue: e.target.value,
+      brandTypeValue: SELECT_ALL,
+      productTypeValue:SELECT_ALL,
+    });
+
+    /**
+     *  重新渲染品牌类型、细分产品类型
+     *  重新渲染图表
+     * */
+    this.renderHeaderSelect();
+    this.renderBrandSelectComponent();
+    this.renderProductSelectComponent();
+    this.reRender();
   };
 
   brandProductSelectedHandler = (e, selectButtonId) => {
@@ -514,7 +576,10 @@ class TasteMatching extends CustomResizeObserver {
       firstClassification
     );
 
-    this.hotTopIngredientBarInstance.setOption(getBarOptions({ ...data }),setOptionConfig);
+    this.hotTopIngredientBarInstance.setOption(
+      getBarOptions({ ...data }),
+      setOptionConfig
+    );
   };
 
   productDialogHideHandler = () => {
@@ -883,7 +948,8 @@ class TasteMatching extends CustomResizeObserver {
       );
 
       this.firstTreeMapInstance.setOption(
-        getTreemapOption("first", data, selectedFirstIngredient),setOptionConfig
+        getTreemapOption("first", data, selectedFirstIngredient),
+        setOptionConfig
       );
     }
     if (type === "second") {
@@ -892,7 +958,8 @@ class TasteMatching extends CustomResizeObserver {
       );
 
       this.secondTreeMapInstance.setOption(
-        getTreemapOption("second", data, selectedSecondIngredient),setOptionConfig
+        getTreemapOption("second", data, selectedSecondIngredient),
+        setOptionConfig
       );
     }
   };
@@ -1063,7 +1130,11 @@ class TasteMatching extends CustomResizeObserver {
       PRODUCT_SELECT_PANEL_CONTAINER_ID,
     ].forEach((id) => {
       const selectElePanel = document.getElementById(id);
-      if (!eleClicked || selectElePanel.classList.contains("hide")) {
+      if (
+        !selectElePanel ||
+        !eleClicked ||
+        selectElePanel.classList.contains("hide")
+      ) {
         return;
       }
 

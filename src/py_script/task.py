@@ -7,10 +7,12 @@ import sys
 
 import pandas as pd
 
-from py_package.utils import message
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+# WARNING: import sort must behind sys.pah.append
+from py_package.utils import message
 
 
 print(pd.__version__)

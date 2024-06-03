@@ -1,5 +1,9 @@
-#brandTypeSelect,#productTypeSelect {
+#brandTypeSelect,#productTypeSelect,#IngredientTypeSelect {
     position: relative;
+}
+
+.product-type-multi-select-panel-container{
+    left: 100px;
 }
 
 .hot-ingredient-select-container{

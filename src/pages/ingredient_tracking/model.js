@@ -246,13 +246,12 @@ class IngredientTracking extends CustomResizeObserver{
       "productTypeValue"
     );
 
-    const currentData = computedCurrentDataAndRange(
-      this.data,
-      startDateIndex,
-      endDateIndex,
-      null,
+    const currentData = computedCurrentDataAndRange({
+      data:this.data,
+      startIndex:startDateIndex,
+      endIndex:endDateIndex,
       productTypeValue
-    );
+    });
 
     this.set({
       currentRangeData: currentData.filter(
