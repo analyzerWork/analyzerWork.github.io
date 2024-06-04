@@ -58,7 +58,7 @@ const computedProductsByBrand = (data) => {
   return monthMap;
 };
 
-const computedRelatedFirstClassificationData = (data) => {
+const computedRelatedFirstClassificationData = (data,bigProductTypeValue) => {
   const firstIngredientCountMap = new Map();
 
   const firstClassificationIngredientMap = new Map();
@@ -80,7 +80,7 @@ const computedRelatedFirstClassificationData = (data) => {
     .sort((a, b) => b.count - a.count);
 
   sortedData.forEach((item) => {
-    const key = item["成分分类"];
+    const key = item[`成分分类-${bigProductTypeValue}`];
     const value = item["加工后成分"];
     if (firstClassificationIngredientMap.has(key)) {
       firstClassificationIngredientMap.set(

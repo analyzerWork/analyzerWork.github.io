@@ -224,9 +224,12 @@ class TasteMatching extends CustomResizeObserver {
       .getElementById('productTypeSelect')
       .addEventListener("click", (e) => {
         e.stopPropagation();
-        document
+        if(e.target.id === PRODUCT_SELECT_BUTTON_ID || e.target.id === PRODUCT_SELECT_BUTTON_TEXT_ID || e.target.classList.contains('ui-select-icon')){
+          document
           .getElementById(PRODUCT_SELECT_PANEL_CONTAINER_ID)
           .classList.toggle("hide");
+        }
+      
       });
 
     document
@@ -346,6 +349,8 @@ class TasteMatching extends CustomResizeObserver {
       "brandTypeValue",
       "productTypeValue"
     );
+
+    
     const computedData = computedCurrentDataAndRange({
       data: this.data,
       startIndex,
@@ -446,8 +451,8 @@ class TasteMatching extends CustomResizeObserver {
   bigProductTypeSelectChangeHandler = (e) => {
     this.set({
       bigProductTypeValue: e.target.value,
-      brandTypeValue: SELECT_ALL,
-      productTypeValue:SELECT_ALL,
+      brandTypeValue: [SELECT_ALL],
+      productTypeValue:[SELECT_ALL],
     });
 
     /**
@@ -520,13 +525,12 @@ class TasteMatching extends CustomResizeObserver {
   };
 
   renderTopHotIngredient = () => {
-    const { currentDateRangeData } = this.get("currentDateRangeData");
-
+    const { currentDateRangeData,bigProductTypeValue, } = this.get("currentDateRangeData","bigProductTypeValue");
     const {
       resortFirstClassificationIngredient,
       firstIngredientCountMap,
       firstClassificationMenuList,
-    } = computedRelatedFirstClassificationData(currentDateRangeData);
+    } = computedRelatedFirstClassificationData(currentDateRangeData,bigProductTypeValue);
 
     this.set({
       resortDateRangeFirstClassificationIngredient:
@@ -790,7 +794,7 @@ class TasteMatching extends CustomResizeObserver {
   };
 
   getFirstClassificationIngredient = (searchKey) => {
-    const { currentData } = this.get("currentData");
+    const { currentData,bigProductTypeValue } = this.get("currentData","bigProductTypeValue");
 
     const filterData = !!searchKey
       ? currentData.filter((data) => data["加工后成分"].includes(searchKey))
@@ -805,7 +809,7 @@ class TasteMatching extends CustomResizeObserver {
       firstIngredientCountMap,
       resortFirstClassificationIngredient,
       firstClassificationMenuList,
-    } = computedRelatedFirstClassificationData(filterData);
+    } = computedRelatedFirstClassificationData(filterData, bigProductTypeValue);
 
     this.set({
       firstClassificationIngredientMap,
@@ -893,7 +897,6 @@ class TasteMatching extends CustomResizeObserver {
 
     if (activeIcon === "table") {
       const firstPanelFragment = document.createDocumentFragment();
-
       for (let {
         classification,
         ingredientList,
@@ -965,9 +968,10 @@ class TasteMatching extends CustomResizeObserver {
   };
 
   getSecondClassificationIngredient = () => {
-    const { currentData, selectedFirstIngredient } = this.get(
+    const { currentData, selectedFirstIngredient, bigProductTypeValue } = this.get(
       "currentData",
-      "selectedFirstIngredient"
+      "selectedFirstIngredient",
+      "bigProductTypeValue"
     );
     const uniqueProductBrandIngredientList = [
       ...new Set(
@@ -1012,7 +1016,7 @@ class TasteMatching extends CustomResizeObserver {
       // 获取二级成分对应的二级创新成分分类
       const secondClassificationList = currentData
         .filter((data) => data["加工后成分"] === ingredient)
-        .map((data) => data["成分分类"]);
+        .map((data) => data[`成分分类-${bigProductTypeValue}`]);
       const [secondClassification] = secondClassificationList;
 
       if (secondClassificationIngredientListMap.has(secondClassification)) {
