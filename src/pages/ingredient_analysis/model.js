@@ -315,7 +315,6 @@ class IngredientAnalysis extends CustomResizeObserver {
       selectedProductType,
       currentRangeData,
     });   
-    console.log(data); 
 
     const options = getScatterOptions({ data });
 
