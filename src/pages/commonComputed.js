@@ -9,9 +9,12 @@ const classificationPriorityMap = new Map([
   ["小料", 1],
 ]);
 
+const COFFICE_LIST = ['果味','茶底','花香','乳基底','谷物草本','烘焙','可可坚果']
+
 const computeResortClassificationIngredient = (
   classificationIngredientMap,
-  type
+  type,
+  bigProductTypeValue
 ) => {
   const classificationIngredientArray = [...classificationIngredientMap].map(
     ([classification, ingredientList]) => ({
@@ -32,7 +35,7 @@ const computeResortClassificationIngredient = (
         )
       : sortClassificationIngredient;
 
-  return resortClassificationIngredient;
+  return bigProductTypeValue ==='咖啡' ? resortClassificationIngredient.filter((item)=> COFFICE_LIST.includes(item.classification)): resortClassificationIngredient;
 };
 
 const computedProductsByBrand = (data) => {
@@ -100,7 +103,8 @@ const computedRelatedFirstClassificationData = (data,bigProductTypeValue) => {
   const resortFirstClassificationIngredient =
     computeResortClassificationIngredient(
       firstClassificationIngredientMap,
-      "first"
+      "first",
+      bigProductTypeValue
     );
 
   const firstClassificationMenuList = resortFirstClassificationIngredient.map(
@@ -111,7 +115,7 @@ const computedRelatedFirstClassificationData = (data,bigProductTypeValue) => {
     firstClassificationIngredientMap,
     firstIngredientCountMap,
     resortFirstClassificationIngredient,
-    firstClassificationMenuList,
+    firstClassificationMenuList: bigProductTypeValue === '咖啡' ? firstClassificationMenuList.filter((item)=> COFFICE_LIST.includes(item)): firstClassificationMenuList,
   };
 };
 
@@ -267,7 +271,7 @@ const getSelectPanelConfig = (config) => {
               : ""
           }
           <div id=${id} style="display:flex;min-width:100px;margin-block: 12px 0;" class=${
-    byGroup ? "" : "select-option-container"
+    byGroup ? "select-option-container-group" : "select-option-container"
   } >
             ${
               byGroup
@@ -320,13 +324,13 @@ const getMultipleSelectConfig = (config) => {
 
 const computedCurrentDataAndRange = ({
   data,
-  startIndex,
-  endIndex,
+  startDateIndex,
+  endDateIndex,
   bigProductTypeValue,
   brandTypeValue,
   productTypeValue,
 }) => {
-  const dataSlice = data.slice(startIndex, endIndex);
+  const dataSlice = data.slice(startDateIndex, endDateIndex);
   const dataFilterByBigProductType = dataSlice.filter(
     (item) => item["产品大类"] === bigProductTypeValue
   );

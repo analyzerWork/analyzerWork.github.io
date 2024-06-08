@@ -56,6 +56,21 @@
     padding-inline: 4px;
 }
 
+.select-option-container-group{
+    max-width: 540px;
+    overflow-x: overlay;
+}
+
+.select-option-container-group::-webkit-scrollbar {
+    display: block;
+    height: 6px;
+    background-color: var(--color-background);
+}
+
+.select-option-container-group .select-panel-option-container {
+    margin-bottom: 14px;
+}
+
 
 .select-option-container::-webkit-scrollbar {
     display: block;

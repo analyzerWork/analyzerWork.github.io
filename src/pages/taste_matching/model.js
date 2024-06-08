@@ -88,8 +88,8 @@ class TasteMatching extends CustomResizeObserver {
     firstIngredientCountMap: new Map(),
     firstClassificationIngredientMap: new Map(),
     resortFirstClassificationIngredient: [],
-    startIndex: 0,
-    endIndex: 0,
+    startDateIndex: 0,
+    endDateIndex: 0,
     secondClassificationWithCount: [],
     selectedFirstIngredient: "",
     selectedSecondIngredient: "",
@@ -152,13 +152,13 @@ class TasteMatching extends CustomResizeObserver {
     this.element.$datePicker.value = `${lastDate} 至 ${lastDate}`;
     this.element.$datePicker.min = dateRange[0];
     this.element.$datePicker.max = lastDate;
-    const startIndex = this.data.findIndex((d) => d["月份"] === lastDate);
-    const endIndex = this.data.findLastIndex((d) => d["月份"] === lastDate);
+    const startDateIndex = this.data.findIndex((d) => d["月份"] === lastDate);
+    const endDateIndex = this.data.findLastIndex((d) => d["月份"] === lastDate);
     this.set({
-      currentData: this.data.slice(startIndex, endIndex),
-      currentDateRangeData: this.data.slice(startIndex, endIndex),
-      startIndex,
-      endIndex,
+      currentData: this.data.slice(startDateIndex, endDateIndex),
+      currentDateRangeData: this.data.slice(startDateIndex, endDateIndex),
+      startDateIndex,
+      endDateIndex,
     });
     this.element.$pageLoading.classList.add("hide");
   };
@@ -324,11 +324,11 @@ class TasteMatching extends CustomResizeObserver {
     const [startDate, endDate] = dateRange
       .split("至")
       .map((value) => value.trim());
-    const startIndex = this.data.findIndex((d) => d["月份"] === startDate);
-    const endIndex = this.data.findLastIndex((d) => d["月份"] === endDate);
+    const startDateIndex = this.data.findIndex((d) => d["月份"] === startDate);
+    const endDateIndex = this.data.findLastIndex((d) => d["月份"] === endDate);
     this.set({
-      startIndex,
-      endIndex,
+      startDateIndex,
+      endDateIndex,
     });
     this.reRender();
   }
@@ -336,15 +336,15 @@ class TasteMatching extends CustomResizeObserver {
   reRender = () => {
     const {
       searchValue,
-      startIndex,
-      endIndex,
+      startDateIndex,
+      endDateIndex,
       bigProductTypeValue,
       brandTypeValue,
       productTypeValue,
     } = this.get(
       "searchValue",
-      "startIndex",
-      "endIndex",
+      "startDateIndex",
+      "endDateIndex",
       "bigProductTypeValue",
       "brandTypeValue",
       "productTypeValue"
@@ -353,8 +353,8 @@ class TasteMatching extends CustomResizeObserver {
     
     const computedData = computedCurrentDataAndRange({
       data: this.data,
-      startIndex,
-      endIndex,
+      startDateIndex,
+      endDateIndex,
       bigProductTypeValue,
       brandTypeValue,
       productTypeValue,
@@ -374,10 +374,10 @@ class TasteMatching extends CustomResizeObserver {
   };
 
   renderHeaderSelect() {
-    const { bigProductTypeValue, startIndex, endIndex } = this.get(
+    const { bigProductTypeValue, startDateIndex, endDateIndex } = this.get(
       "bigProductTypeValue",
-      "startIndex",
-      "endIndex"
+      "startDateIndex",
+      "endDateIndex"
     );
     if (this.bigProductTypeOptions.length > 0) {
       const menuFragment = computedMenuOptionsFragment(
@@ -390,8 +390,8 @@ class TasteMatching extends CustomResizeObserver {
 
     const currentBigProductTypeData = computedCurrentDataAndRange({
       data: this.data,
-      startIndex,
-      endIndex,
+      startDateIndex,
+      endDateIndex,
       bigProductTypeValue,
     });
 
@@ -1035,7 +1035,9 @@ class TasteMatching extends CustomResizeObserver {
 
     const resortSecondClassificationIngredient =
       computeResortClassificationIngredient(
-        secondClassificationIngredientListMap
+        secondClassificationIngredientListMap,
+        'second',
+        bigProductTypeValue
       );
 
     const secondClassificationWithCount =
