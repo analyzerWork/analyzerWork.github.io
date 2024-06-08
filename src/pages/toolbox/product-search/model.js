@@ -115,6 +115,7 @@ class ToolBox extends CustomResizeObserver {
     this.element.$chartLoading.classList.remove("hide");
     // TODO: fetch data
     this.workerInstance.postMessage({
+      type: 'COMPUTED_WORD_CLOUD_DATA',
       data: this.data,
       keyword,
     });
