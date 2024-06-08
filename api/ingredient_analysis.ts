@@ -4,7 +4,6 @@ import { CONNECTION_URL } from "./_constants";
 import {
   Dictionary,
   QueryTypeEnum,
-  PrivateDataItem,
   PublicBigDataItem,
 } from "./type";
 const client = new MongoClient(CONNECTION_URL);

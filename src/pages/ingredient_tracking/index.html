@@ -14,6 +14,7 @@
     <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/DateTime.js"></script>
     <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Dialog.js"></script>
     <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Drop.js"></script>
+    <script type="module" src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Select.js"></script>
 
 </head>
 
@@ -22,6 +23,10 @@
         <div class="header-item">
             <span class="base-label mgr-12">选择日期区间:</span>
             <input id="ingredient-track-date-picker" type="month-range" is="ui-datetime" data-position="1-4">
+        </div>
+        <div class="header-item">
+            <span class="text">产品大类：</span>
+            <select id="bigProductTypeSelect" is="ui-select"></select>
         </div>
         <div class="header-item">
             <div id="ingredientSelectContainer"></div>
@@ -76,7 +81,7 @@
 
         window.addEventListener('load', function () {
             if (MODE === "FE") {
-                ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then((result) => {
+                ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching_v2.json`).then((result) => {
                     const ingredientTrackingInstance = new IngredientTracking(result)
                 })
             } else {

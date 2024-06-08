@@ -1,4 +1,4 @@
-const SELECT_ALL = '全部';
+const SELECT_ALL = "全部";
 
 const classificationPriorityMap = new Map([
   ["果味", 6],
@@ -9,9 +9,12 @@ const classificationPriorityMap = new Map([
   ["小料", 1],
 ]);
 
+const COFFICE_LIST = ['果味','茶底','花香','乳基底','谷物草本','烘焙','可可坚果']
+
 const computeResortClassificationIngredient = (
   classificationIngredientMap,
-  type
+  type,
+  bigProductTypeValue
 ) => {
   const classificationIngredientArray = [...classificationIngredientMap].map(
     ([classification, ingredientList]) => ({
@@ -32,7 +35,7 @@ const computeResortClassificationIngredient = (
         )
       : sortClassificationIngredient;
 
-  return resortClassificationIngredient;
+  return bigProductTypeValue ==='咖啡' ? resortClassificationIngredient.filter((item)=> COFFICE_LIST.includes(item.classification)): resortClassificationIngredient;
 };
 
 const computedProductsByBrand = (data) => {
@@ -58,7 +61,7 @@ const computedProductsByBrand = (data) => {
   return monthMap;
 };
 
-const computedRelatedFirstClassificationData = (data) => {
+const computedRelatedFirstClassificationData = (data,bigProductTypeValue) => {
   const firstIngredientCountMap = new Map();
 
   const firstClassificationIngredientMap = new Map();
@@ -80,7 +83,7 @@ const computedRelatedFirstClassificationData = (data) => {
     .sort((a, b) => b.count - a.count);
 
   sortedData.forEach((item) => {
-    const key = item["成分分类"];
+    const key = item[`成分分类-${bigProductTypeValue}`];
     const value = item["加工后成分"];
     if (firstClassificationIngredientMap.has(key)) {
       firstClassificationIngredientMap.set(
@@ -100,7 +103,8 @@ const computedRelatedFirstClassificationData = (data) => {
   const resortFirstClassificationIngredient =
     computeResortClassificationIngredient(
       firstClassificationIngredientMap,
-      "first"
+      "first",
+      bigProductTypeValue
     );
 
   const firstClassificationMenuList = resortFirstClassificationIngredient.map(
@@ -111,7 +115,7 @@ const computedRelatedFirstClassificationData = (data) => {
     firstClassificationIngredientMap,
     firstIngredientCountMap,
     resortFirstClassificationIngredient,
-    firstClassificationMenuList,
+    firstClassificationMenuList: bigProductTypeValue === '咖啡' ? firstClassificationMenuList.filter((item)=> COFFICE_LIST.includes(item)): firstClassificationMenuList,
   };
 };
 
@@ -133,11 +137,11 @@ const getSelectButtonConfig = (config) => {
     buttonClass,
     value,
     textId,
-    inputMinWidth = '100px',
-    inputMaxWidth = '200px',
+    inputMinWidth = "100px",
+    inputMaxWidth = "200px",
   } = config;
 
-  const finalValue = typeof config.value === "string" ? value : value.join(",")
+  const finalValue = typeof config.value === "string" ? value : value.join(",");
 
   return `<div style="display:flex;align-items: center;" class=${constainerClass}>
     <span class="text ${transClassName(labelClass)}">${label}</span>
@@ -191,7 +195,9 @@ const computedSelectOptions = (data, value) => {
 
   data.forEach((option) => {
     panelOptionsHTML.push(
-      `<div class="text select-option ${value === option ? "option-active" : ""}" ${
+      `<div class="text select-option ${
+        value === option ? "option-active" : ""
+      }" ${
         option.length >= 10 ? `title=${option}` : ""
       } data-value=${option}>${option}</div>`
     );
@@ -201,7 +207,7 @@ const computedSelectOptions = (data, value) => {
 };
 
 // 计算多选 select 下拉
-const computedMultiSelectOptions = (data,values = []) => {
+const computedMultiSelectOptions = (data, values = []) => {
   if (data.length === 0) {
     return "<div>暂无结果</div>";
   }
@@ -213,14 +219,16 @@ const computedMultiSelectOptions = (data,values = []) => {
       `<div class="text multi-select-option"  ${
         option.length >= 10 ? `title=${option}` : ""
       }>
-      <input class="multi-select-checkbox" type="checkbox" data-value=${option} id=${option}  ${values.includes(option) ? "checked" : ""} name="checkbox" is="ui-checkbox">
+      <input class="multi-select-checkbox" type="checkbox" data-value=${option} id=${option}  ${
+        values.includes(option) ? "checked" : ""
+      } name="checkbox" is="ui-checkbox">
       <label class="multi-select-checkbox-label" for=${option}>${option}</label>
       </div>`
     );
   });
 
   return panelOptionsHTML.join("");
-}
+};
 
 // 计算Pannel渲染数据（分组）
 const getPanelDataByKeyword = (data, keyword) =>
@@ -235,10 +243,7 @@ const getPanelDataByKeyword = (data, keyword) =>
 
 // 计算Pannel渲染数据（不分组）
 const getOptionsDataByKeyword = (data, keyword) =>
-  !keyword
-    ? data
-    : data
-        .filter((option) => option.includes(keyword))
+  !keyword ? data : data.filter((option) => option.includes(keyword));
 
 const getSelectPanelConfig = (config) => {
   const {
@@ -250,7 +255,7 @@ const getSelectPanelConfig = (config) => {
     data = [],
     value,
     maxLength = 10,
-    byGroup
+    byGroup,
   } = config;
 
   return `
@@ -263,10 +268,16 @@ const getSelectPanelConfig = (config) => {
                 <input type="search" placeholder="输入关键字搜索" id=${searchInputId} maxLength=${maxLength} />
                 <span class="ui-icon-search cursor-default">搜索</span>
               </span>`
-              : ''
+              : ""
           }
-          <div id=${id} style="display:flex;min-width:100px;margin-block: 12px 0;" class=${byGroup?'':'select-option-container'} >
-            ${byGroup ? computedSelectPanelList(data, value) : computedSelectOptions(data, value)}
+          <div id=${id} style="display:flex;min-width:100px;margin-block: 12px 0;" class=${
+    byGroup ? "select-option-container-group" : "select-option-container"
+  } >
+            ${
+              byGroup
+                ? computedSelectPanelList(data, value)
+                : computedSelectOptions(data, value)
+            }
           </div>
         </div>
       `;
@@ -296,9 +307,11 @@ const getMultipleSelectConfig = (config) => {
                 <input type="search" placeholder="输入关键字搜索" id=${searchInputId} maxLength=${maxLength} />
                 <span class="ui-icon-search cursor-default">搜索</span>
               </span>`
-              : ''
+              : ""
           }
-          <div id=${id} style="display:flex;min-width:100px;" class=${byGroup?'':'select-option-container'} >
+          <div id=${id} style="display:flex;min-width:100px;" class=${
+    byGroup ? "" : "select-option-container"
+  } >
             ${computedMultiSelectOptions(data, value)}
           </div>
           <div class="multi-select-panel-footer" >
@@ -307,22 +320,28 @@ const getMultipleSelectConfig = (config) => {
           </div>
         </div>
       `;
-}
+};
 
-const computedCurrentDataAndRange = (
+const computedCurrentDataAndRange = ({
   data,
-  startIndex,
-  endIndex,
+  startDateIndex,
+  endDateIndex,
+  bigProductTypeValue,
   brandTypeValue,
-  productTypeValue
-) => {
-  const dataSlice = data.slice(startIndex, endIndex);
+  productTypeValue,
+}) => {
+  const dataSlice = data.slice(startDateIndex, endDateIndex);
+  const dataFilterByBigProductType = dataSlice.filter(
+    (item) => item["产品大类"] === bigProductTypeValue
+  );
   const dataFilterByBrand =
     !brandTypeValue || brandTypeValue[0] === SELECT_ALL
-      ? dataSlice
-      : dataSlice.filter((item) => brandTypeValue.includes(item["品牌类型"]));
+      ? dataFilterByBigProductType
+      : dataFilterByBigProductType.filter((item) =>
+          brandTypeValue.includes(item["品牌类型"])
+        );
   const dataFilterByProduct =
-    productTypeValue[0] === SELECT_ALL
+    !productTypeValue || productTypeValue[0] === SELECT_ALL
       ? dataFilterByBrand
       : dataFilterByBrand.filter((item) =>
           productTypeValue.includes(item["产品类型"])
@@ -330,7 +349,6 @@ const computedCurrentDataAndRange = (
 
   return dataFilterByProduct;
 };
-
 
 const computedMenuOptionsFragment = (list) => {
   const menuFragment = document.createDocumentFragment();
