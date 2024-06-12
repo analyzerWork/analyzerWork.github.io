@@ -290,7 +290,6 @@ class IngredientTracking extends CustomResizeObserver {
         bigProductTypeValue
       );
 
-      console.log(startDateIndex,endDateIndex,bigProductTypeValue)
 
 
     this.set({
