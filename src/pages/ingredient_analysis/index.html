@@ -94,7 +94,7 @@
       window.addEventListener("load", function () {
         if (MODE === "FE") {
           Promise.all(
-            ["taste_matching", "bigdata"].map((name) =>
+            ["taste_matching_v2", "bigdata"].map((name) =>
               ANAlYZER_UTILS.requestData(`${SOURCE_PATH}${name}.json`)
             )
           ).then(([taste_matching_data, big_data]) => {
@@ -104,7 +104,7 @@
             });
           });
         } else {
-          ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching.json`).then(
+          ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching_v2.json`).then(
             (taste_matching_data) => {
               ANAlYZER_UTILS.requestData(apiConfig["ingredient_analysis"], {
                 name: "init",

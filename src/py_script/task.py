@@ -1,20 +1,22 @@
 """
 线下表处理
 """
+import json
 import os
 import sys
-import json
 
 import pandas as pd
+
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-
+# WARNING: import sort must behind sys.pah.append
 from py_package.utils import message
 
 
 print(pd.__version__)
+
 
 class TasteMatching:
 
@@ -29,31 +31,36 @@ class TasteMatching:
         # self.data = self.get_data()
 
     # 读取原始数据,转换为json格式
-    def transToJSON(self):
+    def transToJSON(self, version='_v2'):
         log_message = 'taste_matching.xlsx - Excel 转换 JSON 数据'
         try:
             df = pd.read_excel(
-                r'../pages/datasource/taste_matching.xlsx')
+                r'../pages/datasource/taste_matching' + version + '.xlsx')
 
             df['月份'] = df['月份'].dt.strftime('%Y-%m')
             df = df.sort_values(by='月份')
             df['品牌-产品名称-原料构成'] = df['品牌'] + '-' + df['产品名称'] + '-' + df['原料构成']
 
-            df.to_json('../pages/datasource/taste_matching.json',
-                       orient='records',
-                       force_ascii=False,
-                       indent=4)
+            json_str = df.to_json(orient='records', force_ascii=False,
+                                  indent=4)
+
+            # 使用正则表达式替换所有的\/
+            json_str_fixed = json_str.replace('\\/', '/')
+
+            # 将处理后的JSON字符串写入到一个新的JSON文件中
+            with open('../pages/datasource/taste_matching'+version+'.json', 'w', encoding='utf-8') as f:
+                f.write(json_str_fixed)
 
             message.get('success')(log_message)
         except Exception as e:
             message.get('error')(log_message, e)
 
     # 读取转换好的原始json数据
-    def get_data(self):
+    def get_data(self, version='_v2'):
         # 使用 Python JSON 模块载入数据
         log_message = '读取数据'
         try:
-            with open('../pages/datasource/taste_matching.json',
+            with open('../pages/datasource/taste_matching'+version+'.json',
                       'r',
                       encoding='utf-8') as f:
                 origin_data = json.loads(f.read())
@@ -192,4 +199,3 @@ tasteMatching.exec()
 #             '桃子')
 
 # product_list = tasteMatching.get_product_list('桃子', '草莓')
-

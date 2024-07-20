@@ -5,9 +5,12 @@ if (typeof importScripts === "function") {
 self.addEventListener(
   "message",
   function (e) {
-    const { data, keyword } = e.data;
-    const wordCloudData = computeProductWordCloudData(data, keyword);
-    self.postMessage({ payload: wordCloudData });
+    if(e.data.type === 'COMPUTED_WORD_CLOUD_DATA'){
+      const { data, keyword } = e.data;
+      const wordCloudData = computeProductWordCloudData(data, keyword);
+      self.postMessage({ payload: wordCloudData });
+    }
+
   },
   false
 );
