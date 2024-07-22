@@ -3,7 +3,7 @@ import { OpenAIStream, StreamingTextResponse } from "ai";
 import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: 'sk-TnKMfivw7r6mc5y3QO9MwKmmEBBocNDIyXX3oNbh3H5ixPJe',
+  apiKey: process.env.KIMI_API_KEY,
   baseURL: "https://api.moonshot.cn/v1",
 });
 

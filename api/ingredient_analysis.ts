@@ -1,11 +1,11 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { MongoClient } from "mongodb";
-import { CONNECTION_URL } from "./_constants";
+import { CONNECTION_URL } from "./_constants.js";
 import {
   Dictionary,
   QueryTypeEnum,
   PublicBigDataItem,
-} from "./type";
+} from "./type.js";
 const client = new MongoClient(CONNECTION_URL);
 
 module.exports = async (req: VercelRequest, res: VercelResponse) => {

@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { MongoClient } from "mongodb";
-import { CONNECTION_URL, SELECT_ALL } from "./_constants";
-import { Dictionary, QueryTypeEnum, PrivateDataItem } from "./type";
+import { CONNECTION_URL, SELECT_ALL } from "./_constants.js";
+import { Dictionary, QueryTypeEnum, PrivateDataItem } from "./type.js";
 const client = new MongoClient(CONNECTION_URL);
 
 const classificationPriorityMap = new Map([
