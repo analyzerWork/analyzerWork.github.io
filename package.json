@@ -16,6 +16,8 @@
     "typescript": "^5.5.0"
   },
   "dependencies": {
-    "mongodb": "^6.1.0"
+    "ai": "^3.2.32",
+    "mongodb": "^6.1.0",
+    "openai": "^4.52.7"
   }
 }
