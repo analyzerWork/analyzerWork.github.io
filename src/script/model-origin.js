@@ -45,6 +45,10 @@ class AnalyzerModel {
           id: "product-search",
           value: "产品查询",
         },
+        {
+          id: "ai-assistant",
+          value: "智能助手",
+        },
       ],
       {
         onSelect: function (obj) {
