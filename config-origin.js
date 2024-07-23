@@ -71,7 +71,7 @@ const SALES_GROUP = [
   "郝轶",
 ];
 
-const OTHER_GROUP = ["郑楠", "闫志强", "李春红"];
+const OTHER_GROUP = ["闫志强", "李春红"];
 
 const CUSTOM_PASS_GROUP_MAP = new Map([
   ["曹海涛", ""],
