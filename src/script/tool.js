@@ -8,7 +8,7 @@ window.ANAlYZER_UTILS = {
       return (prev += `${prefix}${next}=${params[next]}`);
     }, "");
 
-    return fetch(`${url}${queryStr}`, { cache: "no-cache", mode: "cors" })
+    return fetch(`${url}${queryStr}`, { cache: "no-cache", mode: "no-cors" })
       .then((response) => response.json())
       .then((data) => data);
   },
@@ -131,7 +131,7 @@ window.analyzer_env = {
 const URL =
   window.analyzer_env.TARGET === "Dev"
     ? "http://localhost:3001/api/"
-    : "http://www.analyzer.work/api/";
+    : "https://www.analyzer.work/api/";
 
 window.apiConfig = [
   "auth",
