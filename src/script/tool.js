@@ -125,7 +125,7 @@ class IndexedDBUtil {
 
 window.analyzer_env = {
   MODE: "FE", //DB
-  TARGET: "Dev", // Prod
+  TARGET: "Prod", // Prod
 };
 
 const URL =
