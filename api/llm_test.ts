@@ -28,6 +28,7 @@ async function Llm (req: VercelRequest, res: VercelResponse) {
   const stream = OpenAIStream(response);
   
   // Respond with the stream
+
   return new StreamingTextResponse(stream);
 };
 

@@ -2,14 +2,14 @@ window.ANAlYZER_UTILS = {
   mutableSetState(data, key, val) {
     data[key] = val;
   },
-  requestData(url, params = {}) {
+  requestData(url, params = {}, t=false) {
     const queryStr = Object.keys(params).reduce((prev, next, index) => {
       const prefix = index === 0 ? "?" : "&";
       return (prev += `${prefix}${next}=${params[next]}`);
     }, "");
 
     return fetch(`${url}${queryStr}`, { cache: "no-cache", mode: "no-cors" })
-      .then((response) => response.json())
+      .then((response) => t===true ? response: response.json())
       .then((data) => data);
   },
   locateToPage: (params) => {
@@ -125,7 +125,7 @@ class IndexedDBUtil {
 
 window.analyzer_env = {
   MODE: "FE", //DB
-  TARGET: "Prod", // Prod
+  TARGET: "Dev", // Prod
 };
 
 const URL =
