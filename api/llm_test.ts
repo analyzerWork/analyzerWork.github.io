@@ -7,7 +7,7 @@ const client = new OpenAI({
   baseURL: "https://api.moonshot.cn/v1",
 });
 
-export async function Llm (req: VercelRequest, res: VercelResponse) {
+async function Llm (req: VercelRequest, res: VercelResponse) {
   const response = await client.chat.completions.create({
     model: "moonshot-v1-8k",
     messages: [
@@ -30,3 +30,5 @@ export async function Llm (req: VercelRequest, res: VercelResponse) {
   // Respond with the stream
   return new StreamingTextResponse(stream);
 };
+
+export default Llm
