@@ -39,6 +39,7 @@ const MARKETING_GROUP = [
   "付涤非",
   "王珊",
   "王琨",
+  "穆森",
 ];
 
 const RD_GROUP = [
