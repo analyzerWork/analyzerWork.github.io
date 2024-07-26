@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
       "incremental": true,
-      "target": "es5",
+      "target": "ESNext",
       "downlevelIteration": true,
       "lib": ["dom", "dom.iterable", "esnext"],
       "allowJs": true,
@@ -10,8 +10,8 @@
       "allowSyntheticDefaultImports": true,
       "strict": true,
       "forceConsistentCasingInFileNames": true,
-      "module": "esnext",
-      "moduleResolution": "node",
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext",
       "resolveJsonModule": true,
       "isolatedModules": true,
       "baseUrl": "./api",
@@ -22,10 +22,6 @@
       "experimentalDecorators": true
     },
     "include": ["api/**/*"],
-    "ts-node": {
-      "compilerOptions": {
-        "module": "CommonJS"
-      }
-    }
+    
   }
   

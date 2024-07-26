@@ -13,9 +13,12 @@
   "devDependencies": {
     "@types/mongodb": "^4.0.7",
     "@vercel/node": "^3.0.7",
-    "typescript": "^5.2.2"
+    "typescript": "^5.5.0"
   },
   "dependencies": {
-    "mongodb": "^6.1.0"
-  }
+    "ai": "^3.2.32",
+    "mongodb": "^6.1.0",
+    "openai": "^4.52.7"
+  },
+  "type": "module"
 }

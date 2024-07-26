@@ -34,6 +34,7 @@ const getBarOptions = ({ x_data, y_data }) => {
         backgroundStyle: {
           color: "rgba(180, 180, 180, 0.2)",
         },
+        barMaxWidth: 60,
       },
     ],
 
