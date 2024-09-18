@@ -82,6 +82,7 @@ nav ul {
 .ai-menu-container {
   display: flex;
   justify-content: center;
+  padding: 12px;
 }
 
 .ai-menu {
