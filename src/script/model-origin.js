@@ -47,11 +47,11 @@ class AnalyzerModel {
           id: "product-search",
           value: "产品查询",
         },
-        {
-          id: "ai-assistant",
-          value: "AI 助理",
-          externalLink: "https://www.analyzer.plus",
-        },
+        // {
+        //   id: "ai-assistant",
+        //   value: "AI 助理",
+        //   externalLink: "https://www.analyzer.plus",
+        // },
       ],
       {
         onSelect: function (obj) {
