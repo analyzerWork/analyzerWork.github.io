@@ -5,6 +5,7 @@
     --color-primary-white: #fff;
     --color-background: #f0f0f0;
 }
+
 @font-face {
     font-family: "RichBlack";
     font-weight: 400;
@@ -12,11 +13,12 @@
         url("./92VCtsoqhtDTfM6BxmsNZ.woff") format("woff");
     font-display: swap;
 }
+
 html,body{
     margin: 0;
     padding: 0;
     user-select: none;
-    font-family: "RichBlack";
+    font-family: "microsoft yahei";
     background-color: var(--color-background);
 }
 

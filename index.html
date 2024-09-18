@@ -59,25 +59,33 @@
     </header>
 
     <div class="content-body">
-      <nav>
-        <ul class="nav" id="nav">
-          <template id="navTemplate" rule="v-">
-            <li
-              v-for="route in CONFIG.routes"
-              class="menu-item default-menu"
-              data-menu="${route.pathname}"
-            >
-              <span class="menu-icon ${route.pathname}"></span>
-              <span>${route.name}</span>
-            </li>
-          </template>
-        </ul>
-        <ui-drop id="toolboxDropdown" selector="ui-drop">
-          <div id="toolboxMenu" class="toolbox-container menu-item">
-            <span class="menu-icon toolbox"></span>
-            <span>工具箱</span>
-          </div>
-        </ui-drop>
+      <nav >
+        <div>
+          <ul class="nav" id="nav">
+            <template id="navTemplate" rule="v-">
+              <li
+                v-for="route in CONFIG.routes"
+                class="menu-item default-menu"
+                data-menu="${route.pathname}"
+              >
+                <span class="menu-icon ${route.pathname}"></span>
+                <span>${route.name}</span>
+              </li>
+            </template>
+          </ul>
+          <ui-drop id="toolboxDropdown" selector="ui-drop">
+            <div id="toolboxMenu" class="toolbox-container menu-item">
+              <span class="menu-icon toolbox"></span>
+              <span>工具箱</span>
+            </div>
+          </ui-drop>
+        </div>
+
+        <div id="anna" class="ai-menu default-menu">
+            <span class="ai_avatar"></span>
+            <span>Anna</span>
+          </li>
+        </div>
       </nav>
       <iframe class="iframe-container" src="" frameborder="0"></iframe>
     </div>

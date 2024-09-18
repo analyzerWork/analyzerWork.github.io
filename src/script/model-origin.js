@@ -6,6 +6,7 @@ class AnalyzerModel {
     $toolboxDropdown: document.querySelector("#toolboxDropdown"),
     $toolboxMenu: document.querySelector("#toolboxMenu"),
     $navEle: document.querySelector("#nav"),
+    $anna: document.querySelector("#anna"),
   };
 
   init = () => {
@@ -32,6 +33,7 @@ class AnalyzerModel {
     });
 
     this.element.$navEle.addEventListener("click", this.switchMenuHandler);
+    this.element.$anna.addEventListener("click", this.locationToAnna);
 
     document.addEventListener("visibilitychange", this.visibilityChangeHandler);
   };
@@ -45,10 +47,11 @@ class AnalyzerModel {
           id: "product-search",
           value: "产品查询",
         },
-        // {
-        //   id: "ai-assistant",
-        //   value: "智能助手",
-        // },
+        {
+          id: "ai-assistant",
+          value: "AI 助理",
+          externalLink: "https://www.analyzer.plus",
+        },
       ],
       {
         onSelect: function (obj) {
@@ -61,9 +64,13 @@ class AnalyzerModel {
               }
             }
           );
-          document.querySelector(
-            "iframe"
-          ).src = `../src/pages/toolbox/${obj.id}/index.html`;
+          if(obj.externalLink){
+            window.open(obj.externalLink);
+          }else {
+            document.querySelector(
+              "iframe"
+            ).src = `../src/pages/toolbox/${obj.id}/index.html`;
+          }
         },
       }
     );
@@ -130,6 +137,10 @@ class AnalyzerModel {
       }
     }
   };
+
+  locationToAnna = () => {
+    window.open("https://www.analyzer.plus");
+  }
 
   visibilityChangeHandler = () => {
     if (document.visibilityState === "visible") {
