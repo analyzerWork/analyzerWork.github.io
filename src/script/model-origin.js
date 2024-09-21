@@ -8,6 +8,7 @@ class AnalyzerModel {
     $navEle: document.querySelector("#nav"),
     $anna: document.querySelector("#anna"),
   };
+  cookieInstance = null
 
   init = () => {
     this.setup();
@@ -15,8 +16,8 @@ class AnalyzerModel {
   };
 
   setup = () => {
-    const cookieInstance = new Cookie();
-    const user = cookieInstance.getCookie("name");
+    this.cookieInstance = new Cookie();
+    const user = this.cookieInstance.getCookie("name");
 
     this.element.$user.innerHTML = user;
     // check if the app embedded in iframe
@@ -98,8 +99,7 @@ class AnalyzerModel {
   };
 
   makeWaterMark = () => {
-    const cookieInstance = new Cookie();
-    const user = cookieInstance.getCookie("name");
+    const user = this.cookieInstance.getCookie("name");
 
     const waterMarkInstance = new WaterMark({ text: user });
     const { backgroundDataURL, dataList } = waterMarkInstance;
@@ -139,13 +139,16 @@ class AnalyzerModel {
   };
 
   locationToAnna = () => {
-    window.open("https://www.analyzer.plus");
+    const user = this.cookieInstance.getCookie("name");
+    
+    const search = `user=${user}`;
+
+    window.open(`${window.ANALYZER_PLUS_URL}/api/auth_login?${search}`);
   }
 
   visibilityChangeHandler = () => {
     if (document.visibilityState === "visible") {
-      const cookieInstance = new Cookie();
-      cookieInstance.authCheck();
+      this.cookieInstance.authCheck();
     }
   };
 }
