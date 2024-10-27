@@ -143,7 +143,7 @@ class AnalyzerModel {
     
     const search = `user=${user}`;
 
-    window.open(`${window.ANALYZER_PLUS_URL}/api/auth_login?${search}`);
+    window.open(`${window.ANALYZER_PLUS_URL}/api/sso?${search}`);
   }
 
   visibilityChangeHandler = () => {
