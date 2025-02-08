@@ -24,8 +24,6 @@
     <script src="./config.js"></script>
     <script src="./src/script/tool.js"></script>
     <script src="./src/script/auth.js"></script>
-    <script src="./src/model/chat.js"></script>
-
     <script
       type="module"
       src="https://unpkg.com/lu2/theme/edge/js/common/ui/Drop.js"
@@ -95,13 +93,27 @@
     <button onclick="sendPrompt()">发送</button>
     <div id="response"></div>
     <script>
-      
+      const eventSource = new EventSource(`https://www.analyzer.work/api/chat`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: JSON.stringify({ prompt })
+            });
 
-      function sendPrompt() {
-        const chatModel = new ChatModel();
-        chatModel.handleChat();
-        const responseDiv = document.getElementById("response");
-      }
+            const responseDiv = document.getElementById('response');
+
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.output && data.output.text) {
+                    responseDiv.innerHTML += data.output.text;
+                }
+            };
+
+            eventSource.onerror = (error) => {
+                console.error('EventSource failed:', error);
+                eventSource.close();
+            };
     </script>
 
     <script src="./src/script/render.js"></script>
