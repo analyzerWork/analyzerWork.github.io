@@ -1,7 +1,7 @@
 import axios, { post } from "axios";
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-export async function POST(req: VercelRequest, res: VercelResponse){
+async function POST(req: VercelRequest, res: VercelResponse){
     //若没有配置环境变量，可用百炼API Key将下行替换为：apiKey='sk-xxx'。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
     const apiKey = process.env.BAILIAN_DASHSCOPE_API_KEY;
     const appId = process.env.BAILIAN_APPID;// 替换为实际的应用 ID
