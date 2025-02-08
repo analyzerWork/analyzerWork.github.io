@@ -11,12 +11,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/axios": "^0.9.36",
     "@types/mongodb": "^4.0.7",
     "@vercel/node": "^2.10.3",
     "typescript": "^5.5.0"
   },
   "dependencies": {
     "ai": "^3.2.32",
+    "axios": "^1.7.9",
     "mongodb": "^6.1.0",
     "openai": "^4.52.7"
   },
