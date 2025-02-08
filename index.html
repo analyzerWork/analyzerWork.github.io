@@ -90,31 +90,6 @@
       </nav>
       <iframe class="iframe-container" src="" frameborder="0"></iframe>
     </div>
-    <button onclick="sendPrompt()">发送</button>
-    <div id="response"></div>
-    <script>
-      const eventSource = new EventSource(`https://www.analyzer.work/api/chat`, {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                method: 'POST',
-                body: JSON.stringify({ prompt })
-            });
-
-            const responseDiv = document.getElementById('response');
-
-            eventSource.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                if (data.output && data.output.text) {
-                    responseDiv.innerHTML += data.output.text;
-                }
-            };
-
-            eventSource.onerror = (error) => {
-                console.error('EventSource failed:', error);
-                eventSource.close();
-            };
-    </script>
 
     <script src="./src/script/render.js"></script>
     <script src="./src/script/model.js"></script>
