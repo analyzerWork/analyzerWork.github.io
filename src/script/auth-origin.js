@@ -104,7 +104,7 @@ class Cookie extends IndexedDBUtil {
     this.cookieMap.set(key, value);
 
     const date = new Date();
-    const ms = 12 * 3600 * 1000;
+    const ms = 24 * 3600 * 1000;
     date.setTime(date.getTime() + ms);
 
     document.cookie = `${key}=${encodeURIComponent(
