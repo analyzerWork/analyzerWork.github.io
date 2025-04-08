@@ -11,7 +11,7 @@
     font-weight: 400;
     src: url("./92VCtsoqhtDTfM6BxmsNZ.woff2") format("woff2"),
         url("./92VCtsoqhtDTfM6BxmsNZ.woff") format("woff");
-    font-display: swap;
+    font-display: fallback;
 }
 
 html,body{
