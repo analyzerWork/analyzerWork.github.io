@@ -1,0 +1,4 @@
+
+const computedTrendData = (data, type)=>{
+   
+}
