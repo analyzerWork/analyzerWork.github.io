@@ -1,0 +1,25 @@
+.potential-list-section {
+    margin-block: 20px;
+    height: 500px;
+    overflow-y: auto;
+    position: relative;
+}
+
+#potentialListTable tr td:not(:nth-child(1)){
+    text-align: right;
+    font-family: monospace;
+}
+
+#potentialListTable tr th:not(:nth-child(1)){
+    text-align: right;   
+}
+
+.potential-list-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    background-color: rgba(255,255, 255, .5);
+}
