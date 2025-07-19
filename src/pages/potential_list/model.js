@@ -98,35 +98,39 @@ class PotentialIngredientList {
   renderPotentialList = () => {
     this.element.$potentialListLoading.classList.remove("hide");
 
-    setTimeout(() => {
-      this.element.$potentialListTbody.innerHTML = null;
+    this.element.$potentialListTbody.innerHTML = null;
 
-      const sectionEle = this.element.$potentialListSection;
+    const sectionEle = this.element.$potentialListSection;
 
-      const tableEle = this.element.$potentialListTable;
+    const { currentRangeData, previousData } = this.get(
+      "currentRangeData",
+      "previousData"
+    );
 
-      const { currentRangeData, previousData } = this.get(
-        "currentRangeData",
-        "previousData"
+    const emptySection = document.querySelector(
+      "#potentialListSection .empty-content"
+    );
+    if (emptySection) {
+      sectionEle.removeChild(emptySection);
+    }
+
+    if (currentRangeData.length === 0) {
+      sectionEle.appendChild(
+        this.element.$emptySection.content.cloneNode(true)
+      );
+    } else {
+      const potentialData = computedPotentialData(
+        currentRangeData,
+        previousData
       );
 
-      const emptySection = document.querySelector(
-        "#potentialListSection .empty-content"
-      );
-      if (emptySection) {
-        sectionEle.removeChild(emptySection);
-      }
+      const delay =
+        potentialData.length < 10
+          ? 1000
+          : (Math.random() * 2 + 1).toFixed(2) * 1000;
+      
 
-      if (currentRangeData.length === 0) {
-        sectionEle.appendChild(
-          this.element.$emptySection.content.cloneNode(true)
-        );
-      } else {
-        const potentialData = computedPotentialData(
-          currentRangeData,
-          previousData
-        );
-
+      setTimeout(() => {
         if (potentialData.length === 0) {
           this.element.$potentialListTbody.appendChild(
             this.element.$emptySection.content.cloneNode(true)
@@ -153,7 +157,7 @@ class PotentialIngredientList {
         }
 
         this.element.$potentialListLoading.classList.add("hide");
-      }
-    }, 1500);
+      }, delay);
+    }
   };
 }
