@@ -138,7 +138,7 @@ window.apiConfig = [
   "taste_matching",
   "ingredient_tracking",
   "brand_tracking",
-  "ingredient_analysis",
+  "potential_list",
   'llm_test'
 ].reduce(
   (prev, next) => ({
