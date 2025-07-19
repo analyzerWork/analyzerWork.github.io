@@ -98,7 +98,6 @@ class PotentialIngredientList {
   renderPotentialList = () => {
     this.element.$potentialListLoading.classList.remove("hide");
 
-
     setTimeout(() => {
       this.element.$potentialListTbody.innerHTML = null;
 
@@ -123,7 +122,6 @@ class PotentialIngredientList {
           this.element.$emptySection.content.cloneNode(true)
         );
       } else {
-
         const potentialData = computedPotentialData(
           currentRangeData,
           previousData
@@ -137,13 +135,16 @@ class PotentialIngredientList {
           const tbodyFragment = document.createDocumentFragment();
           potentialData.forEach((item) => {
             const tr = document.createElement("tr");
-            item.tableRow.forEach(({name, value}) => {
+            item.tableRow.forEach(({ name, value }) => {
               const td = document.createElement("td");
-              const digits = name === 'score' ? 2 : 0;
-              td.innerHTML = name === 'ingredient' ? value : new Intl.NumberFormat('en-US',{
-                minimumFractionDigits:digits,
-                maximumFractionDigits:digits
-              }).format(value)
+              const digits = name === "score" ? 2 : 0;
+              td.innerHTML =
+                name === "ingredient"
+                  ? value
+                  : new Intl.NumberFormat("en-US", {
+                      minimumFractionDigits: digits,
+                      maximumFractionDigits: digits,
+                    }).format(value);
               tr.appendChild(td);
             });
             tbodyFragment.appendChild(tr);

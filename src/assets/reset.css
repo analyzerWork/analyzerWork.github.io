@@ -20,6 +20,7 @@ html,body{
     user-select: none;
     font-family: "microsoft yahei";
     background-color: var(--color-background);
+    height: 100%;
 }
 
 .iframe-body {

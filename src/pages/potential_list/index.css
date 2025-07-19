@@ -1,8 +1,26 @@
 .potential-list-section {
     margin-block: 20px;
-    height: 500px;
     overflow-y: auto;
     position: relative;
+}
+
+.list-title{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.list-remind{
+    width: 20px;
+    height: 20px;
+    background-image: url('../../assets/icons/info.svg');
+    background-size: contain;
+    cursor: pointer;
+}
+
+.remind-formula{
+    width: 450px;
+    padding: 6px 8px;
 }
 
 #potentialListTable tr td:not(:nth-child(1)){

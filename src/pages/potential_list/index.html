@@ -13,6 +13,7 @@
       rel="stylesheet"
       href="https://qidian.gtimg.com/lulu/edge/css/common/color.css"
     />
+    <link href="./katex/ketex.mini.css" rel="stylesheet" />
     <link rel="stylesheet" href="../../assets/reset.css" />
     <link rel="stylesheet" href="index.css" />
     <script
@@ -21,8 +22,10 @@
     ></script>
     <script
       type="module"
-      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Select.js"
+      src="https://unpkg.com/lu2/theme/edge/js/common/ui/Drop.js"
     ></script>
+    <script src="./katex/ketex.min.js"></script>
+    <script src="./katex/auto-render.min.js"></script>
   </head>
 
   <body class="iframe-body">
@@ -40,20 +43,38 @@
 
     <div class="content">
       <section>
-        <div class="title">榜单排名</div>
-       
+        <div class="title list-title">
+          榜单排名
+          <div
+            class="list-remind"
+            data-eventtype="hover"
+            data-position="4-1"
+            is-drop="t2"
+          ></div>
+          <div id="t2" class="ui-droplist-x remind-formula" hidden>
+            <div>成分的综合评分计算公式为:</div>
+            $$ score =
+            \frac{\text{上新该成分的品牌门店数}}{\text{监测品牌总门店数}} \times
+            0.5 + \frac{\text{上新该成分的品牌数}}{\text{监测总品牌数}} \times
+            0.5 $$
+          </div>
+        </div>
+
         <div id="potentialListSection" class="potential-list-section">
           <div id="potentialList" class="potential-list"></div>
-          <div id="potentialListLoading" class="ui-loading potential-list-loading">
+          <div
+            id="potentialListLoading"
+            class="ui-loading potential-list-loading"
+          >
             计算中<ui-dot></ui-dot>
           </div>
           <table id="potentialListTable" class="ui-table">
             <thead>
               <tr>
                 <th>成分名称</th>
+                <th>综合评分 ▼</th>
                 <th>品牌数</th>
                 <th>品牌门店数</th>
-                <th>综合评分</th>
               </tr>
             </thead>
             <tbody id="potentialListTbody"></tbody>
@@ -90,6 +111,19 @@
     <script src="./model.js"></script>
 
     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 配置 KaTeX 渲染选项
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "\\[", right: "\\]", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\\(", right: "\\)", display: false },
+          ],
+          throwOnError: false,
+        });
+      });
+
       const SOURCE_PATH = "./src/pages/datasource/";
       const {
         ANAlYZER_UTILS,

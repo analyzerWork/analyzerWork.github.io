@@ -99,9 +99,9 @@ const computedPotentialData = (currentRangeData, previousData) => {
       score,
       tableRow: [
         { name: "ingredient", value: ingredient },
-        { name: "brandCount", value: brandCount },
-        { name: "storeCount", value: storeCount },
         { name: "score", value: score },
+        { name: "brandCount", value: brandCount },
+        { name: "storeCount", value: storeCount }
       ],
     };
   });
