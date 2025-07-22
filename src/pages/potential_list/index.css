@@ -1,4 +1,11 @@
+.potentialIngredientSelect{
+    display: flex;
+    align-items: center;
+    margin-block: 24px 0;
+}
+
 .potential-list-section {
+    position: relative;
     margin-block: 20px;
     overflow-y: auto;
 }
