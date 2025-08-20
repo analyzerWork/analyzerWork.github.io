@@ -304,10 +304,15 @@ class TasteMatching extends CustomResizeObserver {
     document.addEventListener("click", this.hidePanel);
 
     super.observe(this.element.$contentWrapper, () => {
-      const { activeIcon } = this.get("activeIcon");
+      const { activeIcon, selectedFirstIngredient } = this.get("activeIcon","selectedFirstIngredient");
       this.hotTopIngredientBarInstance.resize();
       if (activeIcon === "chart") {
         this.firstTreeMapInstance.resize();
+        console.log(selectedFirstIngredient);
+        
+        if(selectedFirstIngredient){
+          this.secondTreeMapInstance.resize();
+        }
       }
     });
   };
@@ -925,6 +930,7 @@ class TasteMatching extends CustomResizeObserver {
         "first",
         firstClassificationMenuList[0] || ""
       );
+      
     }
   };
   // 渲染 TreeMap
@@ -954,6 +960,10 @@ class TasteMatching extends CustomResizeObserver {
         getTreemapOption("first", data, selectedFirstIngredient),
         setOptionConfig
       );
+      setTimeout(()=>{
+        this.firstTreeMapInstance.resize();
+      },500)
+
     }
     if (type === "second") {
       const data = computedSecondClassificationIngredientTreeData(

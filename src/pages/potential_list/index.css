@@ -1,0 +1,49 @@
+.potentialIngredientSelect{
+    display: flex;
+    align-items: center;
+    margin-block: 24px 0;
+}
+
+.potential-list-section {
+    position: relative;
+    margin-block: 20px;
+    overflow-y: auto;
+}
+
+.list-title{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.list-remind{
+    width: 20px;
+    height: 20px;
+    background-image: url('../../assets/icons/info.svg');
+    background-size: contain;
+    cursor: pointer;
+}
+
+.remind-formula{
+    width: 450px;
+    padding: 6px 8px;
+}
+
+#potentialListTable tr td:not(:nth-child(1)){
+    text-align: right;
+    font-family: monospace;
+}
+
+#potentialListTable tr th:not(:nth-child(1)){
+    text-align: right;   
+}
+
+.potential-list-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    background-color: rgba(255,255, 255, .5);
+}
