@@ -148,4 +148,4 @@ window.apiConfig = [
   {}
 );
 
-window.ANALYZER_PLUS_URL = 'https://www.analyzer.plus'
+window.ANALYZER_PLUS_URL = 'https://xresearch.work'
