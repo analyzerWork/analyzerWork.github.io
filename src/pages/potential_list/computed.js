@@ -1,23 +1,31 @@
-const computeTotalCount = (dateRange, currentRangeData, name) =>
-  dateRange
-    .map((date) => {
-      const uniqueData = [
-        ...new Set(
-          currentRangeData
-            .filter((item) => item["月份"] === date)
-            .map((item) => item[name])
-        ),
-      ];
+const computeTotalCount = (dateRange, currentRangeData, name) => {
+  const data = dateRange
+  .map((date) => {
+    const uniqueData = [
+      ...new Set(
+        currentRangeData
+          .filter((item) => item["月份"] === date)
+          .map((item) => item[name])
+      ),
+    ];
+    
 
-      if (name === "品牌") {
-        return uniqueData.length;
-      }
+    if (name === "品牌") {
+      return uniqueData.length;
+    }
 
-      if (name === "门店数") {
-        return uniqueData.reduce((sum, storeCount) => sum + storeCount, 0);
-      }
-    })
-    .reduce((sum, monthCount) => sum + monthCount, 0);
+    if (name === "门店数") {
+      
+      return uniqueData.reduce((sum, storeCount) => sum + (typeof storeCount === 'number' ? storeCount : 0), 0);
+    }
+  })
+  
+
+  
+  return data.reduce((sum, monthCount) => sum + monthCount, 0);
+}
+  
+    
 
 const computeIngredientCount = (
   dateRange,
