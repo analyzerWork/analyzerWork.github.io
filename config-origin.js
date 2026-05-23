@@ -3,6 +3,7 @@ const CONFIG = {
     { pathname: "taste_matching", name: "口味创意搭配" },
     { pathname: "ingredient_tracking", name: "关键成分追踪" },
     { pathname: "brand_tracking", name: "品牌推新追踪" },
+    { pathname: "ingredient_grow", name: "成分增长榜单" },
     { pathname: "potential_list", name: "新成分潜力榜" },
   ],
 };
