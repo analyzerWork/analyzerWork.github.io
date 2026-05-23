@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>成分增长榜单</title>
+    <link
+      rel="stylesheet"
+      href="https://qidian.gtimg.com/lulu/edge/css/common/ui.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://qidian.gtimg.com/lulu/edge/css/common/color.css"
+    />
+    <link rel="stylesheet" href="../../assets/reset.css" />
+    <link rel="stylesheet" href="../../components/component.css" />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="https://unpkg.com/lu2/theme/edge/css/common/ui/Input.css">
+    <link rel="stylesheet" href="https://unpkg.com/lu2/theme/edge/css/common/ui/Date.css">
+    <link rel="stylesheet" href="https://unpkg.com/lu2/theme/edge/css/common/ui/Select.css">
+    <script type="module" src="https://unpkg.com/lu2/theme/edge/js/common/ui/DateTime.js"></script>
+    <script type="module" src="https://unpkg.com/lu2/theme/edge/js/common/ui/Select.js"></script>
+    
+    <script
+      type="module"
+      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Drop.js"
+    ></script>
+  </head>
+
+  <body class="iframe-body">
+    <div class="body-header">
+      <div class="header-item">
+        <span class="base-label">年份：</span>
+        <input type="year" min="" max="" is="ui-datetime">
+      </div>
+      <div class="header-item">
+        <span class="text">日期：</span>
+        <select id="dateSelect" is="ui-select"></select>
+      </div>
+      <div class="header-item">
+        <span class="text">对比：</span>
+        <select id="comparedSelect" is="ui-select"></select>
+      </div>
+      <div class="header-item">
+        <span class="text">产品大类：</span>
+        <select id="bigProductTypeSelect" is="ui-select"></select>
+      </div>
+      <div class="header-item">
+        <span class="text">产品类型：</span>
+        <select id="productTypeSelect" is="ui-select"></select>
+      </div>
+      <div class="header-item">
+        <span class="text">成分分类：</span>
+        <select id="ingredientTypeSelect" is="ui-select"></select>
+      </div>
+    </div>
+
+    <div class="content">
+      <section>
+        <div class="title">成分使用增长榜单</div>
+        <table id="ingredientGrowTable" class="ui-table">
+          <thead>
+            <tr>
+              <th>成分名称</th>
+              <th id="comparedDateUse"></th>
+              <th id="currentDateUse"></th>
+              <th>增长率</th>
+            </tr>
+          </thead>
+          <tbody id="ingredientGrowTbody"></tbody>
+        </table>
+      </section>
+    </div>
+    <div class="analyzer-loading mask text-large" id="pageLoading">
+      加载中<ui-dot></ui-dot>
+    </div>
+    <script src="../../model/resizeObserver.js"></script>
+    <script src="../commonComputed.js"></script>
+    <script src="./computed.js"></script>
+
+    <script src="./model.js"></script>
+
+    <script>
+      const SOURCE_PATH = "./src/pages/datasource/";
+      const {
+        ANAlYZER_UTILS,
+        apiConfig,
+        analyzer_env: { MODE },
+      } = window.parent;
+
+      window.addEventListener("load", function () {
+        if (MODE === "FE") {
+          ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching_v2.json`).then(
+            (result) => {
+              const ingredientGrowInstance = new ingredientGrow(result);
+            }
+          );
+        } else {
+          ANAlYZER_UTILS.requestData(apiConfig["ingredient_grow"], {
+            name: "init",
+          }).then((result) => {
+            const ingredientGrowInstance = new ingredientGrow(result);
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -157,6 +157,10 @@ div.toolbox-drop-down {
   background-image: url("./icons/ingredient_tracking.svg");
 }
 
+.ingredient_grow {
+  background-image: url("./icons/ingredient_grow.svg");
+}
+
 .brand_tracking {
   background-image: url("./icons/brand_tracking.svg");
 }
