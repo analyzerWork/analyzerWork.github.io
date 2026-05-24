@@ -350,13 +350,13 @@ const computedCurrentDataAndRange = ({
   return dataFilterByProduct;
 };
 
-const computedMenuOptionsFragment = (list) => {
+const computedMenuOptionsFragment = (list, isObjItem) => {
   const menuFragment = document.createDocumentFragment();
 
   list.forEach((item) => {
     const option = document.createElement("option");
-    option.value = item;
-    option.text = item;
+    option.value = isObjItem ? item.value : item;
+    option.text = isObjItem ? item.text : item;
 
     menuFragment.appendChild(option);
   });
