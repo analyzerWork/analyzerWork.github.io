@@ -269,7 +269,6 @@ class PotentialIngredientList {
           this.element.$potentialListTbody.appendChild(tbodyFragment);
         }
 
-        this.element.$potentialListLoading.classList.add("hide");
       }, delay);
     }
   };
