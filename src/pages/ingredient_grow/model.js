@@ -70,8 +70,6 @@ const ALL_CLASSIFICATION_LIST = [
   ...new Set([...TEA_CLASSIFICATION_LIST, ...COFFEE_CLASSIFICATION_LIST]),
 ];
 
-const EMPTY_VALUE = "--";
-
 const EMPTY_TEXT = "(无)";
 
 const EMPTY_ITEM = {
@@ -118,7 +116,7 @@ class IngredientGrow extends CustomResizeObserver {
     endDateIndex: 0,
     comparedStartDateIndex: 0,
     comparedEndDateIndex: 0,
-    currentRangeData: [],
+
     filter: {
       bigProductTypeValue: "茶饮",
       productType: PRODUCT_MAP.get("茶饮")[0].value,
@@ -178,7 +176,6 @@ class IngredientGrow extends CustomResizeObserver {
       this.bigProductTypeSelectChangeHandler
     );
 
-    
     this.element.$productTypeSelect.addEventListener(
       "change",
       this.productTypeSelectChangeHandler
@@ -214,7 +211,10 @@ class IngredientGrow extends CustomResizeObserver {
           : []
       )
       .concat(
-        MONTH_LIST.filter((month) => month <= CURRENT_MONTH).map((item) => ({
+        (year === CURRENT_YEAR
+          ? MONTH_LIST.filter((month) => month <= CURRENT_MONTH)
+          : MONTH_LIST
+        ).map((item) => ({
           value: `${item}`.padStart(2, 0),
           text: `${item}月`,
         }))
@@ -273,7 +273,7 @@ class IngredientGrow extends CustomResizeObserver {
 
       const comparedYear = date === "01" ? currentYear - 1 : currentYear;
 
-      const comparedMonth = date === "01" ? "12" : date - 1;
+      const comparedMonth = date === "01" ? "12" : `${date - 1}`.padStart(2, 0);
 
       comparedStartDateIndex = this.data.findIndex(
         (d) => d["月份"] === `${comparedYear}-${comparedMonth}`
@@ -288,6 +288,54 @@ class IngredientGrow extends CustomResizeObserver {
       endDateIndex,
       comparedStartDateIndex,
       comparedEndDateIndex,
+    };
+  };
+
+  computeRangeData = () => {
+    const {
+      startDateIndex,
+      endDateIndex,
+      comparedStartDateIndex,
+      comparedEndDateIndex,
+      filter,
+    } = this.get(
+      "startDateIndex",
+      "endDateIndex",
+      "comparedStartDateIndex",
+      "comparedEndDateIndex",
+      "filter"
+    );
+
+    const { bigProductTypeValue, productType, ingredientClassification } =
+      filter;
+
+    const currentDataByDateRange = this.data.slice(
+      startDateIndex,
+      endDateIndex
+    );
+
+    const currentComparedByDateRange = this.data.slice(
+      comparedStartDateIndex,
+      comparedEndDateIndex
+    );
+
+    const currentRangeData = computeCurrentDataRangeV2({
+      data: currentDataByDateRange,
+      bigProductTypeValue,
+      productType,
+      ingredientClassification,
+    });
+
+    const currentComparedRangeData = computeCurrentDataRangeV2({
+      data: currentComparedByDateRange,
+      bigProductTypeValue,
+      productType,
+      ingredientClassification,
+    });
+
+    return {
+      currentRangeData,
+      currentComparedRangeData,
     };
   };
 
@@ -306,14 +354,20 @@ class IngredientGrow extends CustomResizeObserver {
 
     const comparedList = this.computeComparedList(selectedDate);
 
-    const { startDateIndex, endDateIndex } =
-      this.computeDataRangeIndex(selectedDate);
+    const {
+      startDateIndex,
+      endDateIndex,
+      comparedStartDateIndex,
+      comparedEndDateIndex,
+    } = this.computeDataRangeIndex(selectedDate);
 
     this.set({
       currentYear,
       yearList: yearRange,
       startDateIndex,
       endDateIndex,
+      comparedStartDateIndex,
+      comparedEndDateIndex,
       dateList,
       selectedDate,
       comparedList,
@@ -327,6 +381,8 @@ class IngredientGrow extends CustomResizeObserver {
     this.renderHeader();
 
     this.renderSummary();
+
+    this.computeIngredientGrowth();
   }
 
   renderHeader = () => {
@@ -462,8 +518,7 @@ class IngredientGrow extends CustomResizeObserver {
 
     prompt += `使用量增长最快的${ingredientClassification}(成分) :`;
 
-    this.element.$summary.innerHTML = prompt
-
+    this.element.$summary.innerHTML = prompt;
   };
 
   yearChangeHandler(value) {
@@ -497,20 +552,21 @@ class IngredientGrow extends CustomResizeObserver {
     // 重新渲染
     this.renderDateSelect();
     this.renderSummary();
+    this.computeIngredientGrowth();
   }
 
   dateChangeHandler(value) {
-    const comparedList = this.computeComparedList(value);
-
-    // 直接取第一个即可，要么不变，要么只有一个
-    const currentComparedDate = comparedList[0].value;
-
     const {
       startDateIndex,
       endDateIndex,
       comparedStartDateIndex,
       comparedEndDateIndex,
-    } = this.computeDataRangeIndex(currentComparedDate);
+    } = this.computeDataRangeIndex(value);
+
+    const comparedList = this.computeComparedList(value);
+
+    // 对比项的值直接取第一个即可，要么不变，要么只有一个
+    const currentComparedDate = comparedList[0].value;
 
     this.set({
       comparedList,
@@ -525,7 +581,7 @@ class IngredientGrow extends CustomResizeObserver {
     // 重新渲染
     this.renderComparedSelect();
     this.renderSummary();
-
+    this.computeIngredientGrowth();
   }
 
   comparedChangeHandler(value) {
@@ -533,7 +589,7 @@ class IngredientGrow extends CustomResizeObserver {
       selectedCompared: value,
     });
     this.renderSummary();
-
+    this.computeIngredientGrowth();
   }
 
   // 产品大类选择
@@ -543,7 +599,9 @@ class IngredientGrow extends CustomResizeObserver {
       filter: {
         bigProductTypeValue: currentBigProductType,
         productType: PRODUCT_MAP.get(currentBigProductType)[0].value,
-        ingredientClassification: CLASSIFICATION_MAP.get(currentBigProductType)[0].value,
+        ingredientClassification: CLASSIFICATION_MAP.get(
+          currentBigProductType
+        )[0].value,
       },
     });
 
@@ -553,16 +611,13 @@ class IngredientGrow extends CustomResizeObserver {
 
     this.renderSummary();
 
+    this.computeIngredientGrowth();
 
     // this.updateData();
-    // this.renderFilter();
-    // this.reRender();
   };
 
   productTypeSelectChangeHandler = (e) => {
-    const { filter } = this.get(
-      "filter",
-    );
+    const { filter } = this.get("filter");
     this.set({
       filter: {
         ...filter,
@@ -572,12 +627,11 @@ class IngredientGrow extends CustomResizeObserver {
 
     this.renderSummary();
 
-  }
+    this.computeIngredientGrowth();
+  };
 
   ingredientTypeSelectChangeHandler = (e) => {
-    const { filter } = this.get(
-      "filter",
-    );
+    const { filter } = this.get("filter");
 
     this.set({
       filter: {
@@ -586,24 +640,114 @@ class IngredientGrow extends CustomResizeObserver {
       },
     });
     this.renderSummary();
+
+    this.computeIngredientGrowth();
+  };
+
+  computeIngredientList(
+    currentRangeData,
+    bigProductTypeValue,
+    ingredientClassification
+  ) {
+    const { resortFirstClassificationIngredient, firstIngredientCountMap } =
+      computedRelatedFirstClassificationData(
+        currentRangeData,
+        bigProductTypeValue
+      );
+
+    const currentData = resortFirstClassificationIngredient.find(
+      (item) => item.classification === ingredientClassification
+    );
+
+    if (currentData !== undefined) {
+      const ingredientList = currentData.ingredientList;
+      const ingredientItemList = [];
+
+      for (const ingredient of ingredientList) {
+        const count = firstIngredientCountMap.get(ingredient) || 0;
+        ingredientItemList.push({
+          name: ingredient,
+          count: count,
+        });
+      }
+
+      return ingredientItemList;
+    } else {
+      console.error("no data");
+    }
   }
 
+  computeIngredientGrowth() {
+    const {
+      filter: { bigProductTypeValue, ingredientClassification },
+    } = this.get("bigProductTypeValue", "filter");
+    const { currentRangeData, currentComparedRangeData } =
+      this.computeRangeData();
 
-
-  updateCurrentRangeData(brand) {
-    const { startDateIndex, endDateIndex } = this.get(
-      "startDateIndex",
-      "endDateIndex"
-    );
-
-    const currentData = this.data.slice(startDateIndex, endDateIndex);
-    const currentRangeData = currentData.filter(
-      (item) => item["品牌"] === brand
-    );
-    this.set({
-      selectedBrand: brand,
-      brandOptions: [...new Set(currentData.map((item) => item["品牌"]))],
+    const data = this.computeIngredientList(
       currentRangeData,
-    });
+      bigProductTypeValue,
+      ingredientClassification
+    );
+
+    const comparedData = this.computeIngredientList(
+      currentComparedRangeData,
+      bigProductTypeValue,
+      ingredientClassification
+    );
+
+    const comparedDataMap = new Map();
+    for (const item of comparedData) {
+      comparedDataMap.set(item.name, item.count);
+    }
+
+    // 存储正常增长率结果
+    const normalGrowthRates = [];
+    // 存储新成分结果
+    const newIngredients = [];
+
+    // 遍历数组data（新值）
+    for (const item of data) {
+      const name = item.name;
+      const newCount = item.count; // 新值
+
+      // 检查comparedData中是否存在相同的成分（旧值）
+      if (!comparedDataMap.has(name)) {
+        continue; // 如果comparedData中不存在该成分，则跳过
+      }
+
+      const oldCount = comparedDataMap.get(name); // 旧值
+
+      if (oldCount === 0 && newCount !== 0) {
+        // 旧值为0但新值不为0，表示新出现的成分
+        newIngredients.push({
+          name: name,
+          oldCount: oldCount,
+          newCount: newCount,
+          growthRate: "N/A(新成分)",
+        });
+      } else if (oldCount !== 0) {
+        // 正常情况：计算增长率 (新值 - 旧值) / 旧值 * 100%
+        const growthRate = ((newCount - oldCount) / oldCount) * 100;
+
+        if (growthRate > 0) {
+          normalGrowthRates.push({
+            name: name,
+            oldCount: oldCount,
+            newCount: newCount,
+            growthRate: growthRate.toFixed(2),
+          });
+        }
+      }
+      // 如果oldCount为0且newCount为0，则跳过
+    }
+
+    // 对正常增长率按从大到小排序
+    normalGrowthRates.sort((a, b) => b.growthRate - a.growthRate);
+
+    // 合并结果：先返回正常增长率，最后是新成分
+    const result = [...normalGrowthRates, ...newIngredients];
+
+    console.log(result);
   }
 }

@@ -1,5 +1,7 @@
 const SELECT_ALL = "全部";
 
+const EMPTY_VALUE = "--";
+
 const classificationPriorityMap = new Map([
   ["果味", 6],
   ["茶底", 5],
@@ -9,7 +11,15 @@ const classificationPriorityMap = new Map([
   ["小料", 1],
 ]);
 
-const COFFICE_LIST = ['果味','茶底','花香','乳基底','谷物草本','烘焙','可可坚果']
+const COFFICE_LIST = [
+  "果味",
+  "茶底",
+  "花香",
+  "乳基底",
+  "谷物草本",
+  "烘焙",
+  "可可坚果",
+];
 
 const computeResortClassificationIngredient = (
   classificationIngredientMap,
@@ -35,7 +45,11 @@ const computeResortClassificationIngredient = (
         )
       : sortClassificationIngredient;
 
-  return bigProductTypeValue ==='咖啡' ? resortClassificationIngredient.filter((item)=> COFFICE_LIST.includes(item.classification)): resortClassificationIngredient;
+  return bigProductTypeValue === "咖啡"
+    ? resortClassificationIngredient.filter((item) =>
+        COFFICE_LIST.includes(item.classification)
+      )
+    : resortClassificationIngredient;
 };
 
 const computedProductsByBrand = (data) => {
@@ -61,7 +75,7 @@ const computedProductsByBrand = (data) => {
   return monthMap;
 };
 
-const computedRelatedFirstClassificationData = (data,bigProductTypeValue) => {
+const computedRelatedFirstClassificationData = (data, bigProductTypeValue) => {
   const firstIngredientCountMap = new Map();
 
   const firstClassificationIngredientMap = new Map();
@@ -115,7 +129,12 @@ const computedRelatedFirstClassificationData = (data,bigProductTypeValue) => {
     firstClassificationIngredientMap,
     firstIngredientCountMap,
     resortFirstClassificationIngredient,
-    firstClassificationMenuList: bigProductTypeValue === '咖啡' ? firstClassificationMenuList.filter((item)=> COFFICE_LIST.includes(item)): firstClassificationMenuList,
+    firstClassificationMenuList:
+      bigProductTypeValue === "咖啡"
+        ? firstClassificationMenuList.filter((item) =>
+            COFFICE_LIST.includes(item)
+          )
+        : firstClassificationMenuList,
   };
 };
 
@@ -348,6 +367,27 @@ const computedCurrentDataAndRange = ({
         );
 
   return dataFilterByProduct;
+};
+
+const computeCurrentDataRangeV2 = ({
+  data,
+  bigProductTypeValue,
+  productType,
+  ingredientClassification,
+}) => {
+  debugger
+  const dataFilterByBigProductType = bigProductTypeValue === EMPTY_VALUE ? data : data.filter(
+    (item) => item["产品大类"] === bigProductTypeValue
+  );
+
+  const dataFilterByProduct  = productType === EMPTY_VALUE ? dataFilterByBigProductType : dataFilterByBigProductType.filter(
+    (item) => item["产品类型"] === productType
+  );
+
+  const dataFilterByIngredientClassification = dataFilterByProduct.filter(item => item[`成分分类-${bigProductTypeValue}`] === ingredientClassification)
+
+  return dataFilterByIngredientClassification;
+
 };
 
 const computedMenuOptionsFragment = (list, isObjItem) => {
