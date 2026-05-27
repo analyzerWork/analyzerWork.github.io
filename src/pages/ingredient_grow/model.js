@@ -111,12 +111,15 @@ class IngredientGrow extends CustomResizeObserver {
     dateList: [],
     selectedDate: "",
     selectedCompared: "",
+    comparedYear:CURRENT_YEAR,
+    comparedDate: "",
     comparedList: [],
     startDateIndex: 0,
     endDateIndex: 0,
     comparedStartDateIndex: 0,
     comparedEndDateIndex: 0,
-
+    currentTdTitle: '',
+    comparedTdTitle: '',
     filter: {
       bigProductTypeValue: "茶饮",
       productType: PRODUCT_MAP.get("茶饮")[0].value,
@@ -131,7 +134,11 @@ class IngredientGrow extends CustomResizeObserver {
     $bigProductTypeSelect: document.querySelector("#bigProductTypeSelect"),
     $productTypeSelect: document.querySelector("#productTypeSelect"),
     $ingredientTypeSelect: document.querySelector("#ingredientTypeSelect"),
+    $currentTdTitle:document.querySelector("#currentTdTitle"),
+    $comparedTdTitle:document.querySelector("#comparedTdTitle"),
     $summary: document.querySelector("#summary"),
+    $ingredientGrowTbody: document.querySelector("#ingredientGrowTbody"),
+    $ingredientGrowLoading: document.querySelector("#ingredientGrowLoading"),
     $pageLoading: document.querySelector("#pageLoading"),
   };
   constructor(initData) {
@@ -237,6 +244,8 @@ class IngredientGrow extends CustomResizeObserver {
     let endDateIndex;
     let comparedStartDateIndex;
     let comparedEndDateIndex;
+    let currentTdTitle;
+    let comparedTdTitle;
     if (date === SECOND_HALF_VALUE) {
       startDateIndex = this.data.findIndex(
         (d) => d["月份"] === `${currentYear}-09`
@@ -250,6 +259,9 @@ class IngredientGrow extends CustomResizeObserver {
       comparedEndDateIndex = this.data.findLastIndex(
         (d) => d["月份"] === `${currentYear}-02`
       );
+      currentTdTitle = `${currentYear}年${SECOND_HALF}`;
+      comparedTdTitle = `${currentYear - 1}年${SECOND_HALF}`
+    
     } else if (date === FIRST_HALF_VALUE) {
       startDateIndex = this.data.findIndex(
         (d) => d["月份"] === `${currentYear}-03`
@@ -263,6 +275,8 @@ class IngredientGrow extends CustomResizeObserver {
       comparedEndDateIndex = this.data.findLastIndex(
         (d) => d["月份"] === `${currentYear - 1}-08`
       );
+      currentTdTitle = `${currentYear}年${FIRST_HALF}`;
+      comparedTdTitle = `${currentYear - 1}年${FIRST_HALF}`
     } else {
       startDateIndex = this.data.findIndex(
         (d) => d["月份"] === `${currentYear}-${date}`
@@ -281,6 +295,9 @@ class IngredientGrow extends CustomResizeObserver {
       comparedEndDateIndex = this.data.findLastIndex(
         (d) => d["月份"] === `${currentYear}-${comparedMonth}`
       );
+
+      currentTdTitle = `${currentYear}年${date}月`;
+      comparedTdTitle = `${comparedYear}年${comparedMonth}月`
     }
 
     return {
@@ -288,6 +305,8 @@ class IngredientGrow extends CustomResizeObserver {
       endDateIndex,
       comparedStartDateIndex,
       comparedEndDateIndex,
+      currentTdTitle,
+      comparedTdTitle,
     };
   };
 
@@ -359,6 +378,8 @@ class IngredientGrow extends CustomResizeObserver {
       endDateIndex,
       comparedStartDateIndex,
       comparedEndDateIndex,
+      currentTdTitle,
+      comparedTdTitle
     } = this.computeDataRangeIndex(selectedDate);
 
     this.set({
@@ -371,6 +392,8 @@ class IngredientGrow extends CustomResizeObserver {
       dateList,
       selectedDate,
       comparedList,
+      currentTdTitle,
+      comparedTdTitle,
       selectedCompared: comparedList[0].value,
     });
 
@@ -537,6 +560,8 @@ class IngredientGrow extends CustomResizeObserver {
       endDateIndex,
       comparedStartDateIndex,
       comparedEndDateIndex,
+      currentTdTitle,
+      comparedTdTitle,
     } = this.computeDataRangeIndex(currentSelectedDate);
 
     this.set({
@@ -545,6 +570,8 @@ class IngredientGrow extends CustomResizeObserver {
       selectedDate: currentSelectedDate,
       startDateIndex,
       endDateIndex,
+      currentTdTitle,
+      comparedTdTitle,
       comparedStartDateIndex,
       comparedEndDateIndex,
     });
@@ -561,6 +588,8 @@ class IngredientGrow extends CustomResizeObserver {
       endDateIndex,
       comparedStartDateIndex,
       comparedEndDateIndex,
+      currentTdTitle,
+      comparedTdTitle,
     } = this.computeDataRangeIndex(value);
 
     const comparedList = this.computeComparedList(value);
@@ -576,6 +605,8 @@ class IngredientGrow extends CustomResizeObserver {
       endDateIndex,
       comparedStartDateIndex,
       comparedEndDateIndex,
+      currentTdTitle,
+      comparedTdTitle,
     });
 
     // 重新渲染
@@ -748,6 +779,49 @@ class IngredientGrow extends CustomResizeObserver {
     // 合并结果：先返回正常增长率，最后是新成分
     const result = [...normalGrowthRates, ...newIngredients];
 
-    console.log(result);
+    this.renderGrowthTable(result);
   }
+
+  renderGrowthTable = (data) => {
+
+    this.element.$ingredientGrowLoading.classList.remove("hide");
+
+    this.element.$ingredientGrowTbody.innerHTML = null;
+
+    const sectionEle = this.element.$ingredientGrowSection;
+
+    const emptySection = document.querySelector(
+      "#ingredientGrowSection .empty-content"
+    );
+    if (emptySection) {
+      sectionEle.removeChild(emptySection);
+    }
+
+    if (data.length === 0) {
+      sectionEle.appendChild(
+        this.element.$emptySection.content.cloneNode(true)
+      );
+    } else {
+      const { currentTdTitle, comparedTdTitle } = this.get('comparedTdTitle','currentTdTitle')
+      this.element.$currentTdTitle.innerHTML = currentTdTitle;
+      this.element.$comparedTdTitle.innerHTML = comparedTdTitle;
+
+      window.setTimeout(() => {
+        const tbodyFragment = document.createDocumentFragment();
+
+        data.forEach((item) => {
+          const tr = document.createElement("tr");
+          Object.entries(item).forEach(([_, value]) => {
+            const td = document.createElement("td");
+            td.innerHTML =value;
+            tr.appendChild(td);
+          });
+          tbodyFragment.appendChild(tr);
+        });
+        this.element.$ingredientGrowTbody.appendChild(tbodyFragment);
+
+        this.element.$ingredientGrowLoading.classList.add("hide");
+      }, 1000);
+    }
+  };
 }

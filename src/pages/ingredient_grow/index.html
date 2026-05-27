@@ -16,12 +16,11 @@
     <link rel="stylesheet" href="../../assets/reset.css" />
     <link rel="stylesheet" href="../../components/component.css" />
     <link rel="stylesheet" href="index.css" />
-    <link rel="stylesheet" href="https://unpkg.com/lu2/theme/edge/css/common/ui/Input.css">
-    <link rel="stylesheet" href="https://unpkg.com/lu2/theme/edge/css/common/ui/Date.css">
-    <link rel="stylesheet" href="https://unpkg.com/lu2/theme/edge/css/common/ui/Select.css">
-    <script type="module" src="https://unpkg.com/lu2/theme/edge/js/common/ui/DateTime.js"></script>
-    <script type="module" src="https://unpkg.com/lu2/theme/edge/js/common/ui/Select.js"></script>
-    
+
+    <script
+      type="module"
+      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Select.js"
+    ></script>
     <script
       type="module"
       src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Drop.js"
@@ -31,11 +30,11 @@
   <body class="iframe-body">
     <div class="body-header">
       <div class="header-item">
-        <span class="base-label">年份：</span>
-        <input type="year" min="" max="" is="ui-datetime">
+        <span class="base-label">选择年份：</span>
+        <select id="yearSelect" is="ui-select"></select>
       </div>
       <div class="header-item">
-        <span class="text">日期：</span>
+        <span class="base-label">日期：</span>
         <select id="dateSelect" is="ui-select"></select>
       </div>
       <div class="header-item">
@@ -58,18 +57,26 @@
 
     <div class="content">
       <section>
-        <div class="title">成分使用增长榜单</div>
-        <table id="ingredientGrowTable" class="ui-table">
-          <thead>
-            <tr>
-              <th>成分名称</th>
-              <th id="comparedDateUse"></th>
-              <th id="currentDateUse"></th>
-              <th>增长率</th>
-            </tr>
-          </thead>
-          <tbody id="ingredientGrowTbody"></tbody>
-        </table>
+        <div id="summary"></div>
+        <div id="ingredientGrowSection" class="ingredient-grow-section">
+          <div
+            id="ingredientGrowLoading"
+            class="ui-loading ingredient-grow-loading"
+          >
+            计算中<ui-dot></ui-dot>
+          </div>
+          <table id="ingredientGrowTable" class="ui-table">
+            <thead>
+              <tr>
+                <th>成分名称</th>
+                <th id="currentTdTitle"></th>
+                <th id="comparedTdTitle"></th>
+                <th>增长率(%)</th>
+              </tr>
+            </thead>
+            <tbody id="ingredientGrowTbody"></tbody>
+          </table>
+        </div>
       </section>
     </div>
     <div class="analyzer-loading mask text-large" id="pageLoading">
@@ -91,16 +98,16 @@
 
       window.addEventListener("load", function () {
         if (MODE === "FE") {
-          ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching_v2.json`).then(
-            (result) => {
-              const ingredientGrowInstance = new ingredientGrow(result);
-            }
-          );
+          ANAlYZER_UTILS.requestData(
+            `${SOURCE_PATH}taste_matching_v2.json`
+          ).then((result) => {
+            const ingredientGrowInstance = new IngredientGrow(result);
+          });
         } else {
           ANAlYZER_UTILS.requestData(apiConfig["ingredient_grow"], {
             name: "init",
           }).then((result) => {
-            const ingredientGrowInstance = new ingredientGrow(result);
+            const ingredientGrowInstance = new IngredientGrow(result);
           });
         }
       });
