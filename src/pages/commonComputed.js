@@ -375,7 +375,7 @@ const computeCurrentDataRangeV2 = ({
   productType,
   ingredientClassification,
 }) => {
-  debugger
+  
   const dataFilterByBigProductType = bigProductTypeValue === EMPTY_VALUE ? data : data.filter(
     (item) => item["产品大类"] === bigProductTypeValue
   );
