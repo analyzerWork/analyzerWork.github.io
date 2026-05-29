@@ -131,6 +131,8 @@ class IndexedDBUtil {
 
 window.SOURCE_PATH = "./src/pages/datasource/";
 
+window.DATA_SOURCE_LIST=[2022,2023,2024,2025,2026]
+
 window.analyzer_env = {
   MODE: "FE", //DB
   TARGET: "Prod", // Prod

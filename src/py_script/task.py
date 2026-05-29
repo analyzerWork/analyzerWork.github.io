@@ -26,16 +26,18 @@ class TasteMatching:
 
     def exec(self):
         if self.options.get('isDataTransfer') == True:
-            self.transToJSON()
+            print( self.options)
+            file_name = self.options.get('fileName')
+            self.transToJSON(file_name)
 
         # self.data = self.get_data()
 
     # 读取原始数据,转换为json格式
-    def transToJSON(self, version='_v2'):
-        log_message = 'taste_matching.xlsx - Excel 转换 JSON 数据'
+    def transToJSON(self, file_name):
+        log_message = file_name+'.xlsx - Excel 转换 JSON 数据'
         try:
             df = pd.read_excel(
-                r'../pages/datasource/taste_matching' + version + '.xlsx')
+                r'../pages/datasource/' + file_name + '.xlsx')
 
             df['月份'] = df['月份'].dt.strftime('%Y-%m')
             df = df.sort_values(by='月份')
@@ -48,7 +50,7 @@ class TasteMatching:
             json_str_fixed = json_str.replace('\\/', '/')
 
             # 将处理后的JSON字符串写入到一个新的JSON文件中
-            with open('../pages/datasource/taste_matching'+version+'.json', 'w', encoding='utf-8') as f:
+            with open('../pages/datasource/'+file_name+'.json', 'w', encoding='utf-8') as f:
                 f.write(json_str_fixed)
 
             message.get('success')(log_message)
@@ -56,11 +58,11 @@ class TasteMatching:
             message.get('error')(log_message, e)
 
     # 读取转换好的原始json数据
-    def get_data(self, version='_v2'):
+    def get_data(self, file_name):
         # 使用 Python JSON 模块载入数据
         log_message = '读取数据'
         try:
-            with open('../pages/datasource/taste_matching'+version+'.json',
+            with open('../pages/datasource/'+file_name+'.json',
                       'r',
                       encoding='utf-8') as f:
                 origin_data = json.loads(f.read())
@@ -187,6 +189,7 @@ class TasteMatching:
 
 tasteMatching = TasteMatching({
     'isDataTransfer': True,
+    'fileName': 'data_2026'
 })
 
 tasteMatching.exec()

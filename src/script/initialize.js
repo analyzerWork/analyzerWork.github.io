@@ -3,21 +3,24 @@ const {
   apiConfig,
   analyzer_env: { MODE },
   SOURCE_PATH,
+  DATA_SOURCE_LIST,
 } = window.parent;
 
 const INIT = {
   loadData(key, ClassRef) {
-    window.addEventListener("load", function () {
+    window.addEventListener("load", async function () {
       if (MODE === "FE") {
 
-        ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching_v2.json`).then(
-          (result) => {
-            console.log('--- load data ---');
-            
-            const instance = new ClassRef(result);
-          }
-        );
+        const result = await Promise.all(DATA_SOURCE_LIST.map(year => ANAlYZER_UTILS.requestData(`${SOURCE_PATH}data_${year}.json`)))
+
+        const data = result.reduce((prev,next)=> prev.concat(next));
+        console.log("-- initialize --",data.length);
+        
+
+        new ClassRef(data);
+       
       } else {
+        // HOLD
         ANAlYZER_UTILS.requestData(apiConfig[key], {
           name: "init",
         }).then((result) => {
