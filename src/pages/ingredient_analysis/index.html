@@ -82,43 +82,14 @@
     <script src="../commonComputed.js"></script>
     <script src="./computed.js"></script>
     <script src="./model.js"></script>
+    <script src="../../script/initialize.js"></script>
 
     <script>
-      const SOURCE_PATH = "./src/pages/datasource/";
-      const {
-        ANAlYZER_UTILS,
-        apiConfig,
-        analyzer_env: { MODE },
-      } = window.parent;
-
-      window.addEventListener("load", function () {
-        if (MODE === "FE") {
-          Promise.all(
-            ["taste_matching_v2", "bigdata"].map((name) =>
-              ANAlYZER_UTILS.requestData(`${SOURCE_PATH}${name}.json`)
-            )
-          ).then(([taste_matching_data, big_data]) => {
-            const tasteMatchingInstance = new IngredientAnalysis({
-              taste_matching_data,
-              big_data,
-            });
-          });
-        } else {
-          ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching_v2.json`).then(
-            (taste_matching_data) => {
-              ANAlYZER_UTILS.requestData(apiConfig["ingredient_analysis"], {
-                name: "init",
-              }).then((big_data) => {
-                // TODO:
-                const ingredientTrackingInstance = new IngredientAnalysis({
-                  taste_matching_data,
-                  big_data
-                });
-              });
-            }
-          );
-        }
-      });
+      const key = 'ingredient_analysis';
+      
+      INIT.loadData(key,IngredientAnalysis)
+     
     </script>
+
   </body>
 </html>

@@ -12,6 +12,11 @@ window.ANAlYZER_UTILS = {
       .then((response) => t===true ? response: response.json())
       .then((data) => data);
   },
+
+  batchRequestData(apiList) {
+    return Promise.all(apiList)
+  },
+
   locateToPage: (params) => {
     const { path = "", type = "href" } = params;
     if (type === "href") {
@@ -122,6 +127,9 @@ class IndexedDBUtil {
         .catch(reject);
     });
 }
+
+
+window.SOURCE_PATH = "./src/pages/datasource/";
 
 window.analyzer_env = {
   MODE: "FE", //DB

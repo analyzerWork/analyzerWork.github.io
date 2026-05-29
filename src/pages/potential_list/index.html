@@ -121,6 +121,7 @@
     <script src="../commonComputed.js"></script>
     <script src="./computed.js"></script>
     <script src="./model.js"></script>
+    <script src="../../script/initialize.js"></script>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -136,25 +137,11 @@
         });
       });
 
-      const SOURCE_PATH = "./src/pages/datasource/";
-      const {
-        ANAlYZER_UTILS,
-        apiConfig,
-        analyzer_env: { MODE },
-      } = window.parent;
+      const key = 'brand_tracking';
+      
+      INIT.loadData(key,PotentialIngredientList)
 
-      window.addEventListener("load", function () {
-        if (MODE === "FE") {
-          ANAlYZER_UTILS.requestData(
-            `${SOURCE_PATH}taste_matching_v2.json`
-          ).then((result) => {
-            const potentialIngredientListInstance = new PotentialIngredientList(
-              result
-            );
-          });
-        } else {
-        }
-      });
+    
     </script>
   </body>
 </html>

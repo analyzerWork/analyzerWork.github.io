@@ -76,17 +76,14 @@
     <script src="./worker.js"></script>
     <script src="./model.js"></script>
 
-    <script>
-      const SOURCE_PATH = "../../src/pages/datasource/";
-      const { ANAlYZER_UTILS } = window.parent;
+    <script src="../../../script/initialize.js"></script>
 
-      window.addEventListener("load", function () {
-        ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching_v2.json`).then(
-          (result) => {
-            const toolboxInstance = new ToolBox(result);
-          }
-        );
-      });
+    <script>
+      const key = 'tool-box';
+      
+      INIT.loadData(key,ToolBox)
+     
     </script>
+
   </body>
 </html>

@@ -167,28 +167,14 @@
 
     <script src="./model.js"></script>
 
+    <script src="../../script/initialize.js"></script>
+
     <script>
-      const SOURCE_PATH = "./src/pages/datasource/";
-      const {
-        ANAlYZER_UTILS,
-        apiConfig,
-        analyzer_env: { MODE },
-      } = window.parent;
-      window.addEventListener("load", function () {
-        if (MODE === "FE") {
-          ANAlYZER_UTILS.requestData(`${SOURCE_PATH}taste_matching_v2.json`).then(
-            (result) => {
-              const tasteMatchingInstance = new TasteMatching(result);
-            }
-          );
-        } else {
-          ANAlYZER_UTILS.requestData(apiConfig["taste_matching"], {
-            name: "init",
-          }).then((result) => {
-            const tasteMatchingInstance = new TasteMatching(result);
-          });
-        }
-      });
+      const key = 'taste_matching';
+      
+      INIT.loadData(key,TasteMatching)
+     
     </script>
+  
   </body>
 </html>
