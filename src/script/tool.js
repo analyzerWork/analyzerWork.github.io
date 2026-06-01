@@ -131,6 +131,8 @@ class IndexedDBUtil {
 
 window.SOURCE_PATH = "./src/pages/datasource/";
 
+window.CLEANED_SOURCE_PATH= "./src/pages/datasource/clean_data/";
+
 window.DATA_SOURCE_LIST=[2022,2023,2024,2025,2026]
 
 window.analyzer_env = {

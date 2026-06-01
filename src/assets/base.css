@@ -169,6 +169,10 @@ div.toolbox-drop-down {
   background-image: url("./icons/potential_list.svg");
 }
 
+.ingredient_health {
+  background-image: url("./icons/ingredient_health.svg");
+}
+
 .toolbox {
   background-image: url("./icons/toolbox.svg");
 }
