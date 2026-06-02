@@ -97,29 +97,6 @@ class IngredientGrow extends CustomResizeObserver {
     );
   };
 
-  computeDateList = (year) => {
-    return []
-      .concat(
-        hasSecondHalf(year)
-          ? [{ value: SECOND_HALF_VALUE, text: SECOND_HALF }]
-          : []
-      )
-      .concat(
-        hasFirstHalf(year)
-          ? [{ value: FIRST_HALF_VALUE, text: FIRST_HALF }]
-          : []
-      )
-      .concat(
-        (year === CURRENT_YEAR
-          ? MONTH_LIST.filter((month) => month <= CURRENT_MONTH)
-          : MONTH_LIST
-        ).map((item) => ({
-          value: `${item}`.padStart(2, 0),
-          text: `${item}月`,
-        }))
-      );
-  };
-
 
   computeComparedList = (date) => {
     return isHalfYear(date)
@@ -271,7 +248,7 @@ class IngredientGrow extends CustomResizeObserver {
 
     const currentYear = yearRange[0];
 
-    const dateList = this.computeDateList(Number(currentYear));
+    const dateList = computeDateList(Number(currentYear));
 
     const selectedDate = dateList[0].value;
 
@@ -458,7 +435,7 @@ class IngredientGrow extends CustomResizeObserver {
     });
     const { selectedDate } = this.get("selectedDate");
 
-    const dateList = this.computeDateList(Number(value));
+    const dateList = computeDateList(Number(value));
 
     const dateValueList = dateList.map((date) => date.value);
 
