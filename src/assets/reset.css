@@ -163,3 +163,10 @@ a{
     margin: 20px 0 0;
     color: var(--color-primary-dark);
 }
+
+.tool-bar {
+    display: flex;
+    align-items: center;
+    margin: 36px 24px 24px;
+    font-size: 14px;
+}
