@@ -1,112 +1,9 @@
-const CURRENT_YEAR = 2026;
-
-const CURRENT_MONTH = 4;
-
-const MONTH_LIST = Array.from({ length: 12 }, (_, index) => 12 - index);
-
-const FIRST_HALF = "春夏(当年3月至8月)";
-
-const FIRST_HALF_VALUE = "firstHalf";
-
-const SECOND_HALF = "秋冬(当年9月至次年2月)";
-
-const FIRST_SHORT_HALF = "春夏";
-
-const SECOND_SHORT_HALF = "秋冬";
-
-const SECOND_HALF_VALUE = "secondHalf";
-
-const YoY_VALUE = "yoy";
-
-const MoM_VALUE = "mom";
-
-const YoY_COMPARE = [{ value: YoY_VALUE, text: "去年同期(同比)" }];
-
-const MoM_COMPARE = [{ value: MoM_VALUE, text: "上月(环比)" }];
-
-const TEA_PRODUCT_LIST = [
-  "水果茶",
-  "奶茶(多料为主)",
-  "奶盖茶",
-  "果奶",
-  "轻乳茶",
-  "冰淇淋",
-  "酸奶",
-  "奶茶(多料奶茶)",
-];
-
-const COFFEE_PRODUCT_LIST = [
-  "拿铁",
-  "美式",
-  "精品/单品咖啡",
-  "Dirty",
-  "玛奇朵",
-  "创意咖啡",
-  "澳白",
-  "浓缩",
-  "馥芮白",
-  "冰滴/冷萃",
-  "阿芙佳朵",
-  "摩卡",
-  "低因咖啡",
-  "阿芙加朵",
-  "低卡咖啡",
-  "精品咖啡",
-];
-
-const ALL_CATEGORY_PRODUCT_LIST = [
-  ...new Set([...TEA_PRODUCT_LIST, ...COFFEE_PRODUCT_LIST]),
-];
-
-const TEA_CLASSIFICATION_LIST = ["果味", "茶底", "花香", "乳基底"];
-
-const COFFEE_CLASSIFICATION_LIST = [
-  "果味",
-  "茶底",
-  "花香",
-  "乳基底",
-  "可可坚果",
-  "谷物草本",
-  "烘焙",
-];
-
-const ALL_CLASSIFICATION_LIST = [
-  ...new Set([...TEA_CLASSIFICATION_LIST, ...COFFEE_CLASSIFICATION_LIST]),
-];
-
-const EMPTY_TEXT = "(无)";
-
-const EMPTY_ITEM = {
-  text: EMPTY_TEXT,
-  value: EMPTY_VALUE,
-};
-
-const getOptions = (options) =>
-  options.map((v) => ({
-    text: v,
-    value: v,
-  }));
-
-const PRODUCT_MAP = new Map([
-  ["茶饮", [...getOptions(TEA_PRODUCT_LIST), EMPTY_ITEM]],
-  ["咖啡", [...getOptions(COFFEE_PRODUCT_LIST), EMPTY_ITEM]],
-  [EMPTY_VALUE, [...getOptions(ALL_CATEGORY_PRODUCT_LIST), EMPTY_ITEM]],
-]);
-const CLASSIFICATION_MAP = new Map([
-  ["茶饮", getOptions(TEA_CLASSIFICATION_LIST)],
-  ["咖啡", getOptions(COFFEE_CLASSIFICATION_LIST)],
-  [EMPTY_VALUE, getOptions(ALL_CLASSIFICATION_LIST)],
-]);
-
-const isEmptyFilterValue = (value) =>
-  value === undefined || value === EMPTY_VALUE;
-
 class IngredientGrow extends CustomResizeObserver {
   data = [];
   bigProductTypeOptions = [
     { text: "茶饮", value: "茶饮" },
     { text: "咖啡", value: "咖啡" },
-    { text: EMPTY_TEXT, value: EMPTY_VALUE },
+    { text: SELECT_ALL, value: SELECT_ALL_VALUE },
   ];
 
   computedData = {
@@ -250,7 +147,6 @@ class IngredientGrow extends CustomResizeObserver {
       "selectedCompared"
     );
 
-    
     let startDateIndex;
     let endDateIndex;
     let comparedStartDateIndex;
@@ -295,7 +191,6 @@ class IngredientGrow extends CustomResizeObserver {
         (d) => d["月份"] === `${currentYear}-${date}`
       );
 
-
       const comparedYearMoM = date === "01" ? currentYear - 1 : currentYear;
 
       const comparedMonthMoM =
@@ -310,7 +205,6 @@ class IngredientGrow extends CustomResizeObserver {
 
       const comparedMonth =
         selectedCompared === YoY_VALUE ? comparedMonthYoY : comparedMonthMoM;
-      
 
       comparedStartDateIndex = this.data.findIndex(
         (d) => d["月份"] === `${comparedYear}-${comparedMonth}`
@@ -333,7 +227,7 @@ class IngredientGrow extends CustomResizeObserver {
     };
   };
 
-  computeRangeData =  () => {
+  computeRangeData = () => {
     const {
       startDateIndex,
       endDateIndex,
@@ -350,6 +244,9 @@ class IngredientGrow extends CustomResizeObserver {
 
     const { bigProductTypeValue, productType, ingredientClassification } =
       filter;
+
+      console.log(filter);
+      
 
     const currentDataByDateRange = this.data.slice(
       startDateIndex,
@@ -403,7 +300,7 @@ class IngredientGrow extends CustomResizeObserver {
       dateList,
       selectedDate,
       comparedList,
-    })
+    });
 
     const {
       startDateIndex,
@@ -415,15 +312,13 @@ class IngredientGrow extends CustomResizeObserver {
     } = this.computeDataRangeIndex(selectedDate);
 
     this.set({
- 
       startDateIndex,
       endDateIndex,
       comparedStartDateIndex,
       comparedEndDateIndex,
-  
+
       currentTdTitle,
       comparedTdTitle,
-     
     });
 
     this.element.$pageLoading.classList.add("hide");
@@ -727,70 +622,18 @@ class IngredientGrow extends CustomResizeObserver {
     this.computeIngredientGrowth();
   };
 
-  computeIngredientList(
-    currentRangeData,
-    bigProductTypeValue,
-    ingredientClassification
-  ) {
-    const { resortFirstClassificationIngredient, firstIngredientCountMap } =
-      computedRelatedFirstClassificationData(
-        currentRangeData,
-        bigProductTypeValue
-      );
-
-
-
-    const currentData = resortFirstClassificationIngredient.find(
-      (item) => item.classification === ingredientClassification
-    );
-
-    
-
-    if (currentData !== undefined) {
-      const ingredientList = currentData.ingredientList;
-      const ingredientItemList = [];
-
-      for (const ingredient of ingredientList) {
-        const count = firstIngredientCountMap.get(ingredient) || 0;
-        ingredientItemList.push({
-          name: ingredient,
-          count: count,
-        });
-      }
-
-      return ingredientItemList;
-    } else {
-      return []
-    }
-  }
-
   computeIngredientGrowth() {
-    const {
-      filter: { bigProductTypeValue, ingredientClassification },
-    } = this.get("bigProductTypeValue", "filter");
     const { currentRangeData, currentComparedRangeData } =
       this.computeRangeData();
-      
-
-    const data = this.computeIngredientList(
-      currentRangeData,
-      bigProductTypeValue,
-      ingredientClassification
-    );
-
-    const comparedData = this.computeIngredientList(
-      currentComparedRangeData,
-      bigProductTypeValue,
-      ingredientClassification
-    );
     
-    
+    const data = getProcessedIngredientsStats(currentRangeData);
+
+    const comparedData = getProcessedIngredientsStats(currentComparedRangeData);
+
     const comparedDataMap = new Map();
     for (const item of comparedData) {
       comparedDataMap.set(item.name, item.count);
     }
-    
-    
 
     // 存储正常增长率结果
     const normalGrowthRates = [];
@@ -816,22 +659,22 @@ class IngredientGrow extends CustomResizeObserver {
           newCount: newCount,
           growthRate: "N/A(新成分)",
         });
-      } else if (oldCount !== 0) {        
+      } else if (oldCount !== 0) {
         // 正常情况：计算增长率 (新值 - 旧值) / 旧值 * 100%
         const growthRate = ((newCount - oldCount) / oldCount) * 100;
         // DEBUG: console.log(growthRate)
         if (growthRate > 0) {
           normalGrowthRates.push({
             name: name,
-            oldCount: oldCount,
             newCount: newCount,
+            oldCount: oldCount,
             growthRate: growthRate.toFixed(2),
           });
         }
       }
       // 如果oldCount为0且newCount为0，则跳过
     }
-    
+
     // 对正常增长率按从大到小排序
     normalGrowthRates.sort((a, b) => b.growthRate - a.growthRate);
 
@@ -842,12 +685,10 @@ class IngredientGrow extends CustomResizeObserver {
   }
 
   renderGrowthTable = (data) => {
-    
-    
     this.element.$ingredientGrowLoading.classList.remove("hide");
 
     this.element.$ingredientGrowTbody.innerHTML = null;
-  
+
     window.setTimeout(() => {
       const { currentTdTitle, comparedTdTitle } = this.get(
         "comparedTdTitle",
@@ -864,8 +705,9 @@ class IngredientGrow extends CustomResizeObserver {
         tr.appendChild(td);
         this.element.$ingredientGrowTbody.appendChild(tr);
       } else {
-      
         const tbodyFragment = document.createDocumentFragment();
+        console.log(data);
+        
 
         data.forEach((item) => {
           const tr = document.createElement("tr");
