@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>成分增长榜单</title>
+    <title>成分健康体检</title>
     <link
       rel="stylesheet"
       href="https://qidian.gtimg.com/lulu/edge/css/common/ui.css"
@@ -16,66 +16,69 @@
     <link rel="stylesheet" href="../../assets/reset.css" />
     <link rel="stylesheet" href="../../components/component.css" />
     <link rel="stylesheet" href="index.css" />
-
     <script
       type="module"
-      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Select.js"
+      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/DateTime.js"
+    ></script>
+    <script
+      type="module"
+      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Dialog.js"
     ></script>
     <script
       type="module"
       src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Drop.js"
+    ></script>
+    <script
+      type="module"
+      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Select.js"
     ></script>
   </head>
 
   <body class="iframe-body">
     <div class="body-header">
       <div class="header-item">
-        <span class="base-label">选择年份：</span>
-        <select id="yearSelect" is="ui-select"></select>
-      </div>
-      <div class="header-item">
-        <span class="base-label">日期：</span>
-        <select id="dateSelect" is="ui-select"></select>
-      </div>
-      <div class="header-item">
-        <span class="text">对比：</span>
-        <select id="comparedSelect" is="ui-select"></select>
-      </div>
-      <div class="header-item">
         <span class="text">产品大类：</span>
         <select id="bigProductTypeSelect" is="ui-select"></select>
+      </div>
+
+      <div class="header-item">
+        <span class="text">品牌：</span>
+        <select id="brandSelect" is="ui-select"></select>
       </div>
       <div class="header-item">
         <span class="text">产品类型：</span>
         <select id="productTypeSelect" is="ui-select"></select>
       </div>
-      <div class="header-item">
-        <span class="text">成分分类：</span>
-        <select id="ingredientTypeSelect" is="ui-select"></select>
-      </div>
     </div>
 
-    <div class="content">
+    <div class="content" id="contentWrapper">
       <section>
-        <div id="summary"></div>
-        <div id="ingredientGrowSection" class="ingredient-grow-section">
-          <div
-            id="ingredientGrowLoading"
-            class="ui-loading ingredient-grow-loading"
-          >
-            计算中<ui-dot></ui-dot>
+        <div class="title">健康雷达透视</div>
+        <div id="healthOverviewSection">
+          <div>年份</div>
+          <div>日期 月度,季度</div>
+          <div id="healthOverview" class="health-overview"></div>
+        </div>
+      </section>
+      <section>
+        <div class="title">健康趋势</div>
+        <div id="healthTrendSection">
+          <div class="header-item">
+            <span class="base-label">选择日期区间：</span>
+            <input
+              id="health-trend-date-picker"
+              type="month-range"
+              is="ui-datetime"
+              data-position="1-4"
+            />
           </div>
-          <table id="ingredientGrowTable" class="ui-table">
-            <thead>
-              <tr>
-                <th>成分名称</th>
-                <th id="currentTdTitle"></th>
-                <th id="comparedTdTitle"></th>
-                <th>增长率(%)</th>
-              </tr>
-            </thead>
-            <tbody id="ingredientGrowTbody"></tbody>
-          </table>
+          <div>
+            <span class="text">健康标签筛选：</span>
+          </div>
+          <div>
+            <span class="text">风险标签筛选：</span>
+          </div>
+          <div id="healthTrend" class="health-trend"></div>
         </div>
       </section>
     </div>
@@ -100,7 +103,7 @@
             fill="#efefef"
           ></path>
         </svg>
-        <div class="empty-text">该筛选条件下没有使用量增长的成分</div>
+        <div class="empty-text">暂无数据</div>
       </div>
     </template>
     <script src="../../model/resizeObserver.js"></script>
@@ -108,14 +111,16 @@
     <script src="../commonComputed.js"></script>
     <script src="./computed.js"></script>
 
+    <script src="../../chartConfig/ingredient_tracking/trend.js"></script>
+
     <script src="./model.js"></script>
+
     <script src="../../script/initialize.js"></script>
 
     <script>
-      const key = 'ingredient_grow';
-      
-      INIT.loadData(key,IngredientGrow)
-     
+      const key = "ingredient_health";
+
+      INIT.loadData(key, IngredientHealth, false);
     </script>
   </body>
 </html>
