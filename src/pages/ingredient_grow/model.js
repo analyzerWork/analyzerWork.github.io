@@ -97,26 +97,15 @@ class IngredientGrow extends CustomResizeObserver {
     );
   };
 
-  hasFirstHalf(year) {
-    return year < CURRENT_YEAR || (year === CURRENT_YEAR && CURRENT_MONTH >= 8);
-  }
-
-  hasSecondHalf(year) {
-    return (
-      year < CURRENT_YEAR - 1 ||
-      (year === CURRENT_YEAR - 1 && CURRENT_MONTH >= 2)
-    );
-  }
-
   computeDateList = (year) => {
     return []
       .concat(
-        this.hasSecondHalf(year)
+        hasSecondHalf(year)
           ? [{ value: SECOND_HALF_VALUE, text: SECOND_HALF }]
           : []
       )
       .concat(
-        this.hasFirstHalf(year)
+        hasFirstHalf(year)
           ? [{ value: FIRST_HALF_VALUE, text: FIRST_HALF }]
           : []
       )
@@ -131,12 +120,9 @@ class IngredientGrow extends CustomResizeObserver {
       );
   };
 
-  isHalfYear(date) {
-    return date === FIRST_HALF_VALUE || date === SECOND_HALF_VALUE;
-  }
 
   computeComparedList = (date) => {
-    return this.isHalfYear(date)
+    return isHalfYear(date)
       ? YoY_COMPARE
       : MoM_COMPARE.concat(YoY_COMPARE);
   };
@@ -244,8 +230,6 @@ class IngredientGrow extends CustomResizeObserver {
 
     const { bigProductTypeValue, productType, ingredientClassification } =
       filter;
-
-      console.log(filter);
       
 
     const currentDataByDateRange = this.data.slice(
@@ -706,7 +690,6 @@ class IngredientGrow extends CustomResizeObserver {
         this.element.$ingredientGrowTbody.appendChild(tr);
       } else {
         const tbodyFragment = document.createDocumentFragment();
-        console.log(data);
         
 
         data.forEach((item) => {
