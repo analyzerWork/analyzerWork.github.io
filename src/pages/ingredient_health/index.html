@@ -4,82 +4,278 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>成分健康体检</title>
+    <title>品牌健康体检</title>
     <link
       rel="stylesheet"
-      href="https://qidian.gtimg.com/lulu/edge/css/common/ui.css"
+      href="https://unpkg.com/lu2/theme/edge/css/common/ui.css"
     />
+
     <link
       rel="stylesheet"
-      href="https://qidian.gtimg.com/lulu/edge/css/common/color.css"
+      href="https://unpkg.com/lu2/theme/edge/css/common/color.css"
     />
+
     <link rel="stylesheet" href="../../assets/reset.css" />
     <link rel="stylesheet" href="../../components/component.css" />
     <link rel="stylesheet" href="index.css" />
+
     <script
       type="module"
-      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/DateTime.js"
+      src="https://unpkg.com/lu2/theme/edge/js/common/ui/DateTime.js"
     ></script>
+
     <script
       type="module"
-      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Dialog.js"
+      src="https://unpkg.com/lu2/theme/edge/js/common/ui/Dialog.js"
     ></script>
+
+    <script type="module" src="https://unpkg.com/lu2/theme/edge/js/common/ui/Drop.js"></script>
+
     <script
       type="module"
-      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Drop.js"
-    ></script>
-    <script
-      type="module"
-      src="https://qidian.gtimg.com/lulu/edge/js/common/ui/Select.js"
+      src="https://unpkg.com/lu2/theme/edge/js/common/ui/Select.js"
     ></script>
   </head>
 
   <body class="iframe-body">
-    <div class="body-header">
-      <div class="header-item">
-        <span class="text">产品大类：</span>
-        <select id="bigProductTypeSelect" is="ui-select"></select>
-      </div>
+    <div class="body-header ingredient-health-header">
+      <div class="filter-section">
+        <div class="header-item">
+          <span class="text">产品大类：</span>
+          <select id="bigProductTypeSelect" is="ui-select"></select>
+        </div>
 
-      <div class="header-item">
-        <span class="text">品牌：</span>
-        <select id="brandSelect" is="ui-select"></select>
+        <div class="header-item">
+          <span class="text">品牌：</span>
+          <select id="brandSelect" is="ui-select"></select>
+        </div>
+        <div class="header-item">
+          <span class="text">产品类型：</span>
+          <select id="productTypeSelect" is="ui-select"></select>
+        </div>
       </div>
-      <div class="header-item">
-        <span class="text">产品类型：</span>
-        <select id="productTypeSelect" is="ui-select"></select>
+      <div class="rule-info">
+        <span class="text">标签规则</span>
+        <span  id="ruleInfo"  class="list-remind"></span>
+        <dialog
+          id="tagRemindDialog"
+          class="remind-dialog"
+          is="ui-dialog"
+          data-params="{
+        title:'🏷️ 成分标签说明'
+      }"
+        >
+          <div class="ui-dialog-body">
+            <div class="tag-rules-modal">
+
+              <dl style="margin: 0; display: grid; gap: 16px">
+                <!-- ✅ 健康加分属性 -->
+                <div>
+                  <dt class="health-rules">✅ 健康属性</dt>
+                  <dd
+                    系统会自动识别产品原料中的以下特征：<br />
+                    • <strong>控糖/无糖：</strong>含
+                    0乳糖、0蔗糖、0卡糖等成分<br />
+                    • <strong>清洁标签：</strong>含
+                    0植脂末、非氢化、0脂肪等成分<br />
+                    •
+                    <strong>高蛋白：</strong
+                    >含高蛋白、浓醇牛乳、源牧甄奶等<br />
+                    •
+                    <strong>优质奶源：</strong
+                    >含有机、A2、娟姗、水牛乳、生牛乳、厚乳等<br />
+                    •
+                    <strong>超级食物：</strong
+                    >含羽衣甘蓝、奇亚籽、大麦若叶等<br />
+                    • <strong>益生菌/活菌：</strong>含益生菌、活菌、B420等<br />
+                    • <strong>真材实料：</strong>含 NFC、HPP、鲜榨、冷萃、SOE
+                    等<br />
+                    • <strong>植物基：</strong>含燕麦奶、OATLY、豆乳、生椰等
+                  </dd>
+                </div>
+
+                <!-- ⚠️ 风险减分属性 -->
+                <div>
+                  <dt class="risk-rules">⚠️ 风险属性</dt>
+                  <dd>
+                    系统会排查产品原料中的潜在风险成分：<br />
+                    •
+                    <strong>高糖/隐形糖：</strong
+                    >含风味糖浆、果葡糖浆、白砂糖、各类花酱等<br />
+                    •
+                    <strong>反式脂肪酸风险：</strong
+                    >含植脂末、氢化植物油、奶精等<br />
+                    •
+                    <strong>高热量/低营养：</strong
+                    >含爆珠、脆啵啵、寒天、芋圆等小料<br />
+                    •
+                    <strong>过度加工/添加剂：</strong
+                    >含香精、色素、防腐剂、调味糖浆等
+                  </dd>
+                </div>
+
+                <!-- 💡 特殊互斥逻辑提示 -->
+                <div class="alert-rules">
+                  💡
+                  <strong>智能防误判机制：</strong
+                  >在判定“反式脂肪酸风险”时，若同一产品的原料中同时包含“0植脂末”或“非氢化”等安全声明，系统将自动豁免该风险扣分，确保评估结果客观准确。
+                </div>
+              </dl>
+            </div>
+          </div>
+        </dialog>
+        <!-- 标签评估规则说明弹窗 -->
       </div>
     </div>
 
     <div class="content" id="contentWrapper">
       <section>
-        <div class="title">健康雷达透视</div>
+        <div class="section-header">
+          <div class="title">健康雷达透视</div>
+          <div class="list-remind" id="radarRemindBtn"></div>
+          <dialog
+            id="radarRemindDialog"
+            class="remind-dialog"
+            is="ui-dialog"
+            data-params="{
+            title:'📊 计算规则说明'
+          }"
+          >
+            <div class="ui-dialog-body">
+              <div class="calc-rules-modal">
+                <dl style="margin: 0; display: grid; gap: 12px">
+                  <!-- 规则一：数据源头与结构占比 -->
+                  <div>
+                    <dt style="font-weight: bold; color: #1e293b">
+                      1. 计算原料结构占比
+                    </dt>
+                    <dd>
+                      统计当前筛选条件下，产品原料构成在各标签维度的出现次数；计算其占总次数的比例，反映该批产品的核心特征。
+                    </dd>
+                  </div>
+
+                  <!-- 规则二：【语感优化】Z-Score 标准化 -->
+                  <div>
+                    <dt>2. Z-Score 标准化</dt>
+                    <dd>
+                      以全行业各维度的平均分布比例为基准，量化当前品牌与行业均值的偏离程度，<br /><strong
+                        >数学规则：</strong
+                      >采用公式
+                      <code class="calc-rules-formula">z = (x - μ) / σ</code
+                      >，即：<span style="color: #1e293b"
+                        >(当前品牌占比 - 行业平均占比) ÷ 行业标准差</span
+                      >。从而客观衡量其在行业中的相对优势。
+                    </dd>
+                  </div>
+
+                  <!-- 规则三：CDF 得分映射 -->
+                  <div>
+                    <dt>3. CDF 得分映射</dt>
+                    <dd>
+                      将上述对比结果转化为 0~100
+                      分的正态得分。分数越高，代表该维度的竞争力越接近或超越行业中上游水平。
+                      <br /><strong>数学规则：</strong>采用累积分布函数
+                      <code class="calc-rules-formula">Score = Φ(z) × 100</code
+                      >，即：<span style="color: #1e293b"
+                        >通过标准正态分布表查出 z 值对应的累积概率，并乘以
+                        100</span
+                      >。将极端差异平滑为直观的百分位排名。
+                    </dd>
+                  </div>
+
+                  <!-- 规则四：极端值平滑处理 -->
+                  <div>
+                    <dt>4. 极端值平滑处理</dt>
+                    <dd>
+                      当某维度原始命中次数为 0
+                      时，会将其纳入统计算法进行转换，生成一个极小的基础分值。在保证雷达图形轮廓的完整性与美观度；同时图表提示框会严格展示真实的业务数据。
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </dialog>
+        </div>
+
         <div id="healthOverviewSection">
-          <div>年份</div>
-          <div>日期 月度,季度</div>
-          <div id="healthOverview" class="health-overview"></div>
+          <div class="tool-bar">
+            <div class="header-item">
+              <span class="base-label">选择年份：</span>
+              <select id="yearSelect" is="ui-select"></select>
+            </div>
+            <div class="header-item">
+              <span class="base-label">日期：</span>
+              <select id="dateSelect" is="ui-select"></select>
+            </div>
+          </div>
+
+          <div id="healthOverview" class="health-overview">
+            <div id="healthRadar" class="chart-container"></div>
+            <div id="riskRadar" class="chart-container"></div>
+          </div>
         </div>
       </section>
       <section>
-        <div class="title">健康趋势</div>
-        <div id="healthTrendSection">
-          <div class="header-item">
-            <span class="base-label">选择日期区间：</span>
-            <input
-              id="health-trend-date-picker"
-              type="month-range"
-              is="ui-datetime"
-              data-position="1-4"
-            />
-          </div>
-          <div>
-            <span class="text">健康标签筛选：</span>
-          </div>
-          <div>
-            <span class="text">风险标签筛选：</span>
-          </div>
-          <div id="healthTrend" class="health-trend"></div>
+        <div class="section-header">
+          <div class="title">健康趋势</div>
         </div>
+
+
+        <div id="healthTrendSection">
+            <div class="tool-bar">
+              <div class="header-item">
+                <span class="base-label">日期区间：</span>
+                <input
+                  id="trendDatePicker"
+                  type="month-range"
+                  is="ui-datetime"
+                  data-position="1-4"
+                />
+              </div>
+              <div class="tag-filter">
+                <span class="text">健康标签：</span>
+                <ui-drop class="ui-select" target="healthTagPanel">
+                  <input
+                    id="healthInput"
+                    class="health-input"
+                    is="ui-input"
+                    required
+                    placeholder="请选择"
+                    readonly
+                  />
+                  <i class="ui-select-icon"></i>
+                </ui-drop>
+              </div>
+              <div id="healthTagPanel" class="tag-panel ui-dropanel-x" hidden>
+                <div id="healthOptionsWrapper" class="options-wrapper">
+                 
+                </div>
+              </div>
+              <div class="tag-filter">
+                <span class="text">风险标签：</span>
+                <ui-drop class="ui-select" target="riskTagPanel">
+                  <input
+                   id="riskInput"
+                   class="risk-input"
+                    is="ui-input"
+                    required
+                    placeholder="请选择"
+                    readonly
+                  />
+                  <i class="ui-select-icon"></i>
+                </ui-drop>
+              </div>
+              <div id="riskTagPanel" class="tag-panel ui-dropanel-x" hidden>
+                <div id="riskOptionsWrapper" class="options-wrapper">
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div id="healthTrend" class="health-trend"></div>
+        </div>
+
+        
       </section>
     </div>
     <div class="analyzer-loading mask text-large" id="pageLoading">
@@ -111,7 +307,9 @@
     <script src="../commonComputed.js"></script>
     <script src="./computed.js"></script>
 
-    <script src="../../chartConfig/ingredient_tracking/trend.js"></script>
+    <script src="../../chartConfig/ingredient_health/radar.js"></script>
+    <script src="../../chartConfig/ingredient_health/trend.js"></script>
+
 
     <script src="./model.js"></script>
 

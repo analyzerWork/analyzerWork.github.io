@@ -402,9 +402,7 @@ const computeCurrentDataRangeV2 = ({
   const dataFilterByProduct =
     productType === undefined || productType === SELECT_ALL_VALUE
       ? dataFilterByBrand
-      : dataFilterByBrand.filter(
-          (item) => item["产品类型"] === productType
-        );
+      : dataFilterByBrand.filter((item) => item["产品类型"] === productType);
 
   const dataFilterByIngredientClassification =
     ingredientClassification === undefined ||
@@ -431,6 +429,32 @@ const computedMenuOptionsFragment = (list, isObjItem) => {
 
   return menuFragment;
 };
+
+function computeCheckboxFragment(list, isObjItem) {
+  // 防御性校验
+  if (!Array.isArray(list)) return;
+
+  // 1. 创建文档片段（内存中的轻量级 DOM 容器）
+  const fragment = document.createDocumentFragment();
+
+  // 2. 遍历规则数组，将节点追加到 Fragment 中（此时不会触发任何页面渲染）
+  list.forEach((item) => {
+    const labelEl = document.createElement("label");
+
+    const inputEl = document.createElement("input");
+    inputEl.setAttribute("is", "ui-checkbox");
+    inputEl.type = "checkbox";
+    inputEl.value = isObjItem ? item.value : item;
+
+    labelEl.appendChild(inputEl);
+    labelEl.append(isObjItem ? item.text: item);
+
+    // 追加到离线容器
+    fragment.appendChild(labelEl);
+  });
+
+  return fragment;
+}
 
 function getProcessedIngredientsStats(data) {
   const countObj = data.reduce((acc, item) => {
@@ -499,40 +523,24 @@ function getProductType(data, filter, isOptionHasAll) {
   };
 }
 
-function computeCurrentDataRangeV3 (data,year,date)  {
-
+function computeCurrentDataRangeV3(data, year, date) {
   let startDateIndex;
   let endDateIndex;
 
   if (date === SECOND_HALF_VALUE) {
-    startDateIndex = data.findIndex(
-      (d) => d["月份"] === `${year}-09`
-    );
-    endDateIndex = data.findLastIndex(
-      (d) => d["月份"] === `${year + 1}-02`
-    );
-  
+    startDateIndex = data.findIndex((d) => d["月份"] === `${year}-09`);
+    endDateIndex = data.findLastIndex((d) => d["月份"] === `${year + 1}-02`);
   } else if (date === FIRST_HALF_VALUE) {
-    startDateIndex = data.findIndex(
-      (d) => d["月份"] === `${year}-03`
-    );
-    endDateIndex = data.findLastIndex(
-      (d) => d["月份"] === `${year}-08`
-    );
-    
+    startDateIndex = data.findIndex((d) => d["月份"] === `${year}-03`);
+    endDateIndex = data.findLastIndex((d) => d["月份"] === `${year}-08`);
   } else {
-    startDateIndex = data.findIndex(
-      (d) => d["月份"] === `${year}-${date}`
-    );
-    endDateIndex = data.findLastIndex(
-      (d) => d["月份"] === `${year}-${date}`
-    );
-
+    startDateIndex = data.findIndex((d) => d["月份"] === `${year}-${date}`);
+    endDateIndex = data.findLastIndex((d) => d["月份"] === `${year}-${date}`);
   }
 
   return {
     startDateIndex,
     endDateIndex,
-    dataRange: data.slice(startDateIndex,endDateIndex)
+    dataRange: data.slice(startDateIndex, endDateIndex),
   };
-};
+}

@@ -1,0 +1,130 @@
+.ingredient-health-header {
+  justify-content: space-between;
+}
+
+.filter-section {
+  display: flex;
+  align-items: center;
+}
+
+.rule-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.tag-rules-modal {
+  font-family: sans-serif;
+  line-height: 1.8;
+  color: #333;
+  max-width: 560px;
+}
+
+.alert-rules {
+  background: #fffbe6;
+  border: 1px solid #ffe58f;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #ad6800;
+}
+
+.risk-rules {
+  font-weight: bold;
+  color: #ff4d4f;
+  margin-bottom: 4px;
+}
+
+.health-rules {
+  font-weight: bold;
+  color: #52c41a;
+  margin-bottom: 4px;
+}
+.calc-rules-modal {
+  font-family: sans-serif;
+  line-height: 1.6;
+  color: #333;
+  max-width: 500px;
+}
+
+.calc-rules-modal dt {
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.calc-rules-modal dd,
+.tag-rules-modal dd {
+  margin-left: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.calc-rules-formula {
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 13px;
+  color: #d32f2f;
+}
+
+.health-overview {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chart-container {
+  flex: 1;
+  height: 400px;
+}
+
+.remind-dialog .ui-dialog-body {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.remind-dialog .ui-dialog-body::-webkit-scrollbar {
+  display: block;
+}
+
+.tag-filter {
+  display: flex;
+  align-items: center;
+  margin-right: 24px;
+}
+
+.options-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.tag-panel {
+  width: 170px;
+  padding: 7px;
+}
+
+.health-input,
+.risk-input {
+  max-width: 1170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.options-wrapper label {
+  cursor: pointer;
+  padding-block: 4px;
+  border-bottom: 1px solid var(--color-primary-black);
+}
+
+.health-trend {
+  height: 400px;
+}
