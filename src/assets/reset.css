@@ -170,3 +170,11 @@ a{
     margin: 36px 24px 24px;
     font-size: 14px;
 }
+
+.list-remind{
+    width: 20px;
+    height: 20px;
+    background-image: url('../assets/icons/info.svg');
+    background-size: contain;
+    cursor: pointer;
+}
