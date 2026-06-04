@@ -1,25 +1,37 @@
-const SELECT_ALL = "全部";
+const hasFirstHalf = (year) => {
+  return year < CURRENT_YEAR || (year === CURRENT_YEAR && CURRENT_MONTH >= 8);
+};
 
-const EMPTY_VALUE = "--";
+const hasSecondHalf = (year) => {
+  return (
+    year < CURRENT_YEAR - 1 || (year === CURRENT_YEAR - 1 && CURRENT_MONTH >= 2)
+  );
+};
 
-const classificationPriorityMap = new Map([
-  ["果味", 6],
-  ["茶底", 5],
-  ["花香", 4],
-  ["其他", 3],
-  ["乳基底", 2],
-  ["小料", 1],
-]);
+const isHalfYear = (date) => {
+  return date === FIRST_HALF_VALUE || date === SECOND_HALF_VALUE;
+};
 
-const COFFICE_LIST = [
-  "果味",
-  "茶底",
-  "花香",
-  "乳基底",
-  "谷物草本",
-  "烘焙",
-  "可可坚果",
-];
+const computeDateList = (year) => {
+  return []
+    .concat(
+      hasSecondHalf(year)
+        ? [{ value: SECOND_HALF_VALUE, text: SECOND_HALF }]
+        : []
+    )
+    .concat(
+      hasFirstHalf(year) ? [{ value: FIRST_HALF_VALUE, text: FIRST_HALF }] : []
+    )
+    .concat(
+      (year === CURRENT_YEAR
+        ? MONTH_LIST.filter((month) => month <= CURRENT_MONTH)
+        : MONTH_LIST
+      ).map((item) => ({
+        value: `${item}`.padStart(2, 0),
+        text: `${item}月`,
+      }))
+    );
+};
 
 const computeResortClassificationIngredient = (
   classificationIngredientMap,
@@ -372,22 +384,38 @@ const computedCurrentDataAndRange = ({
 const computeCurrentDataRangeV2 = ({
   data,
   bigProductTypeValue,
+  brand,
   productType,
   ingredientClassification,
 }) => {
-  
-  const dataFilterByBigProductType = bigProductTypeValue === EMPTY_VALUE ? data : data.filter(
-    (item) => item["产品大类"] === bigProductTypeValue
-  );
+  const dataFilterByBigProductType =
+    bigProductTypeValue === undefined ||
+    bigProductTypeValue === SELECT_ALL_VALUE
+      ? data
+      : data.filter((item) => item["产品大类"] === bigProductTypeValue);
 
-  const dataFilterByProduct  = productType === EMPTY_VALUE ? dataFilterByBigProductType : dataFilterByBigProductType.filter(
-    (item) => item["产品类型"] === productType
-  );
+  const dataFilterByBrand =
+    brand === undefined || brand === SELECT_ALL_VALUE
+      ? dataFilterByBigProductType
+      : dataFilterByBigProductType.filter((item) => item["品牌"] === brand);
 
-  const dataFilterByIngredientClassification = dataFilterByProduct.filter(item => item[`成分分类-${bigProductTypeValue}`] === ingredientClassification)
+  const dataFilterByProduct =
+    productType === undefined || productType === SELECT_ALL_VALUE
+      ? dataFilterByBrand
+      : dataFilterByBrand.filter(
+          (item) => item["产品类型"] === productType
+        );
+
+  const dataFilterByIngredientClassification =
+    ingredientClassification === undefined ||
+    ingredientClassification === SELECT_ALL_VALUE
+      ? dataFilterByProduct
+      : dataFilterByProduct.filter(
+          (item) =>
+            item[`成分分类-${bigProductTypeValue}`] === ingredientClassification
+        );
 
   return dataFilterByIngredientClassification;
-
 };
 
 const computedMenuOptionsFragment = (list, isObjItem) => {
@@ -402,4 +430,109 @@ const computedMenuOptionsFragment = (list, isObjItem) => {
   });
 
   return menuFragment;
+};
+
+function getProcessedIngredientsStats(data) {
+  const countObj = data.reduce((acc, item) => {
+    const ingredient = item["加工后成分"];
+    if (ingredient) {
+      acc[ingredient] = (acc[ingredient] || 0) + 1;
+    }
+    return acc;
+  }, {});
+
+  // 转换为数组并按 count 降序排列
+  const resultArray = Object.entries(countObj)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count); // 降序排序
+
+  return resultArray;
+}
+
+function getBrandByBigProductType(data, bigProductType, isOptionHasAll) {
+  const filteredData =
+    bigProductType === SELECT_ALL_VALUE
+      ? data
+      : data.filter((item) => item["产品大类"] === bigProductType);
+  const brandList = [...new Set(filteredData.map((d) => d["品牌"]))];
+  const brandOptions = brandList.map((brand) => ({
+    text: brand,
+    value: brand,
+  }));
+
+  return {
+    brandOptions: isOptionHasAll
+      ? [{ text: SELECT_ALL, value: SELECT_ALL_VALUE }].concat(brandOptions)
+      : brandOptions,
+    brandList,
+  };
+}
+
+function getProductType(data, filter, isOptionHasAll) {
+  const { bigProductType, brand } = filter;
+
+  const filteredDataByBigProductType =
+    bigProductType === undefined || bigProductType === SELECT_ALL_VALUE
+      ? data
+      : data.filter((item) => item["产品大类"] === bigProductType);
+
+  const filteredDataByBrand =
+    brand === undefined || brand === SELECT_ALL_VALUE
+      ? filteredDataByBigProductType
+      : filteredDataByBigProductType.filter((item) => item["品牌"] === brand);
+
+  const productTypeList = [
+    ...new Set(filteredDataByBrand.map((d) => d["产品类型"])),
+  ];
+  const productTypeOptions = productTypeList.map((productType) => ({
+    text: productType,
+    value: productType,
+  }));
+
+  return {
+    productTypeOptions: isOptionHasAll
+      ? [{ text: SELECT_ALL, value: SELECT_ALL_VALUE }].concat(
+          productTypeOptions
+        )
+      : productTypeOptions,
+    productTypeList,
+  };
+}
+
+function computeCurrentDataRangeV3 (data,year,date)  {
+
+  let startDateIndex;
+  let endDateIndex;
+
+  if (date === SECOND_HALF_VALUE) {
+    startDateIndex = data.findIndex(
+      (d) => d["月份"] === `${year}-09`
+    );
+    endDateIndex = data.findLastIndex(
+      (d) => d["月份"] === `${year + 1}-02`
+    );
+  
+  } else if (date === FIRST_HALF_VALUE) {
+    startDateIndex = data.findIndex(
+      (d) => d["月份"] === `${year}-03`
+    );
+    endDateIndex = data.findLastIndex(
+      (d) => d["月份"] === `${year}-08`
+    );
+    
+  } else {
+    startDateIndex = data.findIndex(
+      (d) => d["月份"] === `${year}-${date}`
+    );
+    endDateIndex = data.findLastIndex(
+      (d) => d["月份"] === `${year}-${date}`
+    );
+
+  }
+
+  return {
+    startDateIndex,
+    endDateIndex,
+    dataRange: data.slice(startDateIndex,endDateIndex)
+  };
 };
