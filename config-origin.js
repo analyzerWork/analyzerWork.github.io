@@ -5,7 +5,7 @@ const CONFIG = {
     { pathname: "brand_tracking", name: "品牌推新追踪" },
     { pathname: "ingredient_grow", name: "成分增长榜单" },
     { pathname: "potential_list", name: "新成分潜力榜" },
-    { pathname: "ingredient_health", name: "品牌健康分析" },
+    { pathname: "ingredient_health", name: "成分健康分析" },
 
   ],
 };
