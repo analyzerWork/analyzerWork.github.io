@@ -11,7 +11,7 @@ class IngredientHealth extends CustomResizeObserver {
     productType: SELECT_ALL_VALUE,
     brandOptions: [],
     currentRangeData: [],
-    currentRangeALLData: [],
+    currentRangeExcludeBrandData: [],
     overview: {
       currentYear: CURRENT_YEAR,
       yearList: [],
@@ -361,16 +361,20 @@ class IngredientHealth extends CustomResizeObserver {
       brand,
       productType,
     });
-    const currentRangeALLData = computeCurrentDataRangeV2({
+    const currentRangeExcludeBrandData = computeCurrentDataRangeV2({
       data: this.data,
       bigProductTypeValue,
-      brand: SELECT_ALL_VALUE,
+      brand,
       productType,
+      options:{
+        excludeBrand: true // 计算除去自身品牌的其他
+      }
     });
+ 
 
     this.set({
       currentRangeData,
-      currentRangeALLData,
+      currentRangeExcludeBrandData,
     });
   }
 
@@ -464,9 +468,9 @@ class IngredientHealth extends CustomResizeObserver {
   };
 
   renderRadar() {
-    const { currentRangeData, currentRangeALLData, overview } = this.get(
+    const { currentRangeData, currentRangeExcludeBrandData,overview } = this.get(
       "currentRangeData",
-      "currentRangeALLData",
+      "currentRangeExcludeBrandData",
       "overview"
     );
     const { currentYear, selectedDate } = overview;
@@ -478,7 +482,7 @@ class IngredientHealth extends CustomResizeObserver {
     );
 
     const { dataRange: allBrandData } = computeCurrentDataRangeV3(
-      currentRangeALLData,
+      currentRangeExcludeBrandData,
       currentYear,
       selectedDate
     );
@@ -497,7 +501,7 @@ class IngredientHealth extends CustomResizeObserver {
     this.healthRadarInstance.setOption(healthOption, setOptionConfig);
   }
   renderTrend() {
-    const { currentRangeData, trend } = this.get("currentRangeData", "trend");
+    const { currentRangeData,currentRangeExcludeBrandData, trend } = this.get("currentRangeData", "currentRangeExcludeBrandData","brand", "trend");
     const { startDate, endDate, riskTags, healthTags } = trend;
 
     const startDateIndex = currentRangeData.findIndex(
@@ -507,7 +511,15 @@ class IngredientHealth extends CustomResizeObserver {
       (d) => d["月份"] === endDate
     );
 
+    const startDateExcludeBrandIndex = currentRangeExcludeBrandData.findIndex(
+      (d) => d["月份"] === startDate
+    );
+    const endDateExcludeBrandIndex = currentRangeExcludeBrandData.findLastIndex(
+      (d) => d["月份"] === endDate
+    );
+
     const filteredData = currentRangeData.slice(startDateIndex, endDateIndex);
+    const filteredExcludeBrandData = currentRangeExcludeBrandData.slice(startDateExcludeBrandIndex, endDateExcludeBrandIndex);
 
     if (filteredData.length === 0) {
       // 【空状态处理】直接通过 setOption 渲染文字提示
@@ -540,13 +552,22 @@ class IngredientHealth extends CustomResizeObserver {
         riskTags.includes(label)
       );
 
-      const result = calculateMonthlyTagCounts(
+      const brandStats = calculateMonthlyTagCounts(
         filteredData,
         healthRules,
         riskRules
       );
 
-      const options = generateTrendChartOptions(result);
+      // 不需要除品牌数，比如 A 月有 50 个品牌，B 月有 100 个品牌，导致失真
+
+      const industryStats = calculateMonthlyTagCounts(
+        filteredExcludeBrandData,
+        healthRules,
+        riskRules
+      );
+      
+
+      const options = generateTrendChartOptions(brandStats, industryStats);
 
       this.healthTrendInstance.setOption(options, setOptionConfig);
     }

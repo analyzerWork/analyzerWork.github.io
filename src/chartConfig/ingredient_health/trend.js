@@ -1,70 +1,101 @@
-/**
- * 根据月度标签统计结果生成 ECharts 趋势图配置项
- * @param {Array} monthlyStats - calculateMonthlyTagCounts 函数的返回值，格式为 [{month, healthCount, riskCount}, ...]
- * @returns {Object} ECharts Option 配置对象
- */
-function generateTrendChartOptions(monthlyStats) {
-  // 防御性校验
-  if (!Array.isArray(monthlyStats)) return {};
-
-  // 提取 X 轴月份与两条折线的数据
-  const months = monthlyStats.map((item) => item.month);
-  const healthData = monthlyStats.map((item) => item.healthCount);
-  const riskData = monthlyStats.map((item) => item.riskCount);
-
-  return {
-    tooltip: {
-      trigger: "axis",
-      axisPointer: { type: "cross" },
-    },
-    legend: {
-      data: ["健康标签命中数", "风险标签命中数"],
-      bottom: 0,
-    },
-    grid: {
-      left: "3%",
-      right: "4%",
-      bottom: "12%",
-      top: "15%",
-      containLabel: true,
-    },
-    xAxis: {
-      type: "category",
-      boundaryGap: false,
-      data: months,
-    },
-    yAxis: {
-      type: "value",
-      name: "成分命中标签数量",
-      minInterval: 1,
-    },
-    series: [
-      {
-        name: "健康标签命中数",
-        type: "line",
-        smooth: true,
-        symbol: "circle",
-        symbolSize: 6,
-        lineStyle: { width: 3, color: "#52c41a" },
-        itemStyle: { color: "#52c41a" },
-        areaStyle: {
-          color: "rgba(82, 196, 26, 0.1)",
-        },
-        data: healthData,
+function generateTrendChartOptions(brandStats, industryStats, brandName = '本品牌') {
+    if (!Array.isArray(brandStats) || !Array.isArray(industryStats)) return {};
+  
+    const months = brandStats.map(item => item.month);
+    const industryMap = new Map(industryStats.map(item => [item.month, item]));
+  
+    // 提取数据
+    const brandHealthData = brandStats.map(item => item.healthCount);
+    const brandRiskData = brandStats.map(item => item.riskCount);
+    const industryHealthData = months.map(m => industryMap.get(m)?.healthCount ?? null);
+    const industryRiskData = months.map(m => industryMap.get(m)?.riskCount ?? null);
+  
+    // 定义统一的调色板
+    const healthColor = '#52c41a';
+    const riskColor = '#ff4d4f';
+  
+    return {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'cross' }
       },
-      {
-        name: "风险标签命中数",
-        type: "line",
-        smooth: true,
-        symbol: "circle",
-        symbolSize: 6,
-        lineStyle: { width: 3, color: "#ff4d4f" },
-        itemStyle: { color: "#ff4d4f" },
-        areaStyle: {
-          color: "rgba(255, 77, 79, 0.1)",
-        },
-        data: riskData,
+      
+      legend: {
+        bottom: '2%',
+        itemGap: 20,
+        textStyle: { color: '#666', fontSize: 12 },
+        selectedMode: true,
+        data: [
+          { 
+            name: `${brandName}-健康`, 
+            icon: 'roundRect', // 本品牌使用实心色块/矩形
+            itemStyle: { color: 'transparent', borderWidth: 2, borderColor:healthColor } 
+          },
+          { 
+            name: `${brandName}-风险`, 
+            icon: 'roundRect', 
+            itemStyle: { color: 'transparent', borderWidth: 2, borderColor:riskColor } 
+          },
+          { 
+            name: '大盘(除本品牌)-健康', 
+            // 🔥 极简方案：直接使用 borderType 绘制虚线边框
+            icon: 'rect', // 推荐使用空心矩形 rect 配合边框显示虚线
+            itemStyle: { 
+              color: 'transparent', // 内部透明
+              borderColor: healthColor, // 边框颜色与折线一致
+              borderWidth: 2, // ⚠️ 关键：必须设置宽度 > 0，borderType 才会生效
+              borderType: 'dashed' // 虚线样式
+            }
+          },
+          { 
+            name: '大盘(除本品牌)-风险', 
+            icon: 'rect', 
+            itemStyle: { 
+              color: 'transparent', 
+              borderColor: riskColor, 
+              borderWidth: 2, 
+              borderType: 'dashed' 
+            }
+          }
+        ]
       },
-    ],
-  };
-}
+  
+      grid: { left: '3%', right: '4%', bottom: '15%', top: '15%', containLabel: true },
+      xAxis: { type: 'category', boundaryGap: false, data: months },
+      yAxis: { type: 'value', name: '累计命中次数', minInterval: 1 },
+  
+      series: [
+        // 本品牌 - 健康 (实线 + 面积)
+        {
+          name: `${brandName}-健康`, type: 'line', smooth: true, symbol: 'circle', symbolSize: 6,
+          lineStyle: { width: 3, color: healthColor },
+          itemStyle: { color: healthColor },
+          areaStyle: { color: 'rgba(82, 196, 26, 0.1)' },
+          data: brandHealthData
+        },
+        // 本品牌 - 风险 (实线 + 面积)
+        {
+          name: `${brandName}-风险`, type: 'line', smooth: true, symbol: 'circle', symbolSize: 6,
+          lineStyle: { width: 3, color: riskColor },
+          itemStyle: { color: riskColor },
+          areaStyle: { color: 'rgba(255, 77, 79, 0.1)' },
+          data: brandRiskData
+        },
+  
+        // 行业大盘 - 健康 (虚线 + 无填充)
+        {
+          name: '大盘(除本品牌)-健康', type: 'line', smooth: true, symbol: 'none',
+          lineStyle: { width: 2, color: healthColor, type: 'dashed' },
+          areaStyle: undefined,
+          data: industryHealthData
+        },
+        // 行业大盘 - 风险 (虚线 + 无填充)
+        {
+          name: '大盘(除本品牌)-风险', type: 'line', smooth: true, symbol: 'none',
+          lineStyle: { width: 2, color: riskColor, type: 'dashed' },
+          areaStyle: undefined,
+          data: industryRiskData
+        }
+      ]
+    };
+  }

@@ -387,7 +387,9 @@ const computeCurrentDataRangeV2 = ({
   brand,
   productType,
   ingredientClassification,
+  options = {}
 }) => {
+  const { excludeBrand, } = options;
   const dataFilterByBigProductType =
     bigProductTypeValue === undefined ||
     bigProductTypeValue === SELECT_ALL_VALUE
@@ -397,7 +399,7 @@ const computeCurrentDataRangeV2 = ({
   const dataFilterByBrand =
     brand === undefined || brand === SELECT_ALL_VALUE
       ? dataFilterByBigProductType
-      : dataFilterByBigProductType.filter((item) => item["品牌"] === brand);
+      : dataFilterByBigProductType.filter((item) => excludeBrand ? item["品牌"] !== brand : item["品牌"] === brand);
 
   const dataFilterByProduct =
     productType === undefined || productType === SELECT_ALL_VALUE

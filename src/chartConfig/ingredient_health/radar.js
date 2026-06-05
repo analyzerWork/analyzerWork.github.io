@@ -119,7 +119,7 @@ function generateCompareRadarOptions(brandStats, globalStats) {
         data: [
           { name: "当前品牌" },
           {
-            name: "行业(所有品牌)均值",
+            name: "行业均值(除本品牌)",
             itemStyle: {
               color: "#FF9800",
             },
@@ -144,7 +144,7 @@ function generateCompareRadarOptions(brandStats, globalStats) {
             },
             {
               value: globalData,
-              name: "行业(所有品牌)均值",
+              name: "行业均值(除本品牌)",
               symbol: "none",
               lineStyle: { color: "#FF9800", width: 2, type: "dashed" },
             },
