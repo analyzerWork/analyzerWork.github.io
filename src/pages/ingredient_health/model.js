@@ -387,16 +387,13 @@ class IngredientHealth extends CustomResizeObserver {
     this.element.$healthOptionsWrapper.appendChild(healthOptions);
 
     this.element.$riskOptionsWrapper.appendChild(riskOptions);
-    
-    [this.element.$healthPanel,this.element.$riskPanel].forEach(ele=>{
-      const checkboxes = ele.querySelectorAll(
-        'input[type="checkbox"]'
-      );
-      Array.from(checkboxes).forEach(checkbox => {
+
+    [this.element.$healthPanel, this.element.$riskPanel].forEach((ele) => {
+      const checkboxes = ele.querySelectorAll('input[type="checkbox"]');
+      Array.from(checkboxes).forEach((checkbox) => {
         checkbox.checked = true;
       });
-    })
-    
+    });
   }
 
   renderBigProductType = () => {
@@ -512,22 +509,46 @@ class IngredientHealth extends CustomResizeObserver {
 
     const filteredData = currentRangeData.slice(startDateIndex, endDateIndex);
 
-    const healthRules = HEALTH_RULES.filter(({ label }) =>
-      healthTags.includes(label)
-    );
+    if (filteredData.length === 0) {
+      // 【空状态处理】直接通过 setOption 渲染文字提示
+      const emptyOptions = {
+        title: {
+          text: "暂无数据",
+          x: "center",
+          y: "center",
+          textStyle: {
+            fontSize: 14,
+            fontWeight: "normal",
+            color: "#999",
+          },
+        },
+        // 强制隐藏可能残留的坐标轴、图例等组件
+        xAxis: { show: false },
+        yAxis: { show: false },
+        series: [],
+      };
 
-    const riskRules = RISK_RULES.filter(({ label }) =>
-      riskTags.includes(label)
-    );
+      // ⚠️ 关键：第二个参数设为 true (notMerge)，清除之前的配置，防止新旧配置合并冲突
+      this.healthTrendInstance.clear(); // 先清空画布
+      this.healthTrendInstance.setOption(emptyOptions, true);
+    } else {
+      const healthRules = HEALTH_RULES.filter(({ label }) =>
+        healthTags.includes(label)
+      );
 
-    const result = calculateMonthlyTagCounts(
-      filteredData,
-      healthRules,
-      riskRules
-    );
+      const riskRules = RISK_RULES.filter(({ label }) =>
+        riskTags.includes(label)
+      );
 
-    const options = generateTrendChartOptions(result);
+      const result = calculateMonthlyTagCounts(
+        filteredData,
+        healthRules,
+        riskRules
+      );
 
-    this.healthTrendInstance.setOption(options, setOptionConfig);
+      const options = generateTrendChartOptions(result);
+
+      this.healthTrendInstance.setOption(options, setOptionConfig);
+    }
   }
 }
