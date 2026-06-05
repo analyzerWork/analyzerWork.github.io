@@ -319,7 +319,6 @@ class IngredientHealth extends CustomResizeObserver {
 
     // 4. 提取所有选中项的 value 值并组成数组
     const selectedValues = Array.from(checkedBoxes).map((box) => box.value);
-    console.log(selectedValues);
 
     this.setByKey("trend", {
       healthTags: selectedValues,
@@ -388,6 +387,16 @@ class IngredientHealth extends CustomResizeObserver {
     this.element.$healthOptionsWrapper.appendChild(healthOptions);
 
     this.element.$riskOptionsWrapper.appendChild(riskOptions);
+    
+    [this.element.$healthPanel,this.element.$riskPanel].forEach(ele=>{
+      const checkboxes = ele.querySelectorAll(
+        'input[type="checkbox"]'
+      );
+      Array.from(checkboxes).forEach(checkbox => {
+        checkbox.checked = true;
+      });
+    })
+    
   }
 
   renderBigProductType = () => {
