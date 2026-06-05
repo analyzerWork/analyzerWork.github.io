@@ -1,108 +1,3 @@
-const HEALTH_RULES = [
-  { label: "控糖/无糖", keywords: ["0乳糖", "0蔗糖", "0糖", "0卡糖"] },
-  {
-    label: "清洁标签",
-    keywords: ["0植脂末", "0氢化", "非氢化", "0脂肪", "0脂", "0酒精"],
-  },
-  { label: "高蛋白", keywords: ["高蛋白", "浓醇牛乳", "源牧甄奶"] },
-  {
-    label: "优质奶源",
-    keywords: [
-      "有机",
-      "A2",
-      "娟姗",
-      "水牛乳",
-      "生牛乳",
-      "鲜牛乳",
-      "厚乳",
-      "厚奶",
-      "丝绒",
-    ],
-  },
-  { label: "超级食物", keywords: ["羽衣甘蓝", "奇亚籽", "大麦若叶", "不老莓"] },
-  { label: "益生菌/活菌", keywords: ["益生菌", "活菌", "B420"] },
-  {
-    label: "真材实料",
-    keywords: [
-      "NFC",
-      "HPP",
-      "鲜果",
-      "鲜榨",
-      "冷冻果肉",
-      "冷萃",
-      "SOE",
-      "精品咖啡",
-    ],
-  },
-  {
-    label: "植物基",
-    keywords: ["燕麦奶", "OATLY", "Oatly", "豆乳", "米乳", "椰乳", "生椰"],
-  },
-];
-
-const HEALTH_RULES_LIST =  HEALTH_RULES.map(({label})=> label); 
-
-//  2. 黑榜：风险减分属性
-const RISK_RULES = [
-  {
-    label: "高糖/隐形糖",
-    keywords: [
-      "风味糖浆",
-      "糖浆",
-      "果葡糖浆",
-      "白砂糖",
-      "蔗糖",
-      "山楂酱",
-      "花酱",
-      "玫瑰酱",
-    ],
-  },
-  // # 注意：植脂末需要在逻辑中排除“0植脂末”的情况
-  {
-    label: "反式脂肪酸风险",
-    keywords: ["植脂末", "氢化", "奶精", "植脂末标准基底乳"],
-  },
-  {
-    label: "高热量/低营养",
-    keywords: [
-      "爆珠",
-      "波波",
-      "脆啵啵",
-      "晶球",
-      "寒天",
-      "Q弹冻",
-      "QQ冻",
-      "芋圆",
-      "Q果",
-      "分子爆珠",
-    ],
-  },
-  {
-    label: "过度加工/添加剂",
-    keywords: [
-      "香精",
-      "色素",
-      "防腐剂",
-      "浓浆",
-      "风味饮料",
-      "固体饮料",
-      "调味糖浆",
-    ],
-  },
-];
-
-const RISK_RULES_LIST = RISK_RULES.map(({label})=> label); 
-
-
-//# 3. 敏感/警示榜：特定人群限制属性
-const WARNING_RULES = [
-  //# 注意：酒精需要在逻辑中排除“0酒精”的情况
-  {
-    label: "含酒精/特定人群慎用",
-    keywords: ["酒", "啤酒", "RIO", "威士忌", "朗姆", "伏特加", "白兰地"],
-  },
-];
-
 /**
  * 接收产品对象数组，返回带有原料标签分析的结果
  * @param {Object[]} productDataArray - 包含产品信息的对象数组
@@ -149,20 +44,6 @@ function generateIngredientTags(productDataArray) {
         }
       }
 
-      // // --- 3. 匹配警示榜并应用排除逻辑 ---
-      // for (const rule of WARNING_RULES) {
-      //   const hasKeyword = rule.keywords.some(keyword => ingLower.includes(keyword.toLowerCase()));
-      //   if (rule.label === '含酒精/特定人群慎用') {
-      //     if (hasKeyword && !ingLower.includes('0酒精')) {
-      //       tags.push(rule.label);
-      //     }
-      //   } else {
-      //     if (hasKeyword) {
-      //       tags.push(rule.label);
-      //     }
-      //   }
-      // }
-
       return {
         原料名称: ingredient,
         属性标签: tags.length > 0 ? tags.join(" | ") : "无",
@@ -180,35 +61,56 @@ function generateIngredientTags(productDataArray) {
 /**
  * 核心判断工具：输入单个原料，返回命中的红黑榜标签数组
  */
+/**
+ * 检查原料构成并返回命中的所有健康与风险标签
+ * @param {string} ingredient - 产品的原料构成字符串
+ * @returns {Array<string>} 命中的标签列表
+ */
 function checkIngredientTags(ingredient) {
-  const tags = [];
-  const ingLower = ingredient.toLowerCase();
+  // 1. 防空处理，确保传入的是字符串
+  if (!ingredient || typeof ingredient !== "string") return [];
 
-  // 匹配红榜
+  const tags = [];
+  // ⚠️ 注意：这里不再强制 toLowerCase()。
+  // 因为 JavaScript 的正则默认是区分大小写的，如果强制转小写，
+  // 会导致像 /(?<!0)植脂末/ 这种依赖特定字符结构的正则失效或行为异常。
+  // 建议在定义 RULES 时，对需要忽略大小写的词直接加上 'i' 标志，如 /oatly/i
+
+  // 2. 统一匹配红榜 (HEALTH_RULES)
   for (const rule of HEALTH_RULES) {
-    if (
-      rule.keywords.some((keyword) => ingLower.includes(keyword.toLowerCase()))
-    ) {
+    const isMatched = rule.keywords.some((keyword) => {
+      if (keyword instanceof RegExp) {
+        return keyword.test(ingredient);
+      } else if (typeof keyword === "string") {
+        return ingredient.includes(keyword);
+      }
+      return false;
+    });
+
+    if (isMatched) {
       tags.push(rule.label);
     }
   }
 
-  // 匹配黑榜并应用排除逻辑
+  // 3. 统一匹配黑榜 (RISK_RULES)
+  // 💡 优化说明：之前的 "0植脂末" 特殊排除逻辑已被移除。
+  // 因为在最新的 RISK_RULES 中，我们已经使用了 /(?<!0)植脂末/
+  // 这样的负向断言正则，JS引擎会在底层自动完成精准过滤，无需业务代码再做二次判断。
   for (const rule of RISK_RULES) {
-    const hasKeyword = rule.keywords.some((keyword) =>
-      ingLower.includes(keyword.toLowerCase())
-    );
-    if (rule.label === "反式脂肪酸风险") {
-      // 特殊排除逻辑：含有植脂末关键词，但不能包含“0植脂末”
-      if (hasKeyword && !ingLower.includes("0植脂末")) {
-        tags.push(rule.label);
+    const isMatched = rule.keywords.some((keyword) => {
+      if (keyword instanceof RegExp) {
+        return keyword.test(ingredient);
+      } else if (typeof keyword === "string") {
+        return ingredient.includes(keyword);
       }
-    } else {
-      if (hasKeyword) {
-        tags.push(rule.label);
-      }
+      return false;
+    });
+
+    if (isMatched) {
+      tags.push(rule.label);
     }
   }
+
   return tags;
 }
 
@@ -257,16 +159,15 @@ function countIngredientTagsByLabel(productDataArray) {
 }
 
 /**
- * 计算每月原料构成中命中 Health 和 Risk 标签的累计次数
- * @param {Array} rawData - 后端返回的原始对象数组
- * @param {Array} healthRules - HEALTH_RULES 规则数组
- * @param {Array} riskRules - RISK_RULES 规则数组
- * @returns {Array} 返回处理后的月份统计数据
+ * 计算每个月份下命中健康标签和风险标签的产品数量
+ * @param {Array} rawData - 原始产品数据数组
+ * @param {Array} healthRules - 健康加分规则库 (HEALTH_RULES)
+ * @param {Array} riskRules - 风险减分规则库 (RISK_RULES)
+ * @returns {Array<Object>} ECharts 友好的按月统计结果
  */
 function calculateMonthlyTagCounts(rawData, healthRules, riskRules) {
   if (!Array.isArray(rawData)) return [];
 
-  // 按月份分组并统计
   const monthMap = {};
 
   rawData.forEach((item) => {
@@ -278,43 +179,41 @@ function calculateMonthlyTagCounts(rawData, healthRules, riskRules) {
       monthMap[month] = { healthCount: 0, riskCount: 0 };
     }
 
-    // 将“原料构成”字符串拆分为数组，清洗空格
+    // 💡 核心修改：将“原料构成”字符串按顿号拆分，清洗空格并过滤空值
     const ingredientsStr = item["原料构成"] || "";
     const ingredients = ingredientsStr
       .split("、")
       .map((s) => s.trim())
       .filter(Boolean);
 
-    // 1. 处理 Health 规则
-    healthRules.forEach((rule) => {
-      // 只要该产品包含该 rule 下的任意一个 keywords，就算命中该 label
-      const isHit = ingredients.some((ing) =>
-        rule.keywords.some((kw) => ing.includes(kw))
+    /**
+     * 统一的匹配器：针对【单个成分】进行正则或子串匹配
+     */
+    const checkMatch = (keywords) => {
+      // 只要该产品的任意一个成分命中了 keywords 中的任意一个词，即算命中
+      return ingredients.some((ing) => 
+        keywords.some((kw) => {
+          if (kw instanceof RegExp) {
+            return kw.test(ing);
+          } else if (typeof kw === 'string') {
+            return ing.includes(kw);
+          }
+          return false;
+        })
       );
-      if (isHit) monthMap[month].healthCount++;
+    };
+
+    // 1. 处理 Health 规则 (红榜)
+    healthRules.forEach((rule) => {
+      if (checkMatch(rule.keywords)) {
+        monthMap[month].healthCount++;
+      }
     });
 
-    // 2. 处理 Risk 规则
+    // 2. 处理 Risk 规则 (黑榜)
     riskRules.forEach((rule) => {
-      // 特殊拦截逻辑：如果是“反式脂肪酸风险”，必须排除掉包含“0植脂末”或“非氢化”的健康原料
-      if (rule.label === "反式脂肪酸风险") {
-        const hasRiskKeyword = ingredients.some((ing) =>
-          rule.keywords.some((kw) => ing.includes(kw))
-        );
-        // 只有命中了风险词，且没有命中对应的安全词时，才计入风险
-        const hasSafeKeyword = ingredients.some((ing) =>
-          ["0植脂末", "非氢化"].some((safeKw) => ing.includes(safeKw))
-        );
-
-        if (hasRiskKeyword && !hasSafeKeyword) {
-          monthMap[month].riskCount++;
-        }
-      } else {
-        // 其他常规风险规则
-        const isHit = ingredients.some((ing) =>
-          rule.keywords.some((kw) => ing.includes(kw))
-        );
-        if (isHit) monthMap[month].riskCount++;
+      if (checkMatch(rule.keywords)) {
+        monthMap[month].riskCount++;
       }
     });
   });
@@ -327,6 +226,3 @@ function calculateMonthlyTagCounts(rawData, healthRules, riskRules) {
       ...counts,
     }));
 }
-
-
-

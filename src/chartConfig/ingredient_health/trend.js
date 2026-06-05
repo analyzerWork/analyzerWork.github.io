@@ -62,7 +62,7 @@ function generateTrendChartOptions(brandStats, industryStats, brandName = '本�
   
       grid: { left: '3%', right: '4%', bottom: '15%', top: '15%', containLabel: true },
       xAxis: { type: 'category', boundaryGap: false, data: months },
-      yAxis: { type: 'value', name: '累计命中次数', minInterval: 1 },
+      yAxis: { type: 'value', name: '成分命中标签次数', minInterval: 1 },
   
       series: [
         // 本品牌 - 健康 (实线 + 面积)
