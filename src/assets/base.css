@@ -173,6 +173,10 @@ div.toolbox-drop-down {
   background-image: url("./icons/ingredient_health.svg");
 }
 
+.store_product {
+  background-image: url("./icons/store_product.svg");
+}
+
 .toolbox {
   background-image: url("./icons/toolbox.svg");
 }
