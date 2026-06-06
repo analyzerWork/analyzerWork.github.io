@@ -63,26 +63,7 @@ class IngredientHealth extends CustomResizeObserver {
 
     const dateRange = [...new Set(this.data.map((item) => item["月份"]))];
 
-    const { bigProductTypeValue } = this.get("bigProductTypeValue");
-    const { brandOptions } = getBrandByBigProductType(
-      this.data,
-      bigProductTypeValue
-    );
-    const brand = brandOptions.at(0).value;
-
-    const { productTypeOptions } = getProductType(
-      this.data,
-      { bigProductType: bigProductTypeValue, brand },
-      true
-    );
-
-    this.set({
-      brandOptions,
-      brand: brandOptions.at(0).value,
-      productTypeOptions,
-      productType: productTypeOptions.at(0).value,
-    });
-
+    this.initFilter();
     this.initOverview(dateRange);
     this.initTagOptions();
     this.initTrend(dateRange);
@@ -189,6 +170,28 @@ class IngredientHealth extends CustomResizeObserver {
     });
   };
 
+  initFilter() {
+    const { bigProductTypeValue } = this.get("bigProductTypeValue");
+    const { brandOptions } = getBrandByBigProductType(
+      this.data,
+      bigProductTypeValue
+    );
+    const brand = brandOptions.at(0).value;
+
+    const { productTypeOptions } = getProductType(
+      this.data,
+      { bigProductType: bigProductTypeValue, brand },
+      true
+    );
+
+    this.set({
+      brandOptions,
+      brand: brandOptions.at(0).value,
+      productTypeOptions,
+      productType: productTypeOptions.at(0).value,
+    });
+  }
+
   initOverview(dateRange) {
     const yearRange = [...new Set(dateRange.map((date) => date.split("-")[0]))]
       .slice(1)
@@ -252,7 +255,7 @@ class IngredientHealth extends CustomResizeObserver {
 
     const { productTypeOptions } = getProductType(
       this.data,
-      { bigProductType:  e.target.value, brand },
+      { bigProductType: e.target.value, brand },
       true
     );
 
