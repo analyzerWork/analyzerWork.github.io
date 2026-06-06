@@ -37,6 +37,9 @@ class StoreProduct extends CustomResizeObserver {
     $bigProductTypeSelect: document.querySelector("#bigProductTypeSelect"),
     $productTypeSelect: document.querySelector("#productTypeSelect"),
     $contentWrapper: document.querySelector("#contentWrapper"),
+    $productDimensionRemindBtn: document.querySelector("#productDimensionRemindBtn"),
+    $productDimensionRemindDialog: document.querySelector("#productDimensionRemindDialog"),
+
     $emptySection: document.querySelector("#emptySection"),
     $healthRadar: document.querySelector("#healthRadar"),
     $textureRadar: document.querySelector("#textureRadar"),
@@ -130,6 +133,12 @@ class StoreProduct extends CustomResizeObserver {
       "change",
       this.productTypeSelectChangeHandler
     );
+
+    this.element.$productDimensionRemindBtn.addEventListener(
+      "click",
+      instance.productDimensionRemindBtnClickHandler
+    );
+
 
     super.observe(this.element.$contentWrapper, () => {
       this.healthRadarInstance.resize();
@@ -398,6 +407,10 @@ class StoreProduct extends CustomResizeObserver {
 
     this.renderChart()
   };
+
+  productDimensionRemindBtnClickHandler = ()=>{
+    this.element.$productDimensionRemindDialog.open = true;
+  }
 
   renderHeader() {
     this.renderYearSelect();
