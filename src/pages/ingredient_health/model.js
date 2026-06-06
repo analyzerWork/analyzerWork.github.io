@@ -10,6 +10,7 @@ class IngredientHealth extends CustomResizeObserver {
     brand: SELECT_ALL_VALUE,
     productType: SELECT_ALL_VALUE,
     brandOptions: [],
+    productTypeOptions: [],
     currentRangeData: [],
     currentRangeExcludeBrandData: [],
     overview: {
@@ -67,9 +68,19 @@ class IngredientHealth extends CustomResizeObserver {
       this.data,
       bigProductTypeValue
     );
+    const brand = brandOptions.at(0).value;
+
+    const { productTypeOptions } = getProductType(
+      this.data,
+      { bigProductType: bigProductTypeValue, brand },
+      true
+    );
+
     this.set({
       brandOptions,
       brand: brandOptions.at(0).value,
+      productTypeOptions,
+      productType: productTypeOptions.at(0).value,
     });
 
     this.initOverview(dateRange);
@@ -236,10 +247,21 @@ class IngredientHealth extends CustomResizeObserver {
       this.data,
       e.target.value
     );
+
+    const brand = brandOptions.at(0).value;
+
+    const { productTypeOptions } = getProductType(
+      this.data,
+      { bigProductType:  e.target.value, brand },
+      true
+    );
+
     this.set({
       bigProductTypeValue: e.target.value,
       brandOptions,
-      brand: brandOptions.at(0).value,
+      productTypeOptions,
+      brand,
+      productType: productTypeOptions.at(0).value,
     });
     this.updateCurrentRangeData();
 
@@ -421,16 +443,7 @@ class IngredientHealth extends CustomResizeObserver {
   }
 
   renderProductType() {
-    const { bigProductTypeValue, brand } = this.get(
-      "bigProductTypeValue",
-      "brand"
-    );
-
-    const { productTypeOptions } = getProductType(
-      this.data,
-      { bigProductType: bigProductTypeValue, brand },
-      true
-    );
+    const { productTypeOptions } = this.get("productTypeOptions");
 
     const menuFragment = computedMenuOptionsFragment(productTypeOptions, true);
     this.element.$productTypeSelect.innerHTML = null;
