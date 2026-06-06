@@ -570,3 +570,11 @@ const STABILITY_RULES = [
 
 const STABILITY_RULES_LIST = STABILITY_RULES.map(({ label }) => label);
 
+
+const RULES_MAP = {
+  health:HEALTH_RULES,
+  texture: TEXTURE_RULES,
+  flavor: FLAVOR_RULES,
+  burden: BURDEN_RULES,
+  stability: STABILITY_RULES
+};

@@ -12,6 +12,10 @@ const isHalfYear = (date) => {
   return date === FIRST_HALF_VALUE || date === SECOND_HALF_VALUE;
 };
 
+const computeComparedList = (date) => {
+  return isHalfYear(date) ? YoY_COMPARE : MoM_COMPARE.concat(YoY_COMPARE);
+};
+
 const computeDateList = (year) => {
   return []
     .concat(
@@ -383,23 +387,31 @@ const computedCurrentDataAndRange = ({
 
 const computeCurrentDataRangeV2 = ({
   data,
+  startDateIndex,
+  endDateIndex,
   bigProductTypeValue,
   brand,
   productType,
   ingredientClassification,
-  options = {}
+  options = {},
 }) => {
-  const { excludeBrand, } = options;
+  const { excludeBrand } = options;
+  const baseData =
+    startDateIndex !== undefined && endDateIndex !== undefined
+      ? data.slice(startDateIndex, endDateIndex)
+      : data;
   const dataFilterByBigProductType =
     bigProductTypeValue === undefined ||
     bigProductTypeValue === SELECT_ALL_VALUE
-      ? data
-      : data.filter((item) => item["产品大类"] === bigProductTypeValue);
+      ? baseData
+      : baseData.filter((item) => item["产品大类"] === bigProductTypeValue);
 
   const dataFilterByBrand =
     brand === undefined || brand === SELECT_ALL_VALUE
       ? dataFilterByBigProductType
-      : dataFilterByBigProductType.filter((item) => excludeBrand ? item["品牌"] !== brand : item["品牌"] === brand);
+      : dataFilterByBigProductType.filter((item) =>
+          excludeBrand ? item["品牌"] !== brand : item["品牌"] === brand
+        );
 
   const dataFilterByProduct =
     productType === undefined || productType === SELECT_ALL_VALUE
@@ -449,7 +461,7 @@ function computeCheckboxFragment(list, isObjItem) {
     inputEl.value = isObjItem ? item.value : item;
 
     labelEl.appendChild(inputEl);
-    labelEl.append(isObjItem ? item.text: item);
+    labelEl.append(isObjItem ? item.text : item);
 
     // 追加到离线容器
     fragment.appendChild(labelEl);
@@ -544,5 +556,88 @@ function computeCurrentDataRangeV3(data, year, date) {
     startDateIndex,
     endDateIndex,
     dataRange: data.slice(startDateIndex, endDateIndex),
+  };
+}
+
+/**
+ * 计算包含对比时间项的索引
+ */
+function computeDataRangeIndexV2(data, options) {
+  const { currentYear, date, selectedCompared } = options;
+  let startDateIndex;
+  let endDateIndex;
+  let comparedStartDateIndex;
+  let comparedEndDateIndex;
+  let currentDateStr;
+  let comparedDateStr;
+
+  if (date === SECOND_HALF_VALUE) {
+    startDateIndex = data.findIndex((d) => d["月份"] === `${currentYear}-09`);
+    endDateIndex = data.findLastIndex(
+      (d) => d["月份"] === `${currentYear + 1}-02`
+    );
+    comparedStartDateIndex = data.findIndex(
+      (d) => d["月份"] === `${currentYear - 1}-09`
+    );
+    comparedEndDateIndex = data.findLastIndex(
+      (d) => d["月份"] === `${currentYear}-02`
+    );
+    currentDateStr = `${currentYear}年${SECOND_SHORT_HALF}`;
+    comparedDateStr = `${currentYear - 1}年${SECOND_SHORT_HALF}`;
+  } else if (date === FIRST_HALF_VALUE) {
+    startDateIndex = data.findIndex(
+      (d) => d["月份"] === `${currentYear}-03`
+    );
+    endDateIndex = data.findLastIndex(
+      (d) => d["月份"] === `${currentYear}-08`
+    );
+    comparedStartDateIndex = data.findIndex(
+      (d) => d["月份"] === `${currentYear - 1}-03`
+    );
+    comparedEndDateIndex = data.findLastIndex(
+      (d) => d["月份"] === `${currentYear - 1}-08`
+    );
+    currentDateStr = `${currentYear}年${FIRST_SHORT_HALF}`;
+    comparedDateStr = `${currentYear - 1}年${FIRST_SHORT_HALF}`;
+  } else {
+    startDateIndex = data.findIndex(
+      (d) => d["月份"] === `${currentYear}-${date}`
+    );
+    endDateIndex = data.findLastIndex(
+      (d) => d["月份"] === `${currentYear}-${date}`
+    );
+
+    const comparedYearMoM = date === "01" ? currentYear - 1 : currentYear;
+
+    const comparedMonthMoM =
+      date === "01" ? "12" : `${date - 1}`.padStart(2, 0);
+
+    const comparedYearYoY = currentYear - 1;
+
+    const comparedMonthYoY = date.padStart(2, 0);
+
+    const comparedYear =
+      selectedCompared === YoY_VALUE ? comparedYearYoY : comparedYearMoM;
+
+    const comparedMonth =
+      selectedCompared === YoY_VALUE ? comparedMonthYoY : comparedMonthMoM;
+
+    comparedStartDateIndex = data.findIndex(
+      (d) => d["月份"] === `${comparedYear}-${comparedMonth}`
+    );
+    comparedEndDateIndex = data.findLastIndex(
+      (d) => d["月份"] === `${currentYear}-${comparedMonth}`
+    );
+    currentDateStr = `${currentYear}年${date}月`;
+    comparedDateStr = `${comparedYear}年${comparedMonth}月`;
+  }
+
+  return {
+    startDateIndex,
+    endDateIndex,
+    comparedStartDateIndex,
+    comparedEndDateIndex,
+    currentDateStr,
+    comparedDateStr,
   };
 }

@@ -1,0 +1,20 @@
+.top20-title{
+  margin-bottom: 60px;
+}
+
+.remind{
+  display: flex;
+  align-items:center;
+  font-size: 14px;
+  color: var(--color-primary-dark);
+}
+
+.chart{
+  height: 400px;
+}
+
+.container{
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 两列各占 1 份 */
+  gap: 60px; /* 列间距 */
+}

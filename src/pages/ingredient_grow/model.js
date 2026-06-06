@@ -98,11 +98,6 @@ class IngredientGrow extends CustomResizeObserver {
   };
 
 
-  computeComparedList = (date) => {
-    return isHalfYear(date)
-      ? YoY_COMPARE
-      : MoM_COMPARE.concat(YoY_COMPARE);
-  };
 
   computeDataRangeIndex = (date) => {
     const { currentYear, selectedCompared } = this.get(
@@ -110,83 +105,26 @@ class IngredientGrow extends CustomResizeObserver {
       "selectedCompared"
     );
 
-    let startDateIndex;
-    let endDateIndex;
-    let comparedStartDateIndex;
-    let comparedEndDateIndex;
-    let currentTdTitle;
-    let comparedTdTitle;
-    if (date === SECOND_HALF_VALUE) {
-      startDateIndex = this.data.findIndex(
-        (d) => d["月份"] === `${currentYear}-09`
-      );
-      endDateIndex = this.data.findLastIndex(
-        (d) => d["月份"] === `${currentYear + 1}-02`
-      );
-      comparedStartDateIndex = this.data.findIndex(
-        (d) => d["月份"] === `${currentYear - 1}-09`
-      );
-      comparedEndDateIndex = this.data.findLastIndex(
-        (d) => d["月份"] === `${currentYear}-02`
-      );
-      currentTdTitle = `${currentYear}年${SECOND_SHORT_HALF}`;
-      comparedTdTitle = `${currentYear - 1}年${SECOND_SHORT_HALF}`;
-    } else if (date === FIRST_HALF_VALUE) {
-      startDateIndex = this.data.findIndex(
-        (d) => d["月份"] === `${currentYear}-03`
-      );
-      endDateIndex = this.data.findLastIndex(
-        (d) => d["月份"] === `${currentYear}-08`
-      );
-      comparedStartDateIndex = this.data.findIndex(
-        (d) => d["月份"] === `${currentYear - 1}-03`
-      );
-      comparedEndDateIndex = this.data.findLastIndex(
-        (d) => d["月份"] === `${currentYear - 1}-08`
-      );
-      currentTdTitle = `${currentYear}年${FIRST_SHORT_HALF}`;
-      comparedTdTitle = `${currentYear - 1}年${FIRST_SHORT_HALF}`;
-    } else {
-      startDateIndex = this.data.findIndex(
-        (d) => d["月份"] === `${currentYear}-${date}`
-      );
-      endDateIndex = this.data.findLastIndex(
-        (d) => d["月份"] === `${currentYear}-${date}`
-      );
-
-      const comparedYearMoM = date === "01" ? currentYear - 1 : currentYear;
-
-      const comparedMonthMoM =
-        date === "01" ? "12" : `${date - 1}`.padStart(2, 0);
-
-      const comparedYearYoY = currentYear - 1;
-
-      const comparedMonthYoY = date.padStart(2, 0);
-
-      const comparedYear =
-        selectedCompared === YoY_VALUE ? comparedYearYoY : comparedYearMoM;
-
-      const comparedMonth =
-        selectedCompared === YoY_VALUE ? comparedMonthYoY : comparedMonthMoM;
-
-      comparedStartDateIndex = this.data.findIndex(
-        (d) => d["月份"] === `${comparedYear}-${comparedMonth}`
-      );
-      comparedEndDateIndex = this.data.findLastIndex(
-        (d) => d["月份"] === `${currentYear}-${comparedMonth}`
-      );
-
-      currentTdTitle = `${currentYear}年${date}月`;
-      comparedTdTitle = `${comparedYear}年${comparedMonth}月`;
-    }
+    const {
+      startDateIndex,
+      endDateIndex,
+      comparedStartDateIndex,
+      comparedEndDateIndex,
+      comparedDateStr,
+      currentDateStr,
+    } = computeDataRangeIndexV2(this.data, {
+      date,
+      currentYear,
+      selectedCompared,
+    });
 
     return {
       startDateIndex,
       endDateIndex,
       comparedStartDateIndex,
       comparedEndDateIndex,
-      currentTdTitle,
-      comparedTdTitle,
+      currentTdTitle:currentDateStr,
+      comparedTdTitle:comparedDateStr,
     };
   };
 
@@ -207,20 +145,13 @@ class IngredientGrow extends CustomResizeObserver {
 
     const { bigProductTypeValue, productType, ingredientClassification } =
       filter;
-      
 
-    const currentDataByDateRange = this.data.slice(
-      startDateIndex,
-      endDateIndex
-    );
-
-    const currentComparedByDateRange = this.data.slice(
-      comparedStartDateIndex,
-      comparedEndDateIndex
-    );
+  
 
     const currentRangeData = computeCurrentDataRangeV2({
       data: currentDataByDateRange,
+      startDateIndex,
+      endDateIndex,
       bigProductTypeValue,
       productType,
       ingredientClassification,
@@ -229,6 +160,8 @@ class IngredientGrow extends CustomResizeObserver {
     const currentComparedRangeData = computeCurrentDataRangeV2({
       data: currentComparedByDateRange,
       bigProductTypeValue,
+      startDateIndex:comparedStartDateIndex,
+      endDateIndex:comparedEndDateIndex,
       productType,
       ingredientClassification,
     });
@@ -252,7 +185,7 @@ class IngredientGrow extends CustomResizeObserver {
 
     const selectedDate = dateList[0].value;
 
-    const comparedList = this.computeComparedList(selectedDate);
+    const comparedList = computeComparedList(selectedDate);
 
     this.set({
       currentYear,
@@ -430,9 +363,7 @@ class IngredientGrow extends CustomResizeObserver {
   };
 
   yearChangeHandler(value) {
-    this.set({
-      currentYear: value,
-    });
+   
     const { selectedDate } = this.get("selectedDate");
 
     const dateList = computeDateList(Number(value));
@@ -453,6 +384,7 @@ class IngredientGrow extends CustomResizeObserver {
     } = this.computeDataRangeIndex(currentSelectedDate);
 
     this.set({
+      currentYear: value,
       dateList,
       selectedDate: currentSelectedDate,
       startDateIndex,
@@ -475,12 +407,6 @@ class IngredientGrow extends CustomResizeObserver {
     // 对比项的值直接取第一个即可，要么不变，要么只有一个
     const currentComparedDate = comparedList[0].value;
 
-    this.set({
-      comparedList,
-      selectedDate: value,
-      selectedCompared: currentComparedDate,
-    });
-
     const {
       startDateIndex,
       endDateIndex,
@@ -497,6 +423,9 @@ class IngredientGrow extends CustomResizeObserver {
       comparedEndDateIndex,
       currentTdTitle,
       comparedTdTitle,
+      comparedList,
+      selectedDate: value,
+      selectedCompared: currentComparedDate,
     });
 
     // 重新渲染
@@ -507,9 +436,7 @@ class IngredientGrow extends CustomResizeObserver {
 
   comparedChangeHandler(value) {
     const { selectedDate } = this.get("selectedDate");
-    this.set({
-      selectedCompared: value,
-    });
+
     const {
       startDateIndex,
       endDateIndex,
@@ -520,6 +447,7 @@ class IngredientGrow extends CustomResizeObserver {
     } = this.computeDataRangeIndex(selectedDate);
 
     this.set({
+      selectedCompared: value,
       startDateIndex,
       endDateIndex,
       comparedStartDateIndex,
@@ -586,7 +514,7 @@ class IngredientGrow extends CustomResizeObserver {
   computeIngredientGrowth() {
     const { currentRangeData, currentComparedRangeData } =
       this.computeRangeData();
-    
+
     const data = getProcessedIngredientsStats(currentRangeData);
 
     const comparedData = getProcessedIngredientsStats(currentComparedRangeData);
@@ -667,7 +595,6 @@ class IngredientGrow extends CustomResizeObserver {
         this.element.$ingredientGrowTbody.appendChild(tr);
       } else {
         const tbodyFragment = document.createDocumentFragment();
-        
 
         data.forEach((item) => {
           const tr = document.createElement("tr");
