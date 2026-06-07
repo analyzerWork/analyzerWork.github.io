@@ -3,6 +3,8 @@ const { setOptionConfig } = window.parent.echartsVariables;
 class StoreProduct extends CustomResizeObserver {
   data = [];
   bigProductTypeOptions = BIG_PRODUCT_OPTIONS;
+  storeCountOptions = STORE_COUNT_OPTIONS;
+
   healthRadarInstance = null;
   textureRadarInstance = null;
   flavorRadarInstance = null;
@@ -21,13 +23,14 @@ class StoreProduct extends CustomResizeObserver {
     endDateIndex: 0,
     comparedStartDateIndex: 0,
     comparedEndDateIndex: 0,
-    currentDateStr:"",
+    currentDateStr: "",
     comparedDateStr: "",
     productTypeOptions: [],
-    bigProductTypeValue: "茶饮",
+    bigProductTypeValue: BIG_PRODUCT_OPTIONS.at(0).value,
     productType: SELECT_ALL_VALUE,
+    storeCount: STORE_COUNT_OPTIONS.at(0).value,
     currentRangeData: [],
-    currentComparedRangeData: []
+    currentComparedRangeData: [],
   };
 
   element = {
@@ -36,9 +39,15 @@ class StoreProduct extends CustomResizeObserver {
     $comparedSelect: document.querySelector("#comparedSelect"),
     $bigProductTypeSelect: document.querySelector("#bigProductTypeSelect"),
     $productTypeSelect: document.querySelector("#productTypeSelect"),
+    $storeCountSelect: document.querySelector("#storeCountSelect"),
+    $productInsightTitle: document.querySelector("#productInsightTitle"),
     $contentWrapper: document.querySelector("#contentWrapper"),
-    $productDimensionRemindBtn: document.querySelector("#productDimensionRemindBtn"),
-    $productDimensionRemindDialog: document.querySelector("#productDimensionRemindDialog"),
+    $productDimensionRemindBtn: document.querySelector(
+      "#productDimensionRemindBtn"
+    ),
+    $productDimensionRemindDialog: document.querySelector(
+      "#productDimensionRemindDialog"
+    ),
 
     $emptySection: document.querySelector("#emptySection"),
     $healthRadar: document.querySelector("#healthRadar"),
@@ -74,14 +83,14 @@ class StoreProduct extends CustomResizeObserver {
     this.burdenRadarInstance = window.parent.echarts.init(
       this.element.$burdenRadar
     );
-   
+
     this.element.$pageLoading.classList.add("hide");
   };
 
   setup() {
     this.updateData();
     this.renderHeader();
-    this.renderChart()
+    this.renderChart();
   }
 
   get = (...keys) =>
@@ -134,11 +143,15 @@ class StoreProduct extends CustomResizeObserver {
       this.productTypeSelectChangeHandler
     );
 
+    this.element.$storeCountSelect.addEventListener(
+      "change",
+      this.storeCountSelectChangeHandler
+    );
+
     this.element.$productDimensionRemindBtn.addEventListener(
       "click",
       instance.productDimensionRemindBtnClickHandler
     );
-
 
     super.observe(this.element.$contentWrapper, () => {
       this.healthRadarInstance.resize();
@@ -209,17 +222,24 @@ class StoreProduct extends CustomResizeObserver {
   }
 
   updateData() {
-    const { bigProductTypeValue, productType, startDateIndex, endDateIndex ,comparedStartDateIndex,
-      comparedEndDateIndex, } =
-      this.get(
-        "bigProductTypeValue",
-        "productType",
-        "startDateIndex",
-        "endDateIndex",
-        "comparedStartDateIndex",
-        "comparedEndDateIndex"
-      );
-      
+    const {
+      bigProductTypeValue,
+      productType,
+      storeCount,
+      startDateIndex,
+      endDateIndex,
+      comparedStartDateIndex,
+      comparedEndDateIndex,
+    } = this.get(
+      "bigProductTypeValue",
+      "productType",
+      "storeCount",
+      "startDateIndex",
+      "endDateIndex",
+      "comparedStartDateIndex",
+      "comparedEndDateIndex"
+    );
+
     const currentRangeData = computeCurrentDataRangeV2({
       data: this.data,
       bigProductTypeValue,
@@ -230,18 +250,25 @@ class StoreProduct extends CustomResizeObserver {
     const currentComparedRangeData = computeCurrentDataRangeV2({
       data: this.data,
       bigProductTypeValue,
-      startDateIndex:comparedStartDateIndex,
-      endDateIndex:comparedEndDateIndex,
+      startDateIndex: comparedStartDateIndex,
+      endDateIndex: comparedEndDateIndex,
       productType,
-    })
+    });
 
-    const top20StoreData = getTopStoresByCount(currentRangeData);
-    const top20StoreComparedData = getTopStoresByCount(currentComparedRangeData);
-
+    const topPercentData = getTopStoresByPercent(
+      currentRangeData,
+      "门店数",
+      storeCount
+    );
+    const topPercentCompareData = getTopStoresByPercent(
+      currentComparedRangeData,
+      "门店数",
+      storeCount
+    );
 
     this.set({
-      currentRangeData:top20StoreData,
-      currentComparedRangeData:top20StoreComparedData
+      currentRangeData: topPercentData,
+      currentComparedRangeData: topPercentCompareData,
     });
   }
   yearChangeHandler(value) {
@@ -278,12 +305,12 @@ class StoreProduct extends CustomResizeObserver {
       comparedEndDateIndex,
     });
 
-    this.updateData()
+    this.updateData();
 
     // 重新渲染
     this.renderDateSelect();
-    this.renderHeader()
-    this.renderChart()
+    this.renderHeader();
+    this.renderChart();
   }
 
   computeDataRangeIndex = (date) => {
@@ -345,13 +372,12 @@ class StoreProduct extends CustomResizeObserver {
       comparedDateStr,
     });
 
-    this.updateData()
-
+    this.updateData();
 
     // 重新渲染
     this.renderComparedSelect();
-    this.renderHeader()
-    this.renderChart()
+    this.renderHeader();
+    this.renderChart();
   }
 
   comparedChangeHandler(value) {
@@ -373,14 +399,13 @@ class StoreProduct extends CustomResizeObserver {
       endDateIndex,
       comparedStartDateIndex,
       comparedEndDateIndex,
-      currentTdTitle:currentDateStr,
-      comparedTdTitle:comparedDateStr,
+      currentTdTitle: currentDateStr,
+      comparedTdTitle: comparedDateStr,
     });
-    this.updateData()
-    this.renderHeader()
-    this.renderChart()
+    this.updateData();
+    this.renderHeader();
+    this.renderChart();
   }
-
 
   // 产品大类选择
   bigProductTypeSelectChangeHandler = (e) => {
@@ -396,7 +421,7 @@ class StoreProduct extends CustomResizeObserver {
     });
     this.updateData();
     this.renderProductType();
-    this.renderChart()
+    this.renderChart();
   };
 
   productTypeSelectChangeHandler = (e) => {
@@ -405,12 +430,21 @@ class StoreProduct extends CustomResizeObserver {
     });
     this.updateData();
 
-    this.renderChart()
+    this.renderChart();
   };
 
-  productDimensionRemindBtnClickHandler = ()=>{
+  productDimensionRemindBtnClickHandler = () => {
     this.element.$productDimensionRemindDialog.open = true;
-  }
+  };
+
+  storeCountSelectChangeHandler = (e) => {
+    this.set({
+      storeCount: e.target.value,
+    });
+    this.updateData();
+
+    this.renderChart();
+  };
 
   renderHeader() {
     this.renderYearSelect();
@@ -418,8 +452,8 @@ class StoreProduct extends CustomResizeObserver {
     this.renderComparedSelect();
     this.renderBigProductType();
     this.renderProductType();
+    this.renderStoreCount();
   }
-
 
   renderYearSelect = () => {
     const { yearList, currentYear } = this.get("currentYear", "yearList");
@@ -465,6 +499,19 @@ class StoreProduct extends CustomResizeObserver {
     }
   };
 
+  renderStoreCount = () => {
+    const { storeCount } = this.get("storeCount");
+    if (this.storeCountOptions.length > 0) {
+      const menuFragment = computedMenuOptionsFragment(
+        this.storeCountOptions,
+        true
+      );
+      this.element.$storeCountSelect.innerHTML = null;
+      this.element.$storeCountSelect.appendChild(menuFragment);
+      this.element.$storeCountSelect.value = storeCount;
+    }
+  };
+
   renderProductType() {
     const { bigProductTypeValue } = this.get("bigProductTypeValue");
     const { productTypeOptions } = getProductType(
@@ -478,23 +525,48 @@ class StoreProduct extends CustomResizeObserver {
     this.element.$productTypeSelect.appendChild(menuFragment);
     this.element.$productTypeSelect.value = productTypeOptions[0].value;
   }
-  renderChart(){
-    const { currentRangeData,currentComparedRangeData, currentDateStr,
-      comparedDateStr, } = this.get("currentRangeData","currentComparedRangeData","currentDateStr","comparedDateStr");
-    const currentCountResult = analyzeConsumerExperience(currentRangeData, RULES_MAP);
-    const comparedCountResult = analyzeConsumerExperience(currentComparedRangeData, RULES_MAP);
-    
-    const configList = generateRadarOptions(currentCountResult,comparedCountResult,{
-      title:currentDateStr,
-      comparedTitle:comparedDateStr
-    });
-    
-    
-    configList.forEach(({key,option})=>{
-      
-      this[`${key}RadarInstance`].setOption(option, setOptionConfig)
-    })
 
+  renderChart() {
+    this.renderProductChart();
   }
 
+  renderProductChart() {
+    const {
+      currentRangeData,
+      currentComparedRangeData,
+      currentDateStr,
+      comparedDateStr,
+      storeCount,
+    } = this.get(
+      "currentRangeData",
+      "currentComparedRangeData",
+      "currentDateStr",
+      "comparedDateStr",
+      "storeCount"
+    );
+
+    this.element.$productInsightTitle.innerHTML = `门店数 TOP ${storeCount}% 产品成分洞察`;
+
+    const currentCountResult = analyzeConsumerExperience(
+      currentRangeData,
+      RULES_MAP
+    );
+    const comparedCountResult = analyzeConsumerExperience(
+      currentComparedRangeData,
+      RULES_MAP
+    );
+
+    const configList = generateRadarOptions(
+      currentCountResult,
+      comparedCountResult,
+      {
+        title: currentDateStr,
+        comparedTitle: comparedDateStr,
+      }
+    );
+
+    configList.forEach(({ key, option }) => {
+      this[`${key}RadarInstance`].setOption(option, setOptionConfig);
+    });
+  }
 }

@@ -127,6 +127,12 @@ const BIG_PRODUCT_OPTIONS = [
   { text: "咖啡", value: "咖啡" },
 ];
 
+const STORE_COUNT_OPTIONS = [
+  { text: "TOP 10%", value: "10" },
+  { text: "TOP 20%", value: "20" },
+  { text: "TOP 30%", value: "30" },
+];
+
 const COFFICE_LIST = [
   "果味",
   "茶底",

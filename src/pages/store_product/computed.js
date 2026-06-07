@@ -20,6 +20,35 @@ function getTopStoresByCount(rawData, countField = '门店数', topN = 30) {
   }
 
 
+  /**
+ * 获取按某字段降序排列的前 N% 数据
+ * @param {Array} rawData - 原始数据数组
+ * @param {string} countField - 用于排序的字段名，默认为 '门店数'
+ * @param {number} topPercent - 需要截取的比例 (0-100)，默认为 30 表示前 30%
+ * @returns {Array} - 返回排序并截取后的新数组
+ */
+function getTopStoresByPercent(rawData, countField = '门店数', topPercent = 10) {
+  // 1. 基础防御性校验
+  if (!Array.isArray(rawData) || rawData.length === 0) return [];
+
+  // 2. 将百分比限制在合理的 0~100 范围内，防止越界
+  const safePercent = Math.max(0, Math.min(100, Number(topPercent) || 0));
+
+  // 3. 按指定字段降序排序，并做防空处理（防止非数字类型导致排序异常）
+  const sortedData = [...rawData].sort((a, b) => {
+      const countA = Number(a[countField]) || 0;
+      const countB = Number(b[countField]) || 0;
+      return countB - countA;
+  });
+
+  // 4. 核心改动：根据总长度和百分比，动态计算需要截取的绝对数量
+  // 使用 Math.ceil 向上取整，确保即使只有 1 条数据时，也能至少保留 1 条（避免 0 的情况）
+  const actualCount = Math.ceil(sortedData.length * (safePercent / 100));
+
+  // 5. 截取前 N% 的数据并返回
+  return sortedData.slice(0, actualCount);
+}
+
 /**
  * 分析产品原料在各个消费者体验维度下的命中次数
  * @param {Array} productList - 产品数据列表
