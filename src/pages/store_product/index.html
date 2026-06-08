@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>门店铺货分析</title>
+    <title>门店产品分析</title>
     <link
       rel="stylesheet"
       href="https://unpkg.com/lu2/theme/edge/css/common/ui.css"
@@ -38,6 +38,11 @@
       type="module"
       src="https://unpkg.com/lu2/theme/edge/js/common/ui/Select.js"
     ></script>
+    <script type="module" src="https://unpkg.com/lu2/theme/edge/js/common/ui/Pagination.js"></script>
+
+
+    <script type="module" src="https://unpkg.com/lu2/theme/edge/js/common/comp/Table.js"></script>
+
   </head>
 
   <body class="iframe-body">
@@ -70,12 +75,12 @@
 
     <div class="content" id="contentWrapper">
       <section>
-        <div class="section-header ">
+        <div class="section-header">
           <div class="title-container">
-            <div id="productInsightTitle" class="title"> </div>
+            <div class="title">产品成分洞察</div>
             <div class="list-remind" id="productDimensionRemindBtn"></div>
           </div>
-         
+
           <dialog
             id="productDimensionRemindDialog"
             class="remind-dialog"
@@ -248,6 +253,34 @@
           </div>
         </div>
       </section>
+      <section>
+        <div class="section-header">
+          <div class="title-container">
+            <div class="title">目标消费者画像</div>
+            <div class="list-remind" id="personaRemindBtn"></div>
+          </div>
+        </div>
+        <div class="text-title subtitle">画像概览</div>
+        <div class="container">
+          <div id="personaPie" class="chart"></div>
+          <div id="personaComparedPie" class="chart"></div>
+        </div>
+        <div id="personaDetail" class="hide">
+          <div id="detailTitle" class="text-title subtitle"></div>
+          <table id="insightTable" class="ui-table">
+            <thead>
+              <tr>
+                <th>产品名称</th>
+                <th>品牌</th>
+                <th>原料构成</th>
+                <th>覆盖门店数</th>
+              </tr>
+            </thead>
+            <tbody id="insightTableBody"></tbody>
+          </table>
+          <ui-pagination class="pagination" per="10"></ui-pagination>
+        </div>
+      </section>
     </div>
     <div class="analyzer-loading mask text-large" id="pageLoading">
       加载中<ui-dot></ui-dot>
@@ -279,6 +312,7 @@
     <script src="./computed.js"></script>
 
     <script src="../../chartConfig/store_product/radar.js"></script>
+    <script src="../../chartConfig/store_product/bar.js"></script>
 
     <script src="./model.js"></script>
 

@@ -4,12 +4,14 @@ class StoreProduct extends CustomResizeObserver {
   data = [];
   bigProductTypeOptions = BIG_PRODUCT_OPTIONS;
   storeCountOptions = STORE_COUNT_OPTIONS;
-
+  pageSize = 10;
   healthRadarInstance = null;
   textureRadarInstance = null;
   flavorRadarInstance = null;
   burdenRadarInstance = null;
   stabilityRadarInstance = null;
+  personaPieInstance = null;
+  personaComparedPieInstance = null;
   computedData = {
     currentYear: CURRENT_YEAR,
     yearList: [],
@@ -31,6 +33,10 @@ class StoreProduct extends CustomResizeObserver {
     storeCount: STORE_COUNT_OPTIONS.at(0).value,
     currentRangeData: [],
     currentComparedRangeData: [],
+    currentTaggedProducts: [],
+    currentComparedTaggedProducts: [],
+    detailList:[],
+    
   };
 
   element = {
@@ -40,7 +46,6 @@ class StoreProduct extends CustomResizeObserver {
     $bigProductTypeSelect: document.querySelector("#bigProductTypeSelect"),
     $productTypeSelect: document.querySelector("#productTypeSelect"),
     $storeCountSelect: document.querySelector("#storeCountSelect"),
-    $productInsightTitle: document.querySelector("#productInsightTitle"),
     $contentWrapper: document.querySelector("#contentWrapper"),
     $productDimensionRemindBtn: document.querySelector(
       "#productDimensionRemindBtn"
@@ -55,6 +60,13 @@ class StoreProduct extends CustomResizeObserver {
     $flavorRadar: document.querySelector("#flavorRadar"),
     $burdenRadar: document.querySelector("#burdenRadar"),
     $stabilityRadar: document.querySelector("#stabilityRadar"),
+
+    $personaPie: document.querySelector("#personaPie"),
+    $personaComparedPie: document.querySelector("#personaComparedPie"),
+    $personaDetail: document.querySelector("#personaDetail"),
+    $insightTableBody: document.querySelector("#insightTableBody"),
+    $pagination:document.querySelector('ui-pagination'),
+
     $pageLoading: document.querySelector("#pageLoading"),
   };
   constructor(initData) {
@@ -82,6 +94,14 @@ class StoreProduct extends CustomResizeObserver {
     );
     this.burdenRadarInstance = window.parent.echarts.init(
       this.element.$burdenRadar
+    );
+
+    this.personaPieInstance = window.parent.echarts.init(
+      this.element.$personaPie
+    );
+
+    this.personaComparedPieInstance = window.parent.echarts.init(
+      this.element.$personaComparedPie
     );
 
     this.element.$pageLoading.classList.add("hide");
@@ -153,12 +173,23 @@ class StoreProduct extends CustomResizeObserver {
       instance.productDimensionRemindBtnClickHandler
     );
 
+    this.personaPieInstance.on("click", (params) =>
+      instance.personaPieClickHandler(params, "current")
+    );
+    this.personaComparedPieInstance.on("click", (params) =>
+      instance.personaPieClickHandler(params, "compared")
+    );
+
+    this.element.$pagination.addEventListener('change',this.paginationChangeHandler)
+
     super.observe(this.element.$contentWrapper, () => {
       this.healthRadarInstance.resize();
       this.textureRadarInstance.resize();
       this.flavorRadarInstance.resize();
       this.burdenRadarInstance.resize();
       this.stabilityRadarInstance.resize();
+      this.personaPieInstance.resize();
+      this.personaComparedPieInstance.resize();
     });
   };
 
@@ -446,6 +477,53 @@ class StoreProduct extends CustomResizeObserver {
     this.renderChart();
   };
 
+  personaPieClickHandler = (params, type) => {
+    if (params.componentType === "series") {
+      const { currentTaggedProducts, currentComparedTaggedProducts,currentDateStr,comparedDateStr} = this.get(
+        "currentTaggedProducts",
+        "currentComparedTaggedProducts",
+        "currentDateStr",
+        "comparedDateStr"
+      );
+      const data =
+        type === "current"
+          ? currentTaggedProducts
+          : currentComparedTaggedProducts;
+      const title = type === "current" ? currentDateStr :comparedDateStr;
+      const targetPersona = params.name; // 获取被点击的画像名称
+
+      // 【关键】调用您提供的函数提取该画像下的明细产品
+      const detailList = extractDetailProducts(data, targetPersona);
+
+     
+
+      const $title = document.querySelector("#personaDetail #detailTitle");
+
+      $title.innerHTML = `${title} [${targetPersona}] 画像下钻透视列表`;
+
+      this.element.$pagination.total = detailList.length;
+      this.element.$pagination.current = 1;
+      this.renderInsightTable(detailList.slice(0,this.pageSize));
+
+      this.set({
+        detailList
+      });
+    
+
+      $title.scrollIntoView({behavior:'smooth'})
+    }
+  };
+
+  paginationChangeHandler = (e) => {
+    const {detailList} = this.get("detailList");
+    const detail = e.detail;
+    this.element.$pagination.current = detail.current;
+    this.renderInsightTable(detailList.slice((detail.current-1)*this.pageSize,detail.current*this.pageSize));
+    const $title = document.querySelector("#personaDetail #detailTitle");
+    $title.scrollIntoView({behavior:'smooth'})
+
+  }
+
   renderHeader() {
     this.renderYearSelect();
     this.renderDateSelect();
@@ -528,6 +606,7 @@ class StoreProduct extends CustomResizeObserver {
 
   renderChart() {
     this.renderProductChart();
+    this.renderPersonaChart();
   }
 
   renderProductChart() {
@@ -536,16 +615,12 @@ class StoreProduct extends CustomResizeObserver {
       currentComparedRangeData,
       currentDateStr,
       comparedDateStr,
-      storeCount,
     } = this.get(
       "currentRangeData",
       "currentComparedRangeData",
       "currentDateStr",
-      "comparedDateStr",
-      "storeCount"
+      "comparedDateStr"
     );
-
-    this.element.$productInsightTitle.innerHTML = `门店数 TOP ${storeCount}% 产品成分洞察`;
 
     const currentCountResult = analyzeConsumerExperience(
       currentRangeData,
@@ -569,4 +644,60 @@ class StoreProduct extends CustomResizeObserver {
       this[`${key}RadarInstance`].setOption(option, setOptionConfig);
     });
   }
+
+  renderPersonaChart() {
+    const {
+      currentRangeData,
+      currentComparedRangeData,
+      currentDateStr,
+      comparedDateStr,
+    } = this.get(
+      "currentRangeData",
+      "currentComparedRangeData",
+      "currentDateStr",
+      "comparedDateStr"
+    );
+
+    const currentPersonaData = aggregatePersonaStats(currentRangeData);
+    const currentPersonaComparedData = aggregatePersonaStats(
+      currentComparedRangeData
+    );
+
+    this.set({
+      currentTaggedProducts: currentPersonaData.taggedProducts,
+      currentComparedTaggedProducts: currentPersonaComparedData.taggedProducts,
+    });
+
+    const currentOption = getBarChartOption(currentPersonaData, currentDateStr);
+
+    const currentComparedOption = getBarChartOption(
+      currentPersonaComparedData,
+      comparedDateStr
+    );
+
+    this.personaPieInstance.setOption(currentOption, setOptionConfig);
+    this.personaComparedPieInstance.setOption(
+      currentComparedOption,
+      setOptionConfig
+    );
+  }
+
+  renderInsightTable = (data) => {
+   
+    this.element.$insightTableBody.innerHTML = null;
+
+    const tbodyFragment = document.createDocumentFragment();
+    data.forEach((item) => {
+      const tr = document.createElement("tr");
+      Object.entries(item).forEach(([_, value]) => {
+        const td = document.createElement("td");
+        td.innerHTML = value;
+        tr.appendChild(td);
+      });
+      tbodyFragment.appendChild(tr);
+    });
+    this.element.$insightTableBody.appendChild(tbodyFragment);
+    this.element.$personaDetail.classList.remove("hide");
+  };
+
 }
