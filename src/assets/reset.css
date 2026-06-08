@@ -178,3 +178,11 @@ a{
     background-size: contain;
     cursor: pointer;
 }
+.vertical-divider{
+    width: 0;
+    border-left: 1px solid var(--color-primary-dark);
+}
+.subtitle{
+    font-size: 16px;
+    margin-block: 20px;
+}
