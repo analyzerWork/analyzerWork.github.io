@@ -10,8 +10,10 @@ class StoreProduct extends CustomResizeObserver {
   flavorRadarInstance = null;
   burdenRadarInstance = null;
   stabilityRadarInstance = null;
-  personaPieInstance = null;
-  personaComparedPieInstance = null;
+  personaBarInstance = null;
+  personaComparedBarInstance = null;
+  currentActiveBarChart = null;
+  currentActiveDataIndex;
   computedData = {
     currentYear: CURRENT_YEAR,
     yearList: [],
@@ -35,8 +37,7 @@ class StoreProduct extends CustomResizeObserver {
     currentComparedRangeData: [],
     currentTaggedProducts: [],
     currentComparedTaggedProducts: [],
-    detailList:[],
-    
+    detailList: [],
   };
 
   element = {
@@ -54,14 +55,9 @@ class StoreProduct extends CustomResizeObserver {
       "#productDimensionRemindDialog"
     ),
 
-    $personaRemindBtn: document.querySelector(
-      "#personaRemindBtn"
-    ),
+    $personaRemindBtn: document.querySelector("#personaRemindBtn"),
 
-
-    $personaRemindDialog: document.querySelector(
-      "#personaRemindDialog"
-    ),
+    $personaRemindDialog: document.querySelector("#personaRemindDialog"),
 
     $emptySection: document.querySelector("#emptySection"),
     $healthRadar: document.querySelector("#healthRadar"),
@@ -74,7 +70,7 @@ class StoreProduct extends CustomResizeObserver {
     $personaComparedPie: document.querySelector("#personaComparedPie"),
     $personaDetail: document.querySelector("#personaDetail"),
     $insightTableBody: document.querySelector("#insightTableBody"),
-    $pagination:document.querySelector('ui-pagination'),
+    $pagination: document.querySelector("ui-pagination"),
 
     $pageLoading: document.querySelector("#pageLoading"),
   };
@@ -105,11 +101,11 @@ class StoreProduct extends CustomResizeObserver {
       this.element.$burdenRadar
     );
 
-    this.personaPieInstance = window.parent.echarts.init(
+    this.personaBarInstance = window.parent.echarts.init(
       this.element.$personaPie
     );
 
-    this.personaComparedPieInstance = window.parent.echarts.init(
+    this.personaComparedBarInstance = window.parent.echarts.init(
       this.element.$personaComparedPie
     );
 
@@ -187,14 +183,25 @@ class StoreProduct extends CustomResizeObserver {
       instance.personaRemindBtnClickHandler
     );
 
-    this.personaPieInstance.on("click", (params) =>
-      instance.personaPieClickHandler(params, "current")
+    this.personaBarInstance.on("click", (params) =>
+      instance.personaBarClickHandler(
+        params,
+        "current",
+        this.personaBarInstance
+      )
     );
-    this.personaComparedPieInstance.on("click", (params) =>
-      instance.personaPieClickHandler(params, "compared")
+    this.personaComparedBarInstance.on("click", (params) =>
+      instance.personaBarClickHandler(
+        params,
+        "compared",
+        this.personaComparedBarInstance
+      )
     );
 
-    this.element.$pagination.addEventListener('change',this.paginationChangeHandler)
+    this.element.$pagination.addEventListener(
+      "change",
+      this.paginationChangeHandler
+    );
 
     super.observe(this.element.$contentWrapper, () => {
       this.healthRadarInstance.resize();
@@ -202,8 +209,8 @@ class StoreProduct extends CustomResizeObserver {
       this.flavorRadarInstance.resize();
       this.burdenRadarInstance.resize();
       this.stabilityRadarInstance.resize();
-      this.personaPieInstance.resize();
-      this.personaComparedPieInstance.resize();
+      this.personaBarInstance.resize();
+      this.personaComparedBarInstance.resize();
     });
   };
 
@@ -495,25 +502,50 @@ class StoreProduct extends CustomResizeObserver {
     this.renderChart();
   };
 
-  personaPieClickHandler = (params, type) => {
+  personaBarClickHandler = (params, type, chartInstance) => {
+
     if (params.componentType === "series") {
-      const { currentTaggedProducts, currentComparedTaggedProducts,currentDateStr,comparedDateStr} = this.get(
+      const {
+        currentTaggedProducts,
+        currentComparedTaggedProducts,
+        currentDateStr,
+        comparedDateStr,
+      } = this.get(
         "currentTaggedProducts",
         "currentComparedTaggedProducts",
         "currentDateStr",
         "comparedDateStr"
       );
+      // 取消选中态
+      if (
+        this.currentActiveChart &&
+        this.currentActiveChart !== chartInstance
+      ) {
+        const oldChart = this.currentActiveChart;
+        const oldDataIndex = this.currentActiveDataIndex;
+
+        oldChart.dispatchAction({
+          type: "unselect",
+          seriesIndex: 0,
+
+          dataIndex: oldDataIndex,
+        });
+      }
+
+      // 2. 将当前图表标记为激活状态
+      this.currentActiveChart = chartInstance;
+      this.currentActiveDataIndex = params.dataIndex;
+
+
       const data =
         type === "current"
           ? currentTaggedProducts
           : currentComparedTaggedProducts;
-      const title = type === "current" ? currentDateStr :comparedDateStr;
+      const title = type === "current" ? currentDateStr : comparedDateStr;
       const targetPersona = params.name; // 获取被点击的画像名称
 
       // 【关键】调用您提供的函数提取该画像下的明细产品
       const detailList = extractDetailProducts(data, targetPersona);
-
-     
 
       const $title = document.querySelector("#personaDetail #detailTitle");
 
@@ -521,26 +553,29 @@ class StoreProduct extends CustomResizeObserver {
 
       this.element.$pagination.total = detailList.length;
       this.element.$pagination.current = 1;
-      this.renderInsightTable(detailList.slice(0,this.pageSize));
+      this.renderInsightTable(detailList.slice(0, this.pageSize));
 
       this.set({
-        detailList
+        detailList,
       });
-    
 
-      $title.scrollIntoView({behavior:'smooth'})
+      $title.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   paginationChangeHandler = (e) => {
-    const {detailList} = this.get("detailList");
+    const { detailList } = this.get("detailList");
     const detail = e.detail;
     this.element.$pagination.current = detail.current;
-    this.renderInsightTable(detailList.slice((detail.current-1)*this.pageSize,detail.current*this.pageSize));
+    this.renderInsightTable(
+      detailList.slice(
+        (detail.current - 1) * this.pageSize,
+        detail.current * this.pageSize
+      )
+    );
     const $title = document.querySelector("#personaDetail #detailTitle");
-    $title.scrollIntoView({behavior:'smooth'})
-
-  }
+    $title.scrollIntoView({ behavior: "smooth" });
+  };
 
   renderHeader() {
     this.renderYearSelect();
@@ -686,22 +721,36 @@ class StoreProduct extends CustomResizeObserver {
       currentComparedTaggedProducts: currentPersonaComparedData.taggedProducts,
     });
 
-    const currentOption = getBarChartOption(currentPersonaData, currentDateStr);
+    const currentOption = getBarChartOption(
+      currentPersonaData,
+      currentDateStr,
+      {
+        linearGradient: [
+          { offset: 0, color: "#60A5FA" }, // Tailwind Blue-400，清新明亮
+          { offset: 1, color: "#2563EB" }, // Tailwind Blue-600，稳重扎实
+        ],
+      }
+    );
 
     const currentComparedOption = getBarChartOption(
       currentPersonaComparedData,
-      comparedDateStr
+      comparedDateStr,
+      {
+        linearGradient: [
+          { offset: 0, color: "#6EE7B7" },
+          { offset: 1, color: "#10b981" },
+        ],
+      }
     );
 
-    this.personaPieInstance.setOption(currentOption, setOptionConfig);
-    this.personaComparedPieInstance.setOption(
+    this.personaBarInstance.setOption(currentOption, setOptionConfig);
+    this.personaComparedBarInstance.setOption(
       currentComparedOption,
       setOptionConfig
     );
   }
 
   renderInsightTable = (data) => {
-   
     this.element.$insightTableBody.innerHTML = null;
 
     const tbodyFragment = document.createDocumentFragment();
@@ -717,5 +766,4 @@ class StoreProduct extends CustomResizeObserver {
     this.element.$insightTableBody.appendChild(tbodyFragment);
     this.element.$personaDetail.classList.remove("hide");
   };
-
 }

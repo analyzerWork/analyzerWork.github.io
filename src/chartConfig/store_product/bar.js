@@ -10,7 +10,7 @@ function formatEchartsData(stats) {
   return chartData;
 }
 
-const getBarChartOption = (stats, title) => {
+const getBarChartOption = (stats, title, options) => {
   // 🌟 【核心改动】不再过滤 count === 0 的数据，完整保留所有维度
   const allDimensions = stats.dimensions;
 
@@ -94,6 +94,23 @@ const getBarChartOption = (stats, title) => {
       {
         name: "画像占比",
         type: "bar",
+        showBackground: true, // 🌟 开启轨道背景
+        backgroundStyle: {
+          color: "rgba(0, 0, 0, 0)", // 默认完全透明，不干扰视觉
+          borderRadius: [0, 4, 4, 0], // 保持与柱子相同的圆角
+        },
+        selectedMode: "single",
+        select: {
+          itemStyle: {
+            borderRadius: [0, 4, 4, 0], // 保持圆角一致
+            borderColor: "#ffffff", // 白色边框能在彩色背景上形成极好的切割感
+            borderWidth: 2, // 边框粗细
+            shadowBlur: 12, // 阴影模糊度
+            shadowColor: "rgba(0, 0, 0, 0.3)", // 阴影颜色与透明度
+            shadowOffsetX: 2, // 阴影向右偏移
+            shadowOffsetY: 2, // 阴影向下偏移
+          },
+        },
         barWidth: 20,
         data: percentages,
         label: {
@@ -114,26 +131,8 @@ const getBarChartOption = (stats, title) => {
               0,
               1,
               0,
-              [
-                { offset: 0, color: "#83bff6" },
-                { offset: 0.5, color: "#188df0" },
-                { offset: 1, color: "#188df0" },
-              ]
+              options.linearGradient
             );
-          },
-        },
-        emphasis: {
-          itemStyle: {
-            color: new window.parent.echarts.graphic.LinearGradient(
-              0,
-              0,
-              1,
-              0,
-              [
-                { offset: 0, color: "#2378f7" },
-                { offset: 1, color: "#83bff6" },
-              ]
-            ),
           },
         },
       },
