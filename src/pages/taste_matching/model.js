@@ -974,6 +974,9 @@ class TasteMatching extends CustomResizeObserver {
         getTreemapOption("second", data, selectedSecondIngredient),
         setOptionConfig
       );
+      setTimeout(()=>{
+        this.secondTreeMapInstance.resize();
+      },500)
     }
   };
 
