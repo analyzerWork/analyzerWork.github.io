@@ -38,11 +38,15 @@
       type="module"
       src="https://unpkg.com/lu2/theme/edge/js/common/ui/Select.js"
     ></script>
-    <script type="module" src="https://unpkg.com/lu2/theme/edge/js/common/ui/Pagination.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/lu2/theme/edge/js/common/ui/Pagination.js"
+    ></script>
 
-
-    <script type="module" src="https://unpkg.com/lu2/theme/edge/js/common/comp/Table.js"></script>
-
+    <script
+      type="module"
+      src="https://unpkg.com/lu2/theme/edge/js/common/comp/Table.js"
+    ></script>
   </head>
 
   <body class="iframe-body">
@@ -259,6 +263,91 @@
             <div class="title">目标消费者画像</div>
             <div class="list-remind" id="personaRemindBtn"></div>
           </div>
+          <dialog
+            id="personaRemindDialog"
+            class="remind-dialog"
+            is="ui-dialog"
+            data-params="{
+          title:'📊 产品成分评估维度规则说明'
+        }"
+          >
+            <div class="ui-dialog-body">
+              <div class="rules-modal-body">
+                <p class="desc">
+                  本系统基于产品的【原料构成】进行多维特征提取，通过<b>加权打分</b>与<b>冲突惩罚</b>双重机制，精准识别每款产品的核心受众。仅当产品具备绝对主导特征时才会归入专属画像，否则降级为“泛大众基础款”，以确保各维度的纯粹性。
+                </p>
+              
+                <!-- 极致自律的成分党 -->
+                <div class="rule-card health">
+                  <div class="rule-header">
+                    <span class="rule-title">极致自律的成分党</span>
+                  </div>
+                  <div class="rule-desc">
+                    看重健康属性与配料表的干净程度。若同时带有“浓郁重口”标签会被扣分。
+                  </div>
+                  <div class="rule-keywords-box">
+                    <div><span class="kw-label">核心加分项：</span>控糖/无糖、清洁标签、真材实料、优质奶源、植物基</div>
+                    <div><span class="kw-label">定向防御项：</span>若命中“浓郁满足”或“丰富层次”，得分将受到惩罚打折。</div>
+                  </div>
+                </div>
+              
+                <!-- 悦己主义的口感控 -->
+                <div class="rule-card texture">
+                  <div class="rule-header">
+                    <span class="rule-title">悦己主义的口感控</span>
+                  </div>
+                  <div class="rule-desc">
+                    追求极致的咀嚼反馈与吞咽体验，主打物理触感上的愉悦感。
+                  </div>
+                  <div class="rule-keywords-box">
+                    <div><span class="kw-label">核心加分项：</span>Q弹脆爽、软糯扎实、绵密顺滑、丰富层次、浓郁烘焙、浓郁满足</div>
+                  </div>
+                </div>
+              
+                <!-- 寻味打卡的茶咖极客 -->
+                <div class="rule-card flavor">
+                  <div class="rule-header">
+                    <span class="rule-title">寻味打卡的茶咖极客</span>
+                  </div>
+                  <div class="rule-desc">
+                    偏好高级茶底与创新风味，注重基底品质与风味的辨识度。
+                  </div>
+                  <div class="rule-keywords-box">
+                    <div><span class="kw-label">核心加分项：</span>高级茶香、真材实料、猎奇特色</div>
+                    <div><span class="kw-label">定向防御项：</span>若命中“浓郁满足”或“丰富层次”，得分将受到惩罚打折。</div>
+                  </div>
+                </div>
+              
+                <!-- 朋克养生的轻食派 -->
+                <div class="rule-card burden">
+                  <div class="rule-header">
+                    <span class="rule-title">朋克养生的轻食派</span>
+                  </div>
+                  <div class="rule-desc">
+                    青睐功能性食材与清爽解腻的饮用体验，追求身体零负担。
+                  </div>
+                  <div class="rule-keywords-box">
+                    <div><span class="kw-label">核心加分项：</span>超级食物、益生菌/活菌、清爽解腻、Q弹脆爽</div>
+                    <div><span class="kw-label">定向防御项：</span>若命中“浓郁满足”或“丰富层次”，得分将受到惩罚打折。</div>
+                  </div>
+                </div>
+              
+                <!-- 节气仪式的温补族 -->
+                <div class="rule-card stability">
+                  <div class="rule-header">
+                    <span class="rule-title">节气仪式的温补族</span>
+                  </div>
+                  <div class="rule-desc">
+                    认准温润暖胃的热饮醇香。若同时带有“冰爽抗化”标签会被扣分。
+                  </div>
+                  <div class="rule-keywords-box">
+                    <div><span class="kw-label">核心加分项：</span>温润暖胃、热饮醇香、猎奇特色</div>
+                    <div><span class="kw-label">互斥排他项：</span>若同时包含“冰爽抗化”标签，该画像得分将直接归零。</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </dialog>
         </div>
         <div class="text-title subtitle">画像概览</div>
         <div class="persona-remind">点击条形图查看画像下钻明细</div>

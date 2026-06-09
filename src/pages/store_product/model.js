@@ -54,6 +54,15 @@ class StoreProduct extends CustomResizeObserver {
       "#productDimensionRemindDialog"
     ),
 
+    $personaRemindBtn: document.querySelector(
+      "#personaRemindBtn"
+    ),
+
+
+    $personaRemindDialog: document.querySelector(
+      "#personaRemindDialog"
+    ),
+
     $emptySection: document.querySelector("#emptySection"),
     $healthRadar: document.querySelector("#healthRadar"),
     $textureRadar: document.querySelector("#textureRadar"),
@@ -171,6 +180,11 @@ class StoreProduct extends CustomResizeObserver {
     this.element.$productDimensionRemindBtn.addEventListener(
       "click",
       instance.productDimensionRemindBtnClickHandler
+    );
+
+    this.element.$personaRemindBtn.addEventListener(
+      "click",
+      instance.personaRemindBtnClickHandler
     );
 
     this.personaPieInstance.on("click", (params) =>
@@ -466,6 +480,10 @@ class StoreProduct extends CustomResizeObserver {
 
   productDimensionRemindBtnClickHandler = () => {
     this.element.$productDimensionRemindDialog.open = true;
+  };
+
+  personaRemindBtnClickHandler = () => {
+    this.element.$personaRemindDialog.open = true;
   };
 
   storeCountSelectChangeHandler = (e) => {
