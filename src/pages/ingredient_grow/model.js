@@ -97,8 +97,6 @@ class IngredientGrow extends CustomResizeObserver {
     );
   };
 
-
-
   computeDataRangeIndex = (date) => {
     const { currentYear, selectedCompared } = this.get(
       "currentYear",
@@ -123,8 +121,8 @@ class IngredientGrow extends CustomResizeObserver {
       endDateIndex,
       comparedStartDateIndex,
       comparedEndDateIndex,
-      currentTdTitle:currentDateStr,
-      comparedTdTitle:comparedDateStr,
+      currentTdTitle: currentDateStr,
+      comparedTdTitle: comparedDateStr,
     };
   };
 
@@ -146,8 +144,6 @@ class IngredientGrow extends CustomResizeObserver {
     const { bigProductTypeValue, productType, ingredientClassification } =
       filter;
 
-  
-
     const currentRangeData = computeCurrentDataRangeV2({
       data: this.data,
       startDateIndex,
@@ -160,8 +156,8 @@ class IngredientGrow extends CustomResizeObserver {
     const currentComparedRangeData = computeCurrentDataRangeV2({
       data: this.data,
       bigProductTypeValue,
-      startDateIndex:comparedStartDateIndex,
-      endDateIndex:comparedEndDateIndex,
+      startDateIndex: comparedStartDateIndex,
+      endDateIndex: comparedEndDateIndex,
       productType,
       ingredientClassification,
     });
@@ -260,6 +256,8 @@ class IngredientGrow extends CustomResizeObserver {
       "selectedCompared",
       "comparedList"
     );
+    console.log(comparedList);
+
     const menuFragment = computedMenuOptionsFragment(comparedList, true);
     this.element.$comparedSelect.innerHTML = null;
     this.element.$comparedSelect.appendChild(menuFragment);
@@ -363,7 +361,6 @@ class IngredientGrow extends CustomResizeObserver {
   };
 
   yearChangeHandler(value) {
-   
     const { selectedDate } = this.get("selectedDate");
 
     const dateList = computeDateList(Number(value));
@@ -402,7 +399,7 @@ class IngredientGrow extends CustomResizeObserver {
   }
 
   dateChangeHandler(value) {
-    const comparedList = this.computeComparedList(value);
+    const comparedList = computeComparedList(value);
 
     // 对比项的值直接取第一个即可，要么不变，要么只有一个
     const currentComparedDate = comparedList[0].value;
@@ -437,6 +434,10 @@ class IngredientGrow extends CustomResizeObserver {
   comparedChangeHandler(value) {
     const { selectedDate } = this.get("selectedDate");
 
+    this.set({
+      selectedCompared: value,
+    });
+
     const {
       startDateIndex,
       endDateIndex,
@@ -447,7 +448,6 @@ class IngredientGrow extends CustomResizeObserver {
     } = this.computeDataRangeIndex(selectedDate);
 
     this.set({
-      selectedCompared: value,
       startDateIndex,
       endDateIndex,
       comparedStartDateIndex,
@@ -455,6 +455,7 @@ class IngredientGrow extends CustomResizeObserver {
       currentTdTitle,
       comparedTdTitle,
     });
+
     this.renderSummary();
     this.computeIngredientGrowth();
   }
