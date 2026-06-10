@@ -80,79 +80,102 @@ function generateCompareRadarOptions(brandStats, globalStats) {
     brandRawCounts,
     globalRawCounts,
     color
-  ) => {
+) => {
     return {
-      title: { text: titleText, left: "center", textStyle: { fontSize: 16 } },
+        title: { text: titleText, left: "center", textStyle: { fontSize: 16 } },
 
-      // 【核心修复】严格保证 formatter 始终返回字符串
-      tooltip: {
-        trigger: "item",
-        formatter: function (params) {
-          if (!params.value || !Array.isArray(params.value)) return "";
+        tooltip: {
+            trigger: "item", 
+            formatter: function (params) {
+                if (!params.value || !Array.isArray(params.value)) return "";
 
-          let html = `<div style="font-weight:bold; margin-bottom:8px;">${params.name}</div>`;
+                // 【核心优化】使用 HTML table 实现绝对稳定的三列对齐布局
+                let html = `
+                    <div style="font-weight:bold; margin-bottom:8px;">${titleText}得分</div>
+                    <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                        <!-- 表头：明确标识左右两列的数据含义 -->
+                        <tr style="color:#999; border-bottom:1px solid #eee;">
+                            <td style="padding-bottom:4px; white-space:nowrap;">指标</td>
+                            <td style="padding-bottom:4px; text-align:right; white-space:nowrap;">当前品牌</td>
+                            <td style="padding-bottom:4px; text-align:right; padding-left:12px; white-space:nowrap;">行业均值(除本品牌)</td>
+                        </tr>
+                `;
 
-          // 根据触发的系列名称决定读取哪一份原始数据
-          const rawCounts =
-            params.name === "当前品牌" ? brandRawCounts : globalRawCounts;
+                // 遍历各维度数据，构建表格行
+                categories.forEach((categoryName, idx) => {
+                    const brandRealCount = brandRawCounts[idx];
+                    const globalRealCount = globalRawCounts[idx];
 
-          // 拼接各维度的真实原始命中次数
-          params.value.forEach((score, idx) => {
-            const realCount = rawCounts[idx];
+                    // 格式化数值（原始值为0时展示0，否则保留两位小数）
+                    const brandDisplayValue = brandRealCount === 0 ? 0 : brandData[idx].toFixed(2);
+                    const globalDisplayValue = globalRealCount === 0 ? 0 : globalData[idx].toFixed(2);
 
-            // 【核心逻辑】：原始值为0时展示0，否则展示映射好的得分
-            const displayValue = realCount === 0 ? 0 : score.toFixed(2);
+                    // 拼接每一行的对比数据
+                    html += `
+                        <tr>
+                            <!-- 左列：维度名称，靠左对齐 -->
+                            <td style="padding-top:4px; color:#333; white-space:nowrap;">${categoryName}</td>
+                            
+                            <!-- 中列：当前品牌数值，靠右对齐 -->
+                            <td style="padding-top:4px; text-align:right; color:${color}; font-weight:bold; white-space:nowrap;">
+                                ${brandDisplayValue}
+                            </td>
+                            
+                            <!-- 右列：行业均值数值，靠右对齐并增加间距 -->
+                            <td style="padding-top:4px; text-align:right; padding-left:12px; color:#FF9800; font-weight:bold; white-space:nowrap;">
+                                ${globalDisplayValue}
+                            </td>
+                        </tr>
+                    `;
+                });
 
-            html += `<div>${categories[idx]}：<b>${displayValue}</b></div>`;
-          });
-
-          // 最终统一返回有效的 HTML 字符串
-          return html;
-        },
-        backgroundColor: "rgba(255,255,255,0.95)",
-        borderColor: "#e2e8f0",
-        textStyle: { color: "#1e293b" },
-      },
-
-      legend: {
-        bottom: 0,
-        data: [
-          { name: "当前品牌" },
-          {
-            name: "行业均值(除本品牌)",
-            itemStyle: {
-              color: "#FF9800",
+                html += `</table>`;
+                return html;
             },
-          },
+            backgroundColor: "rgba(255,255,255,0.95)",
+            borderColor: "#e2e8f0",
+            textStyle: { color: "#1e293b" },
+        },
+
+        legend: {
+            bottom: 0,
+            data: [
+                { name: "当前品牌" },
+                {
+                    name: "行业均值(除本品牌)",
+                    itemStyle: { color: "#FF9800" },
+                },
+            ],
+        },
+
+        radar: {
+            indicator: categories.map((name) => ({ name, max: 100 })),
+            radius: "60%",
+            center: ["50%", "50%"],
+            axisName: { color: "#666" },
+        },
+
+        series: [
+            {
+                type: "radar",
+                data: [
+                    {
+                        value: brandData,
+                        name: "当前品牌",
+                        lineStyle: { color: color, width: 2 },
+                        itemStyle: { color: color },
+                    },
+                    {
+                        value: globalData,
+                        name: "行业均值(除本品牌)",
+                        symbol: "none",
+                        lineStyle: { color: "#FF9800", width: 2, type: "dashed" },
+                    },
+                ],
+            },
         ],
-      },
-      radar: {
-        indicator: categories.map((name) => ({ name, max: 100 })),
-        radius: "60%",
-        center: ["50%", "50%"],
-        axisName: { color: "#666" },
-      },
-      series: [
-        {
-          type: "radar",
-          data: [
-            {
-              value: brandData,
-              name: "当前品牌",
-              lineStyle: { color: color, width: 2 },
-              itemStyle: { color: color },
-            },
-            {
-              value: globalData,
-              name: "行业均值(除本品牌)",
-              symbol: "none",
-              lineStyle: { color: "#FF9800", width: 2, type: "dashed" },
-            },
-          ],
-        },
-      ],
     };
-  };
+};
 
   return {
     // 将两套原始数据都传入配置生成器

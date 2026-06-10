@@ -123,7 +123,7 @@ function generateRadarOptions(data, compareData, { title, comparedTitle }) {
             `<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;background-color:${color};"></span>`;
 
           // 💡 核心修改：构建左右并排的 Flex 布局 HTML
-          let html = `<div style="font-weight:bold; margin-bottom:8px; border-bottom:1px solid #eee; padding-bottom:5px;">${chartTitle}</div>`;
+          let html = `<div style="font-weight:bold; margin-bottom:8px; border-bottom:1px solid #eee; padding-bottom:5px;">命中[${chartTitle}]各维度标签的成分数量</div>`;
 
           // 开启 Flex 容器，使本期与对比期左右平铺
           html += `<div style="display:flex; justify-content:space-between; gap:20px;">`;

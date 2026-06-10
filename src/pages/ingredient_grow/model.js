@@ -256,7 +256,6 @@ class IngredientGrow extends CustomResizeObserver {
       "selectedCompared",
       "comparedList"
     );
-    console.log(comparedList);
 
     const menuFragment = computedMenuOptionsFragment(comparedList, true);
     this.element.$comparedSelect.innerHTML = null;
