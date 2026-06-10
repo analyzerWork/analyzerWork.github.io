@@ -149,7 +149,7 @@ class IngredientGrow extends CustomResizeObserver {
   
 
     const currentRangeData = computeCurrentDataRangeV2({
-      data: currentDataByDateRange,
+      data: this.data,
       startDateIndex,
       endDateIndex,
       bigProductTypeValue,
@@ -158,7 +158,7 @@ class IngredientGrow extends CustomResizeObserver {
     });
 
     const currentComparedRangeData = computeCurrentDataRangeV2({
-      data: currentComparedByDateRange,
+      data: this.data,
       bigProductTypeValue,
       startDateIndex:comparedStartDateIndex,
       endDateIndex:comparedEndDateIndex,
