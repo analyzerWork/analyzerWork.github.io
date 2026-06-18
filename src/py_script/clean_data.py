@@ -136,4 +136,8 @@ if __name__ == '__main__':
             
         print("🎉 所有年份文件处理完毕！")
         
+        extract_unique_ingredients(output_dir)
+        
+
+        
         
