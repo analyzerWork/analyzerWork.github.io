@@ -1,6 +1,7 @@
 import json
 import os
 import glob
+import re  # 引入正则表达式模块
 
 def process_year_file(input_file, output_dir):
     """
@@ -100,9 +101,13 @@ def extract_unique_ingredients(input_dir,output_dir):
             if raw_ingredients:
                 # 原料构成是以顿号分隔的字符串，按顿号拆分成列表
                 ingredients_list = raw_ingredients.split('、')
-                # 去除每个原料可能存在的空格，并加入集合中
                 for ing in ingredients_list:
-                    unique_ingredients.add(ing.strip())
+                    # 1. 使用正则表达式替换掉字符串中【所有位置】的空白字符（空格、换行符、制表符等）
+                    cleaned_ing = re.sub(r'\s+', '', ing)
+                    
+                    # 2. 过滤掉清洗后为空字符串的无效成分
+                    if cleaned_ing:
+                        unique_ingredients.add(cleaned_ing)
         
         print(f"✅ 已处理文件: {os.path.basename(file)}")
 
@@ -143,7 +148,7 @@ if __name__ == '__main__':
             
         print("🎉 所有年份数据清理完毕！")
         
-        extract_unique_ingredients(output_dir)
+        extract_unique_ingredients(output_dir,input_dir)
         
 
         
