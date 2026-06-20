@@ -75,7 +75,7 @@ def process_year_file(input_file, output_dir):
     print(f"✅ 年份 {year} 处理完成！最终输出 {len(final_cleaned_data)} 条数据 | 保存至: {output_file}\n")
 
 
-def extract_unique_ingredients(input_dir):
+def extract_unique_ingredients(input_dir,output_dir):
     """
     统计指定目录下所有清洗后的JSON文件，提取并去重所有的“原料构成”。
     """
@@ -109,7 +109,14 @@ def extract_unique_ingredients(input_dir):
     # 将集合转化为排序后的列表，方便阅读
     final_ingredients = sorted(list(unique_ingredients))
     print(f"\n🎉 提取完成！共计 {len(final_ingredients)} 种不重复的原料。")
-    return final_ingredients
+     # 拼接输出文件的完整路径
+    output_file = os.path.join(output_dir, "all_unique_ingredients.json")
+    
+    # 将列表写入 JSON 文件，ensure_ascii=False 保证中文正常显示
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(final_ingredients, f, ensure_ascii=False, indent=2)
+        
+    print(f"💾 不重复的原料结果已保存至: {output_file}")
 
 if __name__ == '__main__':
     # 定义输入和输出目录
@@ -134,7 +141,7 @@ if __name__ == '__main__':
         for input_file in json_files:
             process_year_file(input_file, output_dir)
             
-        print("🎉 所有年份文件处理完毕！")
+        print("🎉 所有年份数据清理完毕！")
         
         extract_unique_ingredients(output_dir)
         
