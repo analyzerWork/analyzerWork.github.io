@@ -65,10 +65,11 @@
           ></div>
           <div id="t2" class="ui-droplist-x remind-formula" hidden>
             <div>成分的综合评分计算公式为:</div>
-            $$ score =
+            $$ score = \left[ \left(
             \frac{\text{上新该成分的品牌门店数}}{\text{监测品牌总门店数}} \times
-            0.5 + \frac{\text{上新该成分的品牌数}}{\text{监测总品牌数}} \times
-            0.5 $$
+            0.5 \right) + \left(
+            \frac{\text{上新该成分的品牌数}}{\text{监测总品牌数}} \times 0.5
+            \right) \right] \times 100 $$
           </div>
         </div>
 
@@ -138,11 +139,9 @@
         });
       });
 
-      const key = 'brand_tracking';
-      
-      INIT.loadData(key,PotentialIngredientList)
+      const key = "brand_tracking";
 
-    
+      INIT.loadData(key, PotentialIngredientList);
     </script>
   </body>
 </html>

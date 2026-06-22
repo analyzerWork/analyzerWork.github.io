@@ -117,6 +117,7 @@ const computedPotentialData = (currentRangeData, previousData) => {
   const sortedIngredientList = ingredientCountList.sort(
     (prev, next) => next["score"] - prev["score"]
   );
+  
 
   const no20Ingredient = sortedIngredientList.at(19);
 
