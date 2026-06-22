@@ -105,28 +105,41 @@ const computedPotentialData = (currentRangeData, previousData) => {
     return {
       ingredient,
       score,
-      tableRow: [
-        { name: "ingredient", value: ingredient },
-        { name: "score", value: score },
-        { name: "brandCount", value: brandCount },
-        { name: "storeCount", value: storeCount }
-      ],
+      brandCount,
+      storeCount
     };
   });
 
   const sortedIngredientList = ingredientCountList.sort(
     (prev, next) => next["score"] - prev["score"]
   );
+  
 
   const no20Ingredient = sortedIngredientList.at(19);
+
+  let data = []
 
   if (no20Ingredient !== undefined) {
     const lastNo20ScoreIndex = sortedIngredientList.findLastIndex(
       (item) => item.score === no20Ingredient.score
     );
     
-    return sortedIngredientList.slice(0, lastNo20ScoreIndex);
+    data = sortedIngredientList.slice(0, lastNo20ScoreIndex);
   } else {
-    return sortedIngredientList.slice(0, 20);
+    data = sortedIngredientList.slice(0, 20);
   }
+
+  const maxScore = data[0]?.score || 1;
+
+
+  return data.map(({ingredient, score, brandCount, storeCount})=>({
+    
+    tableRow: [
+      { name: "ingredient", value: ingredient },
+      { name: "score", value: score },
+      { name: "relative_score", value:  maxScore > 0 ? (score / maxScore * 100) : 0},
+      { name: "brandCount", value: brandCount },
+      { name: "storeCount", value: storeCount }
+    ],
+  }))
 };

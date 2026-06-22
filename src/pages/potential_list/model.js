@@ -258,10 +258,11 @@ class PotentialIngredientList {
               td.innerHTML =
                 name === "ingredient"
                   ? value
+                  :(name === "relative_score" ? `${value.toFixed(0)}%`
                   : new Intl.NumberFormat("en-US", {
                       minimumFractionDigits: digits,
                       maximumFractionDigits: digits,
-                    }).format(value);
+                    }).format(value));
               tr.appendChild(td);
             });
             tbodyFragment.appendChild(tr);

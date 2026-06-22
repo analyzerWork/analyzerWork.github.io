@@ -1,6 +1,7 @@
 import json
 import os
 import glob
+import re  # 引入正则表达式模块
 
 def process_year_file(input_file, output_dir):
     """
@@ -75,7 +76,7 @@ def process_year_file(input_file, output_dir):
     print(f"✅ 年份 {year} 处理完成！最终输出 {len(final_cleaned_data)} 条数据 | 保存至: {output_file}\n")
 
 
-def extract_unique_ingredients(input_dir):
+def extract_unique_ingredients(input_dir,output_dir):
     """
     统计指定目录下所有清洗后的JSON文件，提取并去重所有的“原料构成”。
     """
@@ -100,16 +101,27 @@ def extract_unique_ingredients(input_dir):
             if raw_ingredients:
                 # 原料构成是以顿号分隔的字符串，按顿号拆分成列表
                 ingredients_list = raw_ingredients.split('、')
-                # 去除每个原料可能存在的空格，并加入集合中
                 for ing in ingredients_list:
-                    unique_ingredients.add(ing.strip())
+                    # 1. 使用正则表达式替换掉字符串中【所有位置】的空白字符（空格、换行符、制表符等）
+                    cleaned_ing = re.sub(r'\s+', '', ing)
+                    
+                    # 2. 过滤掉清洗后为空字符串的无效成分
+                    if cleaned_ing:
+                        unique_ingredients.add(cleaned_ing)
         
         print(f"✅ 已处理文件: {os.path.basename(file)}")
 
     # 将集合转化为排序后的列表，方便阅读
     final_ingredients = sorted(list(unique_ingredients))
     print(f"\n🎉 提取完成！共计 {len(final_ingredients)} 种不重复的原料。")
-    return final_ingredients
+     # 拼接输出文件的完整路径
+    output_file = os.path.join(output_dir, "all_unique_ingredients.json")
+    
+    # 将列表写入 JSON 文件，ensure_ascii=False 保证中文正常显示
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(final_ingredients, f, ensure_ascii=False, indent=2)
+        
+    print(f"💾 不重复的原料结果已保存至: {output_file}")
 
 if __name__ == '__main__':
     # 定义输入和输出目录
@@ -134,6 +146,10 @@ if __name__ == '__main__':
         for input_file in json_files:
             process_year_file(input_file, output_dir)
             
-        print("🎉 所有年份文件处理完毕！")
+        print("🎉 所有年份数据清理完毕！")
+        
+        extract_unique_ingredients(output_dir,input_dir)
+        
+
         
         
