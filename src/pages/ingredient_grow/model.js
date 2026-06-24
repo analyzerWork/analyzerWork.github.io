@@ -35,13 +35,17 @@ class IngredientGrow extends CustomResizeObserver {
     $bigProductTypeSelect: document.querySelector("#bigProductTypeSelect"),
     $productTypeSelect: document.querySelector("#productTypeSelect"),
     $ingredientTypeSelect: document.querySelector("#ingredientTypeSelect"),
-    $ingredientGrowSection: document.querySelector("#ingredientGrowSection"),
     $currentTdTitle: document.querySelector("#currentTdTitle"),
     $comparedTdTitle: document.querySelector("#comparedTdTitle"),
     $summary: document.querySelector("#summary"),
     $ingredientGrowTbody: document.querySelector("#ingredientGrowTbody"),
+    $summaryCoreStable: document.querySelector("#summaryCoreStable"),
+    $currentTdCoreStableTitle: document.querySelector("#currentTdCoreStableTitle"),
+    $comparedTdCoreStableTitle: document.querySelector("#comparedTdCoreStableTitle"),
     $emptySection: document.querySelector("#emptySection"),
     $ingredientGrowLoading: document.querySelector("#ingredientGrowLoading"),
+    $ingredientCoreStableLoading: document.querySelector("#ingredientCoreStableLoading"),
+    $ingredientCoreStableTbody: document.querySelector("#ingredientCoreStableTbody"),
     $pageLoading: document.querySelector("#pageLoading"),
   };
   constructor(initData) {
@@ -332,15 +336,17 @@ class IngredientGrow extends CustomResizeObserver {
       prompt += ` ${Number(selectedDate)} 月`;
     }
 
+    let filterPrompt = '';
+
     if (!isEmptyFilterValue(bigProductTypeValue)) {
-      prompt += bigProductTypeValue === "茶饮" ? "茶饮新品中," : "咖啡中,";
+      filterPrompt += bigProductTypeValue === "茶饮" ? "茶饮新品中," : "咖啡中,";
     }
 
     if (!isEmptyFilterValue(productType)) {
-      prompt += `${productType}分类下,`;
+      filterPrompt += `${productType}分类下,`;
     }
 
-    let compareDateStr = "相对";
+    let compareDateStr = "";
     if (selectedCompared === YoY_VALUE) {
       compareDateStr += `去年同期(同比)`;
     } else {
@@ -352,11 +358,14 @@ class IngredientGrow extends CustomResizeObserver {
       compareDateStr += ` ${yearStr} 年  ${monthStr} 月(环比)`;
     }
 
-    prompt += compareDateStr;
 
-    prompt += `使用量增长最快的${ingredientClassification}(成分) :`;
+    const growthPrompt = `${prompt}${filterPrompt}相对${compareDateStr}使用量增长最快的${ingredientClassification}(成分) :`;
+    const coreStablePrompt = `${prompt}和${compareDateStr}${filterPrompt}使用量都比较多的${ingredientClassification}(成分) :`;
 
-    this.element.$summary.innerHTML = prompt;
+
+    this.element.$summary.innerHTML = growthPrompt;
+
+    this.element.$summaryCoreStable.innerHTML = coreStablePrompt;
   };
 
   yearChangeHandler(value) {
@@ -456,6 +465,7 @@ class IngredientGrow extends CustomResizeObserver {
     });
 
     this.renderSummary();
+
     this.computeIngredientGrowth();
   }
 
@@ -514,10 +524,12 @@ class IngredientGrow extends CustomResizeObserver {
   computeIngredientGrowth() {
     const { currentRangeData, currentComparedRangeData } =
       this.computeRangeData();
+      
 
     const data = getProcessedIngredientsStats(currentRangeData);
 
     const comparedData = getProcessedIngredientsStats(currentComparedRangeData);
+
 
     const comparedDataMap = new Map();
     for (const item of comparedData) {
@@ -570,7 +582,12 @@ class IngredientGrow extends CustomResizeObserver {
     // 合并结果：先返回正常增长率，最后是新成分
     const result = [...normalGrowthRates, ...newIngredients];
 
+
+    const coreStableData = findCoreStableIngredients(data, comparedData);
+
     this.renderGrowthTable(result);
+
+    this.renderCoreStableTable(coreStableData)
   }
 
   renderGrowthTable = (data) => {
@@ -608,6 +625,45 @@ class IngredientGrow extends CustomResizeObserver {
         this.element.$ingredientGrowTbody.appendChild(tbodyFragment);
       }
       this.element.$ingredientGrowLoading.classList.add("hide");
+    }, 1000);
+  };
+
+  renderCoreStableTable = (data) => {
+    
+    this.element.$ingredientCoreStableLoading.classList.remove("hide");
+
+    this.element.$ingredientCoreStableTbody.innerHTML = null;
+
+    window.setTimeout(() => {
+      const { currentTdTitle, comparedTdTitle } = this.get(
+        "comparedTdTitle",
+        "currentTdTitle"
+      );
+      this.element.$currentTdCoreStableTitle.innerHTML = currentTdTitle;
+      this.element.$comparedTdCoreStableTitle.innerHTML = comparedTdTitle;
+
+      if (data.length === 0) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.appendChild(this.element.$emptySection.content.cloneNode(true));
+        td.colSpan = 3;
+        tr.appendChild(td);
+        this.element.$ingredientCoreStableTbody.appendChild(tr);
+      } else {
+        const tbodyFragment = document.createDocumentFragment();
+
+        data.forEach((item) => {
+          const tr = document.createElement("tr");
+          Object.entries(item).forEach(([_, value]) => {
+            const td = document.createElement("td");
+            td.innerHTML = value;
+            tr.appendChild(td);
+          });
+          tbodyFragment.appendChild(tr);
+        });
+        this.element.$ingredientCoreStableTbody.appendChild(tbodyFragment);
+      }
+      this.element.$ingredientCoreStableLoading.classList.add("hide");
     }, 1000);
   };
 }
