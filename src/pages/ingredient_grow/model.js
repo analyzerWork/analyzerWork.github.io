@@ -359,8 +359,8 @@ class IngredientGrow extends CustomResizeObserver {
     }
 
 
-    const growthPrompt = `${prompt}${filterPrompt}相对${compareDateStr}使用量增长最快的${ingredientClassification}(成分) :`;
-    const coreStablePrompt = `${prompt}和${compareDateStr}${filterPrompt}使用量都比较多的${ingredientClassification}(成分) :`;
+    const growthPrompt = `${prompt}${filterPrompt}相对${compareDateStr}产品使用量增长最快的${ingredientClassification}(成分) :`;
+    const coreStablePrompt = `${prompt}和${compareDateStr}${filterPrompt}产品使用量都比较多的${ingredientClassification}(成分) :`;
 
 
     this.element.$summary.innerHTML = growthPrompt;
