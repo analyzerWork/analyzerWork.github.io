@@ -487,6 +487,41 @@ function getProcessedIngredientsStats(data) {
   return resultArray;
 }
 
+/**
+ * 寻找两个时间段中核心稳固的成分（Top N 交集）
+ * @param {Array} currentArr - 当前时间段的成分数据
+ * @param {Array} compareArr - 对比时间段的成分数据
+ * @param {Number} topN - 截取的头部数量，默认20
+ * @returns {Array} 核心稳固成分列表（仅包含原始使用量）
+ */
+function findCoreStableIngredients(currentArr, compareArr, topN = 20) {
+  // 1. 基础防御性校验
+  if (!Array.isArray(currentArr) || !Array.isArray(compareArr)) return [];
+
+  // 2. 分别对两个数组按 count 降序排列，并截取前 topN 名
+  const currentTopNames = currentArr.slice(0, topN).map((item) => item.name);
+
+  const compareTopNames = compareArr.slice(0, topN).map((item) => item.name);
+
+  // 3. 将对比期数据转换为 Map，方便 O(1) 时间复杂度查找
+  const compareMap = new Map(compareArr.map((item) => [item.name, item.count]));
+
+  // 4. 遍历当前期的 Top N，寻找交集
+  const result = [];
+  for (const name of currentTopNames) {
+    if (compareTopNames.includes(name)) {
+      result.push({
+        name: name,
+        currentCount: currentArr.find((item) => item.name === name).count,
+        compareCount: compareMap.get(name),
+      });
+    }
+  }
+
+  // 5. 按当前期的使用量降序排列返回（保持头部成分的直观顺序）
+  return result.sort((a, b) => b.currentCount - a.currentCount);
+}
+
 function getBrandByBigProductType(data, bigProductType, isOptionHasAll) {
   const filteredData =
     bigProductType === SELECT_ALL_VALUE
@@ -585,12 +620,8 @@ function computeDataRangeIndexV2(data, options) {
     currentDateStr = `${currentYear}年${SECOND_SHORT_HALF}`;
     comparedDateStr = `${currentYear - 1}年${SECOND_SHORT_HALF}`;
   } else if (date === FIRST_HALF_VALUE) {
-    startDateIndex = data.findIndex(
-      (d) => d["月份"] === `${currentYear}-03`
-    );
-    endDateIndex = data.findLastIndex(
-      (d) => d["月份"] === `${currentYear}-08`
-    );
+    startDateIndex = data.findIndex((d) => d["月份"] === `${currentYear}-03`);
+    endDateIndex = data.findLastIndex((d) => d["月份"] === `${currentYear}-08`);
     comparedStartDateIndex = data.findIndex(
       (d) => d["月份"] === `${currentYear - 1}-03`
     );

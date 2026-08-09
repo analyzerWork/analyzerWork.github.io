@@ -217,6 +217,7 @@ class IngredientHealth extends CustomResizeObserver {
     this.element.$trendDatePicker.value = `${startDate} 至 ${endDate}`;
     this.element.$trendDatePicker.min = dateRange[0];
     this.element.$trendDatePicker.max = endDate;
+    
 
     this.setByKey("trend", {
       startDate,
@@ -521,6 +522,7 @@ class IngredientHealth extends CustomResizeObserver {
       "trend"
     );
     const { startDate, endDate, riskTags, healthTags } = trend;
+    
 
     const startDateIndex = currentRangeData.findIndex(
       (d) => d["月份"] === startDate
@@ -536,6 +538,8 @@ class IngredientHealth extends CustomResizeObserver {
       (d) => d["月份"] === endDate
     );
 
+    
+
     const filteredData = currentRangeData.slice(startDateIndex, endDateIndex);
     const filteredExcludeBrandData = currentRangeExcludeBrandData.slice(
       startDateExcludeBrandIndex,
@@ -546,7 +550,7 @@ class IngredientHealth extends CustomResizeObserver {
       // 【空状态处理】直接通过 setOption 渲染文字提示
       const emptyOptions = {
         title: {
-          text: "暂无数据",
+          text: `${startDateIndex === -1 && endDateIndex === -1 ? '该时间区间内' : ''}暂无符合条件的数据`,
           x: "center",
           y: "center",
           textStyle: {

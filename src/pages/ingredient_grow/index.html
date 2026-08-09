@@ -78,6 +78,27 @@
           </table>
         </div>
       </section>
+      <section>
+        <div id="summaryCoreStable"></div>
+        <div class="ingredient-grow-section">
+          <div
+            id="ingredientCoreStableLoading"
+            class="ui-loading ingredient-grow-loading"
+          >
+            计算中<ui-dot></ui-dot>
+          </div>
+          <table id="ingredientCoreStableTable" class="ui-table">
+            <thead>
+              <tr>
+                <th>成分名称</th>
+                <th id="currentTdCoreStableTitle"></th>
+                <th id="comparedTdCoreStableTitle"></th>
+              </tr>
+            </thead>
+            <tbody id="ingredientCoreStableTbody"></tbody>
+          </table>
+        </div>
+      </section>
     </div>
     <div class="analyzer-loading mask text-large" id="pageLoading">
       加载中<ui-dot></ui-dot>
@@ -100,7 +121,7 @@
             fill="#efefef"
           ></path>
         </svg>
-        <div class="empty-text">该筛选条件下没有使用量增长的成分</div>
+        <div class="empty-text">该筛选条件下没有符合条件的成分</div>
       </div>
     </template>
     <script src="../../model/resizeObserver.js"></script>
@@ -112,10 +133,9 @@
     <script src="../../script/initialize.js"></script>
 
     <script>
-      const key = 'ingredient_grow';
-      
-      INIT.loadData(key,IngredientGrow)
-     
+      const key = "ingredient_grow";
+
+      INIT.loadData(key, IngredientGrow);
     </script>
   </body>
 </html>
