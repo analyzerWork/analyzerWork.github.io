@@ -425,6 +425,8 @@ class TasteMatching extends CustomResizeObserver {
       "brandTypeValue",
       "brandSelectOptions"
     );
+    console.log(brandSelectOptions,'brandSelectOptions')
+    
 
     const panelWraper = document.getElementById(BRAND_SELECT_PANEL_WRAPPER_ID);
     panelWraper.innerHTML = `${getMultipleSelectConfig({
@@ -443,6 +445,8 @@ class TasteMatching extends CustomResizeObserver {
     const panelWraper = document.getElementById(
       PRODUCT_SELECT_PANEL_WRAPPER_ID
     );
+        console.log(productSelectOptions,'productSelectOptions')
+
 
     panelWraper.innerHTML = `${getMultipleSelectConfig({
       ...DEFAULT_PRODUCT_SELECT_PANEl_CONFIG,

@@ -34,7 +34,7 @@ class AnalyzerModel {
     });
 
     this.element.$navEle.addEventListener("click", this.switchMenuHandler);
-    this.element.$anna.addEventListener("click", this.locationToAnna);
+    // this.element.$anna.addEventListener("click", this.locationToAnna);
 
     document.addEventListener("visibilitychange", this.visibilityChangeHandler);
   };

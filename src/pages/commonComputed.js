@@ -249,6 +249,11 @@ const computedMultiSelectOptions = (data, values = []) => {
 
   const panelOptionsHTML = [];
 
+  if(data.some(option=>!option)){
+    console.error('type error in options')
+    return
+  }
+
   data.forEach((option) => {
     panelOptionsHTML.push(
       `<div class="text multi-select-option"  ${
