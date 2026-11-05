@@ -189,7 +189,7 @@ class TasteMatching:
 
 tasteMatching = TasteMatching({
     'isDataTransfer': True,
-    'fileName': 'data_2022'
+    'fileName': 'data_2023'
 })
 
 tasteMatching.exec()
